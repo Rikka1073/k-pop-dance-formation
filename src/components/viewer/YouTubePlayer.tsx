@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useYouTubePlayer } from '@/hooks'
 
 interface YouTubePlayerProps {
@@ -28,14 +29,18 @@ export function YouTubePlayer({
   })
 
   // 時間更新の通知
-  if (onTimeUpdate && isReady) {
-    onTimeUpdate(currentTime)
-  }
+  useEffect(() => {
+    if (onTimeUpdate && isReady) {
+      onTimeUpdate(currentTime)
+    }
+  }, [currentTime, isReady, onTimeUpdate])
 
   // Duration更新の通知
-  if (onDurationChange && duration > 0) {
-    onDurationChange(duration)
-  }
+  useEffect(() => {
+    if (onDurationChange && duration > 0) {
+      onDurationChange(duration)
+    }
+  }, [duration, onDurationChange])
 
   return (
     <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
