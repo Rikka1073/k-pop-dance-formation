@@ -14,22 +14,23 @@ interface MemberIconProps {
 
 export function MemberIcon({ member, x, y, isSelected, onClick }: MemberIconProps) {
   return (
-    <motion.div
+    <div
       className={cn(
         'absolute flex flex-col items-center cursor-pointer',
-        'transform -translate-x-1/2 -translate-y-1/2'
+        'transition-all duration-500 ease-in-out',
+        '-translate-x-1/2 -translate-y-1/2'
       )}
-      style={{ left: `${x}%`, top: `${y}%` }}
-      animate={{ left: `${x}%`, top: `${y}%` }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      style={{
+        left: `${x}%`,
+        top: `${y}%`,
+      }}
       onClick={onClick}
     >
       {/* アイコン円 */}
       <motion.div
         className={cn(
           'w-10 h-10 rounded-full flex items-center justify-center',
-          'text-white font-bold text-sm shadow-lg',
-          'transition-all duration-200'
+          'text-white font-bold text-sm shadow-lg'
         )}
         style={{
           backgroundColor: member.color,
@@ -52,6 +53,6 @@ export function MemberIcon({ member, x, y, isSelected, onClick }: MemberIconProp
       >
         {member.name}
       </div>
-    </motion.div>
+    </div>
   )
 }
