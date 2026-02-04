@@ -118,7 +118,7 @@ export function useYouTubePlayer({
         playerInstanceRef.current.destroy()
       }
 
-      playerInstanceRef.current = new window.YT.Player(playerRef.current, {
+      new window.YT.Player(playerRef.current, {
         videoId,
         playerVars: {
           autoplay: 0,
@@ -131,6 +131,8 @@ export function useYouTubePlayer({
         events: {
           onReady: (event) => {
             if (!isMounted) return
+            // onReadyイベントで正しいプレイヤーインスタンスを保存
+            playerInstanceRef.current = event.target
             setIsReady(true)
             setDuration(event.target.getDuration())
             onReady?.()
