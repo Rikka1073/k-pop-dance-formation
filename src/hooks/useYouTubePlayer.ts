@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
+import type { YTPlayer } from '@/types/youtube.d'
 
 type PlayerState = 'unstarted' | 'playing' | 'paused' | 'buffering' | 'ended'
 
@@ -49,15 +50,25 @@ function loadYouTubeAPI(): Promise<void> {
   return apiLoadPromise
 }
 
+// YouTube PlayerState values
+const YT_STATE = {
+  UNSTARTED: -1,
+  ENDED: 0,
+  PLAYING: 1,
+  PAUSED: 2,
+  BUFFERING: 3,
+  CUED: 5,
+} as const
+
 function mapPlayerState(state: number): PlayerState {
   switch (state) {
-    case YT.PlayerState.PLAYING:
+    case YT_STATE.PLAYING:
       return 'playing'
-    case YT.PlayerState.PAUSED:
+    case YT_STATE.PAUSED:
       return 'paused'
-    case YT.PlayerState.BUFFERING:
+    case YT_STATE.BUFFERING:
       return 'buffering'
-    case YT.PlayerState.ENDED:
+    case YT_STATE.ENDED:
       return 'ended'
     default:
       return 'unstarted'
@@ -70,7 +81,7 @@ export function useYouTubePlayer({
   onStateChange,
 }: UseYouTubePlayerOptions): UseYouTubePlayerReturn {
   const playerRef = useRef<HTMLDivElement | null>(null)
-  const playerInstanceRef = useRef<YT.Player | null>(null)
+  const playerInstanceRef = useRef<YTPlayer | null>(null)
   const [isReady, setIsReady] = useState(false)
   const [playerState, setPlayerState] = useState<PlayerState>('unstarted')
   const [currentTime, setCurrentTime] = useState(0)
@@ -107,7 +118,7 @@ export function useYouTubePlayer({
         playerInstanceRef.current.destroy()
       }
 
-      playerInstanceRef.current = new YT.Player(playerRef.current, {
+      playerInstanceRef.current = new window.YT.Player(playerRef.current, {
         videoId,
         playerVars: {
           autoplay: 0,
