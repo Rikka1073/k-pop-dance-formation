@@ -11,6 +11,15 @@ import {
 } from '@/components/editor'
 import { YouTubePlayer } from '@/components/viewer'
 import { Member, Position } from '@/types'
+import { isSupabaseConfigured } from '@/lib/supabase'
+import {
+  createArtist,
+  createMember,
+  createVideo,
+  createFormationData,
+  createFormation,
+  createPosition,
+} from '@/lib/supabase/queries'
 
 // Generate unique ID
 function generateId() {
@@ -205,18 +214,76 @@ export default function EditorPage() {
   }
 
   // ============ Save Handler ============
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   const handleSave = async () => {
-    // TODO: Implement save to Supabase
-    console.log('Saving...', {
-      artistName,
-      videoTitle,
-      youtubeVideoId,
-      contributorName,
-      members,
-      formations,
-    })
-    alert('保存機能は準備中です。Supabaseの設定後に有効になります。')
+    if (!isSupabaseConfigured()) {
+      alert('Supabaseが設定されていません。環境変数を確認してください。')
+      return
+    }
+
+    if (members.length === 0) {
+      alert('メンバーを追加してください。')
+      return
+    }
+
+    if (formations.length === 0) {
+      alert('フォーメーションを追加してください。')
+      return
+    }
+
+    setIsSaving(true)
+    setSaveError(null)
+
+    try {
+      // 1. Create artist
+      const artist = await createArtist(artistName)
+
+      // 2. Create members
+      const memberIdMap = new Map<string, string>() // local ID -> DB ID
+      for (let i = 0; i < members.length; i++) {
+        const m = members[i]
+        const dbMember = await createMember(artist.id, m.name, m.color, i)
+        memberIdMap.set(m.id, dbMember.id)
+      }
+
+      // 3. Create video
+      const video = await createVideo(artist.id, youtubeVideoId, videoTitle)
+
+      // 4. Create formation data
+      const formationData = await createFormationData(
+        video.id,
+        contributorName || undefined
+      )
+
+      // 5. Create formations and positions
+      for (let i = 0; i < formations.length; i++) {
+        const f = formations[i]
+        const dbFormation = await createFormation(
+          formationData.id,
+          f.time,
+          f.name || null,
+          i
+        )
+
+        // Create positions
+        for (const pos of f.positions) {
+          const dbMemberId = memberIdMap.get(pos.memberId)
+          if (dbMemberId) {
+            await createPosition(dbFormation.id, dbMemberId, pos.x, pos.y)
+          }
+        }
+      }
+
+      alert('保存が完了しました！')
+      router.push(`/viewer/${video.id}`)
+    } catch (error) {
+      console.error('Save error:', error)
+      setSaveError(error instanceof Error ? error.message : '保存に失敗しました')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -373,10 +440,17 @@ export default function EditorPage() {
                   className="w-full"
                   size="lg"
                   onClick={handleSave}
-                  disabled={members.length === 0 || formations.length === 0}
+                  disabled={members.length === 0 || formations.length === 0 || isSaving}
                 >
-                  Save Formation Data
+                  {isSaving ? 'Saving...' : 'Save Formation Data'}
                 </Button>
+
+                {/* Error Message */}
+                {saveError && (
+                  <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
+                    {saveError}
+                  </div>
+                )}
 
                 {/* Info */}
                 <div className="bg-gray-800/50 rounded-lg p-3 text-xs text-gray-400">
