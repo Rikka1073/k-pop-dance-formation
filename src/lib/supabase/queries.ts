@@ -196,6 +196,8 @@ export async function getFormationDataByVideoId(
   videoId: string
 ): Promise<FullFormationData | null> {
   const client = getSupabaseClient()
+
+  // Get the most recent formation_data for this video
   const { data, error } = await client
     .from('formation_data')
     .select(`
@@ -213,14 +215,20 @@ export async function getFormationDataByVideoId(
       )
     `)
     .eq('video_id', videoId)
-    .single()
+    .order('created_at', { ascending: false })
+    .limit(1)
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    console.error('getFormationDataByVideoId error:', error)
     throw error
   }
 
-  const result = data as FullFormationData
+  // Return null if no data found
+  if (!data || data.length === 0) {
+    return null
+  }
+
+  const result = data[0] as FullFormationData
 
   // Sort formations by time
   if (result?.formations) {
@@ -246,6 +254,16 @@ export async function createFormationData(
 
   if (error) throw error
   return data as FormationData
+}
+
+export async function deleteFormationDataByVideoId(videoId: string): Promise<void> {
+  const client = getSupabaseClient()
+  const { error } = await client
+    .from('formation_data')
+    .delete()
+    .eq('video_id', videoId)
+
+  if (error) throw error
 }
 
 // ============ Formations ============
