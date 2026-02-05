@@ -72,17 +72,26 @@ export function FormationList({
                 {/* 時間入力 */}
                 <div className="flex items-center gap-1">
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     value={formation.time}
-                    onChange={(e) =>
-                      onFormationTimeChange(formation.id, parseFloat(e.target.value) || 0)
-                    }
-                    min={0}
-                    step={0.1}
-                    className="w-16 px-2 py-1 bg-gray-600 text-white text-xs rounded border-none outline-none text-center"
+                    onChange={(e) => {
+                      const value = e.target.value
+                      // 数字とドットのみ許可
+                      if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                        const num = parseFloat(value)
+                        if (!isNaN(num) && num >= 0) {
+                          onFormationTimeChange(formation.id, num)
+                        } else if (value === '' || value === '.') {
+                          onFormationTimeChange(formation.id, 0)
+                        }
+                      }
+                    }}
+                    onFocus={(e) => e.target.select()}
+                    className="w-20 px-2 py-1 bg-gray-600 text-white text-sm rounded border border-gray-500 outline-none text-center focus:border-purple-500"
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <span className="text-gray-400 text-xs">s</span>
+                  <span className="text-gray-400 text-xs">秒</span>
                 </div>
 
                 {/* 削除ボタン */}
