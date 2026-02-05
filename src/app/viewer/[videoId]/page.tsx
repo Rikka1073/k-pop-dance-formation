@@ -274,8 +274,8 @@ export default function ViewerPage() {
           </div>
         </div>
 
-        {/* アーティスト情報 */}
-        <div className="mt-6 p-4 bg-gray-800/50 rounded-lg">
+        {/* アーティスト情報 + Edit */}
+        <div className="mt-6 p-4 bg-gray-800/50 rounded-lg flex items-center justify-between">
           <p className="text-gray-400 text-sm">
             <span className="text-white font-medium">{viewerData.artistName}</span>
             {' • '}
@@ -289,6 +289,12 @@ export default function ViewerPage() {
               </>
             )}
           </p>
+          <a
+            href={`/editor/${videoId}`}
+            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+          >
+            Edit Formation
+          </a>
         </div>
       </main>
     </div>
