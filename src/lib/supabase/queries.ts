@@ -8,6 +8,21 @@ import type {
   Position,
 } from './types'
 
+// Error for when Supabase is not configured
+class SupabaseNotConfiguredError extends Error {
+  constructor() {
+    super('Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables.')
+    this.name = 'SupabaseNotConfiguredError'
+  }
+}
+
+function getSupabaseClient() {
+  if (!supabase) {
+    throw new SupabaseNotConfiguredError()
+  }
+  return supabase
+}
+
 // Artist with members
 export type ArtistWithMembers = Artist & {
   members: Member[]
@@ -32,7 +47,8 @@ export type FullFormationData = FormationData & {
 // ============ Artists ============
 
 export async function getArtists(): Promise<ArtistWithMembers[]> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('artists')
     .select(`
       *,
@@ -45,7 +61,8 @@ export async function getArtists(): Promise<ArtistWithMembers[]> {
 }
 
 export async function getArtistById(id: string): Promise<ArtistWithMembers | null> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('artists')
     .select(`
       *,
@@ -62,14 +79,15 @@ export async function getArtistById(id: string): Promise<ArtistWithMembers | nul
 }
 
 export async function createArtist(name: string): Promise<Artist> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('artists')
-    .insert({ name })
+    .insert({ name } as never)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as Artist
 }
 
 // ============ Members ============
@@ -80,40 +98,43 @@ export async function createMember(
   color: string,
   displayOrder: number
 ): Promise<Member> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('members')
     .insert({
       artist_id: artistId,
       name,
       color,
       display_order: displayOrder,
-    })
+    } as never)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as Member
 }
 
 export async function updateMember(
   id: string,
   updates: { name?: string; color?: string; display_order?: number }
 ): Promise<Member> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('members')
-    .update(updates)
+    .update(updates as never)
     .eq('id', id)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as Member
 }
 
 // ============ Videos ============
 
 export async function getVideos(): Promise<VideoWithArtist[]> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('videos')
     .select(`
       *,
@@ -129,7 +150,8 @@ export async function getVideos(): Promise<VideoWithArtist[]> {
 }
 
 export async function getVideoById(id: string): Promise<VideoWithArtist | null> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('videos')
     .select(`
       *,
@@ -153,18 +175,19 @@ export async function createVideo(
   youtubeVideoId: string,
   title: string
 ): Promise<Video> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('videos')
     .insert({
       artist_id: artistId,
       youtube_video_id: youtubeVideoId,
       title,
-    })
+    } as never)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as Video
 }
 
 // ============ Formation Data ============
@@ -172,7 +195,8 @@ export async function createVideo(
 export async function getFormationDataByVideoId(
   videoId: string
 ): Promise<FullFormationData | null> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('formation_data')
     .select(`
       *,
@@ -196,29 +220,32 @@ export async function getFormationDataByVideoId(
     throw error
   }
 
+  const result = data as FullFormationData
+
   // Sort formations by time
-  if (data?.formations) {
-    data.formations.sort((a: Formation, b: Formation) => a.time - b.time)
+  if (result?.formations) {
+    result.formations.sort((a, b) => a.time - b.time)
   }
 
-  return data as FullFormationData
+  return result
 }
 
 export async function createFormationData(
   videoId: string,
   contributorName?: string
 ): Promise<FormationData> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('formation_data')
     .insert({
       video_id: videoId,
       contributor_name: contributorName,
-    })
+    } as never)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as FormationData
 }
 
 // ============ Formations ============
@@ -229,38 +256,41 @@ export async function createFormation(
   name: string | null,
   displayOrder: number
 ): Promise<Formation> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('formations')
     .insert({
       formation_data_id: formationDataId,
       time,
       name,
       display_order: displayOrder,
-    })
+    } as never)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as Formation
 }
 
 export async function updateFormation(
   id: string,
   updates: { time?: number; name?: string | null }
 ): Promise<Formation> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('formations')
-    .update(updates)
+    .update(updates as never)
     .eq('id', id)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as Formation
 }
 
 export async function deleteFormation(id: string): Promise<void> {
-  const { error } = await supabase.from('formations').delete().eq('id', id)
+  const client = getSupabaseClient()
+  const { error } = await client.from('formations').delete().eq('id', id)
   if (error) throw error
 }
 
@@ -272,49 +302,52 @@ export async function createPosition(
   x: number,
   y: number
 ): Promise<Position> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('positions')
     .insert({
       formation_id: formationId,
       member_id: memberId,
       x,
       y,
-    })
+    } as never)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as Position
 }
 
 export async function updatePosition(
   id: string,
   updates: { x?: number; y?: number }
 ): Promise<Position> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('positions')
-    .update(updates)
+    .update(updates as never)
     .eq('id', id)
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return data as Position
 }
 
 export async function upsertPositions(
   positions: { formation_id: string; member_id: string; x: number; y: number }[]
 ): Promise<Position[]> {
-  const { data, error } = await supabase
+  const client = getSupabaseClient()
+  const { data, error } = await client
     .from('positions')
-    .upsert(positions, {
+    .upsert(positions as never, {
       onConflict: 'formation_id,member_id',
       ignoreDuplicates: false,
     })
     .select()
 
   if (error) throw error
-  return data
+  return data as Position[]
 }
 
 // ============ Bulk Operations ============
