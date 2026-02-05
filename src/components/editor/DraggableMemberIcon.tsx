@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Member } from '@/types'
 import { cn } from '@/lib/utils'
@@ -25,39 +25,53 @@ export function DraggableMemberIcon({
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
-  const handleDragStart = () => {
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
     setIsDragging(true)
-  }
+  }, [])
 
-  const handleDrag = (
-    event: MouseEvent | TouchEvent | PointerEvent,
-    info: { point: { x: number; y: number } }
-  ) => {
-    if (!containerRef.current) return
+  useEffect(() => {
+    if (!isDragging) return
 
-    const parent = containerRef.current.parentElement
-    if (!parent) return
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return
+      const parent = containerRef.current.parentElement
+      if (!parent) return
 
-    const rect = parent.getBoundingClientRect()
-    const newX = ((info.point.x - rect.left) / rect.width) * 100
-    const newY = ((info.point.y - rect.top) / rect.height) * 100
+      const rect = parent.getBoundingClientRect()
+      const newX = ((e.clientX - rect.left) / rect.width) * 100
+      const newY = ((e.clientY - rect.top) / rect.height) * 100
 
-    // Clamp values between 5 and 95 to keep icons visible
-    const clampedX = Math.max(5, Math.min(95, newX))
-    const clampedY = Math.max(5, Math.min(95, newY))
+      const clampedX = Math.max(5, Math.min(95, newX))
+      const clampedY = Math.max(5, Math.min(95, newY))
 
-    onPositionChange(clampedX, clampedY)
-  }
+      onPositionChange(clampedX, clampedY)
+    }
 
-  const handleDragEnd = () => {
-    setIsDragging(false)
-  }
+    const handleMouseUp = () => {
+      setIsDragging(false)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isDragging, onPositionChange])
+
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    onClick?.()
+  }, [onClick])
 
   return (
-    <motion.div
+    <div
       ref={containerRef}
       className={cn(
-        'absolute flex flex-col items-center cursor-grab',
+        'absolute flex flex-col items-center cursor-grab select-none',
         '-translate-x-1/2 -translate-y-1/2',
         isDragging && 'cursor-grabbing z-50'
       )}
@@ -65,19 +79,8 @@ export function DraggableMemberIcon({
         left: `${x}%`,
         top: `${y}%`,
       }}
-      drag
-      dragMomentum={false}
-      dragElastic={0}
-      onDragStart={handleDragStart}
-      onDrag={handleDrag}
-      onDragEnd={handleDragEnd}
-      onClick={(e) => {
-        if (!isDragging) {
-          e.stopPropagation()
-          onClick?.()
-        }
-      }}
-      whileDrag={{ scale: 1.1 }}
+      onMouseDown={handleMouseDown}
+      onClick={handleClick}
     >
       {/* アイコン円 */}
       <motion.div
@@ -92,6 +95,7 @@ export function DraggableMemberIcon({
             ? `0 0 0 3px white, 0 0 0 5px ${member.color}, 0 4px 12px rgba(0,0,0,0.3)`
             : '0 2px 8px rgba(0,0,0,0.2)',
         }}
+        animate={{ scale: isDragging ? 1.1 : 1 }}
         whileHover={{ scale: 1.05 }}
       >
         {member.name.charAt(0)}
@@ -113,6 +117,6 @@ export function DraggableMemberIcon({
           ({Math.round(x)}, {Math.round(y)})
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }
