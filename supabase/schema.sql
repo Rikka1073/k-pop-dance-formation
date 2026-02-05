@@ -95,3 +95,11 @@ CREATE POLICY "Allow public update" ON videos FOR UPDATE USING (true);
 CREATE POLICY "Allow public update" ON formation_data FOR UPDATE USING (true);
 CREATE POLICY "Allow public update" ON formations FOR UPDATE USING (true);
 CREATE POLICY "Allow public update" ON positions FOR UPDATE USING (true);
+
+-- Policies: Allow public delete
+CREATE POLICY "Allow public delete" ON artists FOR DELETE USING (true);
+CREATE POLICY "Allow public delete" ON members FOR DELETE USING (true);
+CREATE POLICY "Allow public delete" ON videos FOR DELETE USING (true);
+CREATE POLICY "Allow public delete" ON formation_data FOR DELETE USING (true);
+CREATE POLICY "Allow public delete" ON formations FOR DELETE USING (true);
+CREATE POLICY "Allow public delete" ON positions FOR DELETE USING (true);
