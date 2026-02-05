@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Header } from '@/components/layout'
 import { Button } from '@/components/ui'
@@ -13,12 +13,14 @@ import { YouTubePlayer } from '@/components/viewer'
 import { Member, Position } from '@/types'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import {
+  getArtists,
   createArtist,
   createMember,
   createVideo,
   createFormationData,
   createFormation,
   createPosition,
+  ArtistWithMembers,
 } from '@/lib/supabase/queries'
 
 // Generate unique ID
@@ -46,6 +48,14 @@ interface EditorFormation {
 export default function EditorPage() {
   const router = useRouter()
 
+  // Existing artists
+  const [existingArtists, setExistingArtists] = useState<ArtistWithMembers[]>([])
+  const [isLoadingArtists, setIsLoadingArtists] = useState(true)
+
+  // Artist selection
+  const [artistMode, setArtistMode] = useState<'new' | 'existing'>('new')
+  const [selectedArtistId, setSelectedArtistId] = useState<string | null>(null)
+
   // Video settings
   const [youtubeVideoId, setYoutubeVideoId] = useState('')
   const [videoTitle, setVideoTitle] = useState('')
@@ -65,6 +75,62 @@ export default function EditorPage() {
 
   // Get current formation
   const currentFormation = formations.find((f) => f.id === currentFormationId)
+
+  // Load existing artists on mount
+  useEffect(() => {
+    async function loadArtists() {
+      if (!isSupabaseConfigured()) {
+        setIsLoadingArtists(false)
+        return
+      }
+
+      try {
+        const artists = await getArtists()
+        setExistingArtists(artists)
+        // If there are existing artists, default to existing mode
+        if (artists.length > 0) {
+          setArtistMode('existing')
+        }
+      } catch (error) {
+        console.error('Failed to load artists:', error)
+      } finally {
+        setIsLoadingArtists(false)
+      }
+    }
+
+    loadArtists()
+  }, [])
+
+  // When selecting an existing artist, load their members
+  const handleArtistSelect = (artistId: string) => {
+    setSelectedArtistId(artistId)
+    const artist = existingArtists.find((a) => a.id === artistId)
+    if (artist) {
+      setArtistName(artist.name)
+      // Convert DB members to local members
+      const loadedMembers: Member[] = artist.members.map((m) => ({
+        id: m.id, // Use DB ID directly
+        artistId: m.artist_id,
+        name: m.name,
+        color: m.color,
+        order: m.display_order,
+      }))
+      setMembers(loadedMembers)
+    }
+  }
+
+  // When switching to new artist mode, clear members
+  const handleArtistModeChange = (mode: 'new' | 'existing') => {
+    setArtistMode(mode)
+    if (mode === 'new') {
+      setSelectedArtistId(null)
+      setArtistName('')
+      setMembers([])
+    } else {
+      setArtistName('')
+      setMembers([])
+    }
+  }
 
   // ============ Video Handlers ============
 
@@ -88,6 +154,12 @@ export default function EditorPage() {
   // ============ Member Handlers ============
 
   const handleAddMember = () => {
+    // Only allow adding members for new artists
+    if (artistMode === 'existing') {
+      alert('既存アーティストのメンバーは変更できません')
+      return
+    }
+
     const newMember: Member = {
       id: generateId(),
       artistId: '',
@@ -118,6 +190,12 @@ export default function EditorPage() {
     memberId: string,
     updates: { name?: string; color?: string }
   ) => {
+    // Only allow updating members for new artists
+    if (artistMode === 'existing') {
+      alert('既存アーティストのメンバーは変更できません')
+      return
+    }
+
     setMembers((prev) =>
       prev.map((m) => (m.id === memberId ? { ...m, ...updates } : m))
     )
@@ -136,6 +214,12 @@ export default function EditorPage() {
   }
 
   const handleDeleteMember = (memberId: string) => {
+    // Only allow deleting members for new artists
+    if (artistMode === 'existing') {
+      alert('既存アーティストのメンバーは変更できません')
+      return
+    }
+
     setMembers((prev) => prev.filter((m) => m.id !== memberId))
 
     // Remove from formations
@@ -154,16 +238,24 @@ export default function EditorPage() {
   // ============ Formation Handlers ============
 
   const handleAddFormation = () => {
+    // 円形に配置（上から時計回り）
+    const count = members.length
     const newFormation: EditorFormation = {
       id: generateId(),
       time: currentTime,
       name: `Formation ${formations.length + 1}`,
-      positions: members.map((m) => ({
-        memberId: m.id,
-        x: 50,
-        y: 30 + (members.indexOf(m) * 15),
-        member: m,
-      })),
+      positions: members.map((m, index) => {
+        const angle = (index / count) * 2 * Math.PI - Math.PI / 2 // 上から始める
+        const radius = Math.min(25, 15 + count * 2) // メンバー数に応じて半径調整
+        const x = 50 + radius * Math.cos(angle)
+        const y = 50 + radius * Math.sin(angle)
+        return {
+          memberId: m.id,
+          x: Math.round(x),
+          y: Math.round(y),
+          member: m,
+        }
+      }),
     }
     setFormations((prev) => [...prev, newFormation].sort((a, b) => a.time - b.time))
     setCurrentFormationId(newFormation.id)
@@ -237,27 +329,39 @@ export default function EditorPage() {
     setSaveError(null)
 
     try {
-      // 1. Create artist
-      const artist = await createArtist(artistName)
+      let artistId: string
+      let memberIdMap = new Map<string, string>() // local ID -> DB ID
 
-      // 2. Create members
-      const memberIdMap = new Map<string, string>() // local ID -> DB ID
-      for (let i = 0; i < members.length; i++) {
-        const m = members[i]
-        const dbMember = await createMember(artist.id, m.name, m.color, i)
-        memberIdMap.set(m.id, dbMember.id)
+      if (artistMode === 'existing' && selectedArtistId) {
+        // Use existing artist
+        artistId = selectedArtistId
+        // For existing artists, member IDs are already DB IDs
+        members.forEach((m) => {
+          memberIdMap.set(m.id, m.id)
+        })
+      } else {
+        // Create new artist
+        const artist = await createArtist(artistName)
+        artistId = artist.id
+
+        // Create members
+        for (let i = 0; i < members.length; i++) {
+          const m = members[i]
+          const dbMember = await createMember(artistId, m.name, m.color, i)
+          memberIdMap.set(m.id, dbMember.id)
+        }
       }
 
-      // 3. Create video
-      const video = await createVideo(artist.id, youtubeVideoId, videoTitle)
+      // Create video
+      const video = await createVideo(artistId, youtubeVideoId, videoTitle)
 
-      // 4. Create formation data
+      // Create formation data
       const formationData = await createFormationData(
         video.id,
         contributorName || undefined
       )
 
-      // 5. Create formations and positions
+      // Create formations and positions
       for (let i = 0; i < formations.length; i++) {
         const f = formations[i]
         const dbFormation = await createFormation(
@@ -333,17 +437,83 @@ export default function EditorPage() {
                   />
                 </div>
 
+                {/* Artist Selection */}
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">
-                    Artist/Group Name
+                  <label className="block text-sm text-gray-400 mb-2">
+                    Artist/Group
                   </label>
-                  <input
-                    type="text"
-                    value={artistName}
-                    onChange={(e) => setArtistName(e.target.value)}
-                    placeholder="e.g., BLACKPINK"
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 outline-none"
-                  />
+
+                  {/* Artist Mode Toggle */}
+                  {existingArtists.length > 0 && (
+                    <div className="flex gap-2 mb-3">
+                      <button
+                        onClick={() => handleArtistModeChange('existing')}
+                        className={`flex-1 px-3 py-2 rounded-lg text-sm transition-colors ${
+                          artistMode === 'existing'
+                            ? 'bg-purple-500 text-white'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`}
+                      >
+                        既存のアーティスト
+                      </button>
+                      <button
+                        onClick={() => handleArtistModeChange('new')}
+                        className={`flex-1 px-3 py-2 rounded-lg text-sm transition-colors ${
+                          artistMode === 'new'
+                            ? 'bg-purple-500 text-white'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`}
+                      >
+                        新規アーティスト
+                      </button>
+                    </div>
+                  )}
+
+                  {artistMode === 'existing' && existingArtists.length > 0 ? (
+                    <div>
+                      <select
+                        value={selectedArtistId || ''}
+                        onChange={(e) => handleArtistSelect(e.target.value)}
+                        className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 outline-none"
+                      >
+                        <option value="">アーティストを選択...</option>
+                        {existingArtists.map((artist) => (
+                          <option key={artist.id} value={artist.id}>
+                            {artist.name} ({artist.members.length}人)
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Show selected artist's members */}
+                      {selectedArtistId && members.length > 0 && (
+                        <div className="mt-3 p-3 bg-gray-700/50 rounded-lg">
+                          <p className="text-xs text-gray-400 mb-2">メンバー:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {members.map((m) => (
+                              <div
+                                key={m.id}
+                                className="flex items-center gap-1.5 px-2 py-1 bg-gray-600 rounded-full"
+                              >
+                                <div
+                                  className="w-3 h-3 rounded-full"
+                                  style={{ backgroundColor: m.color }}
+                                />
+                                <span className="text-white text-xs">{m.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <input
+                      type="text"
+                      value={artistName}
+                      onChange={(e) => setArtistName(e.target.value)}
+                      placeholder="e.g., BLACKPINK"
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 outline-none"
+                    />
+                  )}
                 </div>
 
                 <div>
@@ -362,10 +532,21 @@ export default function EditorPage() {
                 <Button
                   className="w-full"
                   onClick={handleLoadVideo}
-                  disabled={!youtubeVideoId.trim() || !videoTitle.trim() || !artistName.trim()}
+                  disabled={
+                    !youtubeVideoId.trim() ||
+                    !videoTitle.trim() ||
+                    (artistMode === 'new' && !artistName.trim()) ||
+                    (artistMode === 'existing' && !selectedArtistId)
+                  }
                 >
                   Load Video & Continue
                 </Button>
+
+                {isLoadingArtists && (
+                  <p className="text-gray-400 text-sm text-center">
+                    アーティスト情報を読み込み中...
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -422,6 +603,7 @@ export default function EditorPage() {
                   onMemberAdd={handleAddMember}
                   onMemberUpdate={handleUpdateMember}
                   onMemberDelete={handleDeleteMember}
+                  readOnly={artistMode === 'existing'}
                 />
 
                 {/* Formations */}
@@ -458,7 +640,9 @@ export default function EditorPage() {
                     <strong className="text-white">Tips:</strong>
                   </p>
                   <ul className="list-disc list-inside space-y-1">
-                    <li>First add members, then create formations</li>
+                    {artistMode === 'new' && (
+                      <li>First add members, then create formations</li>
+                    )}
                     <li>Drag members on the stage to position them</li>
                     <li>Set the time for each formation to match the video</li>
                     <li>Preview by playing the video</li>
