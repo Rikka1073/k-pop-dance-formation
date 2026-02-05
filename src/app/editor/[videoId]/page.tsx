@@ -19,6 +19,7 @@ import {
   createFormation,
   createPosition,
   deleteFormation as deleteFormationFromDB,
+  deleteFormationDataByVideoId,
 } from '@/lib/supabase/queries'
 import {
   sampleArtist,
@@ -187,16 +188,24 @@ export default function EditVideoPage() {
   // ============ Formation Handlers ============
 
   const handleAddFormation = () => {
+    // 円形に配置（上から時計回り）
+    const count = members.length
     const newFormation: EditorFormation = {
       id: generateId(),
       time: currentTime,
       name: `Formation ${formations.length + 1}`,
-      positions: members.map((m, idx) => ({
-        memberId: m.id,
-        x: 50,
-        y: 30 + idx * 15,
-        member: m,
-      })),
+      positions: members.map((m, index) => {
+        const angle = (index / count) * 2 * Math.PI - Math.PI / 2 // 上から始める
+        const radius = Math.min(25, 15 + count * 2) // メンバー数に応じて半径調整
+        const x = 50 + radius * Math.cos(angle)
+        const y = 50 + radius * Math.sin(angle)
+        return {
+          memberId: m.id,
+          x: Math.round(x),
+          y: Math.round(y),
+          member: m,
+        }
+      }),
     }
     setFormations((prev) => [...prev, newFormation].sort((a, b) => a.time - b.time))
     setCurrentFormationId(newFormation.id)
@@ -270,8 +279,10 @@ export default function EditVideoPage() {
     setSaveError(null)
 
     try {
-      // Create new formation data (replacing old one)
-      // In a real app, you might want to update existing data instead
+      // Delete old formation data first
+      await deleteFormationDataByVideoId(videoId)
+
+      // Create new formation data
       const newFormationData = await createFormationData(
         videoId,
         contributorName || undefined
