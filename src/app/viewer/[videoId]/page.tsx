@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import { Header } from '@/components/layout'
 import {
@@ -139,9 +139,38 @@ export default function ViewerPage() {
     loadData()
   }, [videoId])
 
+  // フォーメーションがない場合は円形の初期位置を生成
+  const defaultPositions = useMemo(() => {
+    if (!viewerData?.members || viewerData.members.length === 0) return []
+    const count = viewerData.members.length
+    return viewerData.members.map((m, index) => {
+      const angle = (index / count) * 2 * Math.PI - Math.PI / 2
+      const radius = Math.min(25, 15 + count * 2)
+      return {
+        memberId: m.id,
+        x: Math.round(50 + radius * Math.cos(angle)),
+        y: Math.round(50 + radius * Math.sin(angle)),
+      }
+    })
+  }, [viewerData?.members])
+
+  // フォーメーションがない場合はデフォルトのフォーメーションを使用
+  const effectiveFormations = useMemo(() => {
+    if (viewerData?.formations && viewerData.formations.length > 0) {
+      return viewerData.formations
+    }
+    // デフォルトのフォーメーションを生成
+    return [{
+      id: 'default',
+      time: 0,
+      name: 'Initial Position',
+      positions: defaultPositions,
+    }]
+  }, [viewerData?.formations, defaultPositions])
+
   // フォーメーション同期
   const { currentFormation, nextFormation, interpolatedPositions } = useFormationSync({
-    formations: viewerData?.formations || [],
+    formations: effectiveFormations,
     members: viewerData?.members || [],
     currentTime,
   })
