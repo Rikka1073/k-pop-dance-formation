@@ -87,6 +87,18 @@ export function useYouTubePlayer({
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
 
+  // コールバックをrefで保持（依存配列から除外するため）
+  const onReadyRef = useRef(onReady)
+  const onStateChangeRef = useRef(onStateChange)
+
+  useEffect(() => {
+    onReadyRef.current = onReady
+  }, [onReady])
+
+  useEffect(() => {
+    onStateChangeRef.current = onStateChange
+  }, [onStateChange])
+
   // 現在時刻を定期的に更新
   useEffect(() => {
     if (!isReady || playerState !== 'playing') {
@@ -95,7 +107,8 @@ export function useYouTubePlayer({
 
     const interval = setInterval(() => {
       if (playerInstanceRef.current) {
-        setCurrentTime(playerInstanceRef.current.getCurrentTime())
+        const time = playerInstanceRef.current.getCurrentTime()
+        setCurrentTime(time)
       }
     }, 100)
 
@@ -116,6 +129,7 @@ export function useYouTubePlayer({
       // 既存のプレイヤーがあれば破棄
       if (playerInstanceRef.current) {
         playerInstanceRef.current.destroy()
+        playerInstanceRef.current = null
       }
 
       new window.YT.Player(playerRef.current, {
@@ -131,18 +145,17 @@ export function useYouTubePlayer({
         events: {
           onReady: (event) => {
             if (!isMounted) return
-            // onReadyイベントで正しいプレイヤーインスタンスを保存
             playerInstanceRef.current = event.target
             setIsReady(true)
             setDuration(event.target.getDuration())
-            onReady?.()
+            onReadyRef.current?.()
           },
           onStateChange: (event) => {
             if (!isMounted) return
             const state = mapPlayerState(event.data)
             setPlayerState(state)
             setCurrentTime(event.target.getCurrentTime())
-            onStateChange?.(state)
+            onStateChangeRef.current?.(state)
           },
         },
       })
@@ -157,7 +170,7 @@ export function useYouTubePlayer({
         playerInstanceRef.current = null
       }
     }
-  }, [videoId, onReady, onStateChange])
+  }, [videoId]) // videoIdのみに依存
 
   const play = useCallback(() => {
     playerInstanceRef.current?.playVideo()

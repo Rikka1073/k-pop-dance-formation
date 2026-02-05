@@ -117,6 +117,14 @@ export default function ViewerPage() {
                 <span className="text-white text-sm">Show movement arrows</span>
               </label>
 
+              {/* デバッグ: 現在時刻 */}
+              <div className="pt-3 border-t border-gray-700">
+                <p className="text-gray-400 text-xs mb-1">Current Time (debug)</p>
+                <p className="text-white font-medium">
+                  {currentTime.toFixed(2)}s
+                </p>
+              </div>
+
               {/* 現在のフォーメーション情報 */}
               <div className="pt-3 border-t border-gray-700">
                 <p className="text-gray-400 text-xs mb-1">Current Formation</p>
