@@ -22,7 +22,7 @@ export function EditorStage({
 }: EditorStageProps) {
   return (
     <div
-      className="relative w-full aspect-video bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg overflow-hidden border-2 border-dashed border-gray-600"
+      className="relative w-full aspect-video bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden border-2 border-dashed border-gray-600"
       onClick={() => onMemberSelect(null)}
     >
       {/* グリッド */}

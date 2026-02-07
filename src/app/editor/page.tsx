@@ -398,7 +398,7 @@ export default function EditorPage() {
         {/* Step 1: Video Setup */}
         {!isVideoLoaded ? (
           <div className="max-w-xl mx-auto">
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div className="bg-gray-800 rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-6">
                 Step 1: Video Setup
               </h2>
@@ -420,7 +420,7 @@ export default function EditorPage() {
                       setYoutubeVideoId(match ? match[1] : input)
                     }}
                     placeholder="e.g., dQw4w9WgXcQ or https://youtube.com/watch?v=..."
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 outline-none"
+                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
                   />
                 </div>
 
@@ -433,7 +433,7 @@ export default function EditorPage() {
                     value={videoTitle}
                     onChange={(e) => setVideoTitle(e.target.value)}
                     placeholder="e.g., BLACKPINK - DDU-DU DDU-DU Dance Practice"
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 outline-none"
+                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
                   />
                 </div>
 
@@ -448,9 +448,9 @@ export default function EditorPage() {
                     <div className="flex gap-2 mb-3">
                       <button
                         onClick={() => handleArtistModeChange('existing')}
-                        className={`flex-1 px-3 py-2 rounded-lg text-sm transition-colors ${
+                        className={`flex-1 px-3 py-2 rounded-xl text-sm transition-colors ${
                           artistMode === 'existing'
-                            ? 'bg-purple-500 text-white'
+                            ? 'bg-gradient-to-r from-pink-400 to-violet-400 text-white'
                             : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`}
                       >
@@ -458,9 +458,9 @@ export default function EditorPage() {
                       </button>
                       <button
                         onClick={() => handleArtistModeChange('new')}
-                        className={`flex-1 px-3 py-2 rounded-lg text-sm transition-colors ${
+                        className={`flex-1 px-3 py-2 rounded-xl text-sm transition-colors ${
                           artistMode === 'new'
-                            ? 'bg-purple-500 text-white'
+                            ? 'bg-gradient-to-r from-pink-400 to-violet-400 text-white'
                             : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`}
                       >
@@ -474,7 +474,7 @@ export default function EditorPage() {
                       <select
                         value={selectedArtistId || ''}
                         onChange={(e) => handleArtistSelect(e.target.value)}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 outline-none"
+                        className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
                       >
                         <option value="">アーティストを選択...</option>
                         {existingArtists.map((artist) => (
@@ -511,7 +511,7 @@ export default function EditorPage() {
                       value={artistName}
                       onChange={(e) => setArtistName(e.target.value)}
                       placeholder="e.g., BLACKPINK"
-                      className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 outline-none"
+                      className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
                     />
                   )}
                 </div>
@@ -525,7 +525,7 @@ export default function EditorPage() {
                     value={contributorName}
                     onChange={(e) => setContributorName(e.target.value)}
                     placeholder="e.g., DanceFan123"
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 outline-none"
+                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
                   />
                 </div>
 
@@ -553,9 +553,9 @@ export default function EditorPage() {
         ) : (
           <>
             {/* Editor UI */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 gap-6">
               {/* Left: Video + Stage */}
-              <div className="lg:col-span-2 space-y-4">
+              <div className="col-span-2 space-y-4">
                 {/* Video */}
                 <div>
                   <h2 className="text-white/60 text-sm font-medium mb-2">
@@ -575,7 +575,7 @@ export default function EditorPage() {
                     <h2 className="text-white/60 text-sm font-medium">
                       Formation Stage
                       {currentFormation && (
-                        <span className="ml-2 text-purple-400">
+                        <span className="ml-2 text-pink-400">
                           - {currentFormation.name} ({currentFormation.time}s)
                         </span>
                       )}
@@ -635,7 +635,7 @@ export default function EditorPage() {
                 )}
 
                 {/* Info */}
-                <div className="bg-gray-800/50 rounded-lg p-3 text-xs text-gray-400">
+                <div className="bg-gray-800/50 rounded-2xl p-3 text-xs text-gray-400">
                   <p className="mb-2">
                     <strong className="text-white">Tips:</strong>
                   </p>

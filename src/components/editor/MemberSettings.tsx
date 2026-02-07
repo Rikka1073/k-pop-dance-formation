@@ -35,9 +35,9 @@ export function MemberSettings({
   readOnly = false,
 }: MemberSettingsProps) {
   return (
-    <div className="bg-gray-800 rounded-lg p-4">
+    <div className="bg-gray-800 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white font-semibold">
+        <h3 className="text-pink-400 font-semibold">
           Members
           {readOnly && (
             <span className="ml-2 text-xs text-gray-400 font-normal">
@@ -64,10 +64,10 @@ export function MemberSettings({
             <div
               key={member.id}
               className={cn(
-                'p-3 rounded-lg transition-all',
+                'p-3 rounded-xl transition-all duration-200',
                 selectedMemberId === member.id
-                  ? 'bg-white/10 ring-2 ring-white/30'
-                  : 'bg-gray-700/50'
+                  ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
+                  : 'bg-gray-700/50 hover:bg-gray-700'
               )}
               onClick={() => onMemberSelect(member.id)}
             >

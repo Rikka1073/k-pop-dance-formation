@@ -333,7 +333,7 @@ export default function EditVideoPage() {
         <Header title="Formation Editor" />
         <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
           <div className="text-red-400">{loadError}</div>
-          <a href="/" className="text-purple-400 hover:underline">
+          <a href="/" className="text-pink-400 hover:underline">
             ホームに戻る
           </a>
         </div>
@@ -347,7 +347,7 @@ export default function EditVideoPage() {
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Video Info Banner */}
-        <div className="bg-gray-800 rounded-lg p-4 mb-6">
+        <div className="bg-gray-800 rounded-2xl p-4 mb-6">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-white font-semibold">{videoTitle}</h2>
@@ -355,7 +355,7 @@ export default function EditVideoPage() {
             </div>
             <a
               href={`/viewer/${videoId}`}
-              className="text-purple-400 hover:text-purple-300 text-sm"
+              className="text-pink-400 hover:text-pink-300 text-sm"
             >
               View Mode →
             </a>
@@ -363,9 +363,9 @@ export default function EditVideoPage() {
         </div>
 
         {/* Editor UI */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-6">
           {/* Left: Video + Stage */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="col-span-2 space-y-4">
             {/* Video */}
             <div>
               <h2 className="text-white/60 text-sm font-medium mb-2">
@@ -384,7 +384,7 @@ export default function EditVideoPage() {
                 <h2 className="text-white/60 text-sm font-medium">
                   Formation Stage
                   {currentFormation && (
-                    <span className="ml-2 text-purple-400">
+                    <span className="ml-2 text-pink-400">
                       - {currentFormation.name} ({currentFormation.time}s)
                     </span>
                   )}
@@ -405,13 +405,13 @@ export default function EditVideoPage() {
           {/* Right: Settings */}
           <div className="space-y-4">
             {/* Members (read-only display) */}
-            <div className="bg-gray-800 rounded-lg p-4">
-              <h3 className="text-white font-semibold mb-3">Members</h3>
+            <div className="bg-gray-800 rounded-2xl p-4">
+              <h3 className="text-pink-400 font-semibold mb-3">Members</h3>
               <div className="space-y-2">
                 {members.map((member) => (
                   <div
                     key={member.id}
-                    className="flex items-center gap-3 p-2 bg-gray-700/50 rounded-lg"
+                    className="flex items-center gap-3 p-2 bg-gray-700/50 rounded-xl"
                   >
                     <div
                       className="w-8 h-8 rounded-full"

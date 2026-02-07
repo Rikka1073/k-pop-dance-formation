@@ -28,9 +28,9 @@ export function FormationList({
   onFormationNameChange,
 }: FormationListProps) {
   return (
-    <div className="bg-gray-800 rounded-lg p-4">
+    <div className="bg-gray-800 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white font-semibold">Formations</h3>
+        <h3 className="text-pink-400 font-semibold">Formations</h3>
         <Button size="sm" onClick={onFormationAdd}>
           + Add
         </Button>
@@ -46,9 +46,9 @@ export function FormationList({
             <div
               key={formation.id}
               className={cn(
-                'p-3 rounded-lg cursor-pointer transition-all',
+                'p-3 rounded-xl cursor-pointer transition-all duration-200',
                 currentFormationId === formation.id
-                  ? 'bg-purple-600/30 ring-2 ring-purple-500'
+                  ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
                   : 'bg-gray-700/50 hover:bg-gray-700'
               )}
               onClick={() => onFormationSelect(formation.id)}
@@ -88,7 +88,7 @@ export function FormationList({
                       }
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="w-20 px-2 py-1 bg-gray-600 text-white text-sm rounded border border-gray-500 outline-none text-center focus:border-purple-500"
+                    className="w-20 px-2 py-1 bg-gray-600 text-white text-sm rounded-lg border border-gray-500 outline-none text-center focus:border-pink-400"
                     onClick={(e) => e.stopPropagation()}
                   />
                   <span className="text-gray-400 text-xs">秒</span>
