@@ -211,7 +211,7 @@ export default function ViewerPage() {
         <Header />
         <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
           <div className="text-red-400">{error || 'データが見つかりません'}</div>
-          <a href="/" className="text-purple-400 hover:underline">
+          <a href="/" className="text-pink-400 hover:underline">
             ホームに戻る
           </a>
         </div>
@@ -224,8 +224,8 @@ export default function ViewerPage() {
       <Header title={viewerData.videoTitle} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
-        {/* メインコンテンツ - 2カラムレイアウト */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* メインコンテンツ - 2カラムレイアウト（タブレット以上） */}
+        <div className="grid grid-cols-2 gap-6 mb-6">
           {/* YouTube Player */}
           <div>
             <h2 className="text-white/60 text-sm font-medium mb-2">Video</h2>
@@ -261,7 +261,7 @@ export default function ViewerPage() {
         </div>
 
         {/* 下部コントロール - 2カラム */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-6">
           {/* メンバー一覧 */}
           <MemberList
             members={viewerData.members}
@@ -270,18 +270,18 @@ export default function ViewerPage() {
           />
 
           {/* オプション */}
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h3 className="text-white font-semibold mb-3">Options</h3>
+          <div className="bg-gray-800 rounded-2xl p-4">
+            <h3 className="text-pink-400 font-semibold mb-3">Options</h3>
             <div className="space-y-3">
               {/* 動線表示切替 */}
-              <label className="flex items-center gap-3 cursor-pointer">
+              <label className="flex items-center gap-3 cursor-pointer group">
                 <input
                   type="checkbox"
                   checked={showMovementArrows}
                   onChange={(e) => setShowMovementArrows(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-purple-500 focus:ring-purple-500 focus:ring-offset-gray-900"
+                  className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
                 />
-                <span className="text-white text-sm">Show movement arrows</span>
+                <span className="text-white text-sm group-hover:text-pink-300 transition-colors">Show movement arrows</span>
               </label>
 
               {/* 現在のフォーメーション情報 */}
@@ -304,9 +304,9 @@ export default function ViewerPage() {
         </div>
 
         {/* アーティスト情報 + Edit */}
-        <div className="mt-6 p-4 bg-gray-800/50 rounded-lg flex items-center justify-between">
+        <div className="mt-6 p-4 bg-gray-800/50 rounded-2xl flex items-center justify-between">
           <p className="text-gray-400 text-sm">
-            <span className="text-white font-medium">{viewerData.artistName}</span>
+            <span className="text-pink-300 font-medium">{viewerData.artistName}</span>
             {' • '}
             {viewerData.members.length} members
             {' • '}
@@ -320,7 +320,7 @@ export default function ViewerPage() {
           </p>
           <a
             href={`/editor/${videoId}`}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-xl hover:-translate-y-0.5 transition-all duration-200"
           >
             Edit Formation
           </a>

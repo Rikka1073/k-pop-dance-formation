@@ -35,7 +35,7 @@ export function Timeline({
       {/* フォーメーション名表示 */}
       {currentFormationName && (
         <div className="text-center">
-          <span className="inline-block px-3 py-1 bg-white/10 rounded-full text-white text-sm font-medium">
+          <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-pink-500/20 to-violet-500/20 rounded-full text-white text-sm font-medium border border-pink-500/30">
             {currentFormationName}
           </span>
         </div>
@@ -43,12 +43,12 @@ export function Timeline({
 
       {/* タイムライン */}
       <div
-        className="relative h-8 bg-gray-700 rounded-lg cursor-pointer overflow-hidden"
+        className="relative h-8 bg-gray-700 rounded-xl cursor-pointer overflow-hidden hover:ring-2 hover:ring-pink-400/50 transition-all duration-200"
         onClick={handleClick}
       >
         {/* プログレスバー */}
         <div
-          className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-purple-500 to-pink-500"
+          className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-pink-400 via-rose-400 to-violet-400"
           style={{ width: `${progress}%` }}
         />
 

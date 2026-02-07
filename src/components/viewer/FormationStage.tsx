@@ -20,7 +20,7 @@ export function FormationStage({
   onMemberClick,
 }: FormationStageProps) {
   return (
-    <div className="relative w-full aspect-video bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg overflow-hidden">
+    <div className="relative w-full aspect-video bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden">
       {/* ステージグリッド（背景） */}
       <div className="absolute inset-0 opacity-20">
         <svg className="w-full h-full">

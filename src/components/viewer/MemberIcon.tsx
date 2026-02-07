@@ -35,11 +35,19 @@ export function MemberIcon({ member, x, y, isSelected, onClick }: MemberIconProp
         style={{
           backgroundColor: member.color,
           boxShadow: isSelected
-            ? `0 0 0 3px white, 0 0 0 5px ${member.color}, 0 4px 12px rgba(0,0,0,0.3)`
+            ? `0 0 0 3px white, 0 0 0 5px ${member.color}, 0 4px 16px rgba(0,0,0,0.4)`
             : '0 2px 8px rgba(0,0,0,0.2)',
         }}
-        whileHover={{ scale: 1.1 }}
+        whileHover={{
+          scale: 1.15,
+          rotate: [0, -5, 5, -5, 0],
+          transition: { rotate: { duration: 0.4 } }
+        }}
         whileTap={{ scale: 0.95 }}
+        animate={isSelected ? {
+          scale: [1, 1.05, 1],
+          transition: { repeat: Infinity, duration: 2 }
+        } : {}}
       >
         {member.name.charAt(0)}
       </motion.div>
@@ -47,8 +55,9 @@ export function MemberIcon({ member, x, y, isSelected, onClick }: MemberIconProp
       {/* 名前ラベル */}
       <div
         className={cn(
-          'mt-1 px-2 py-0.5 rounded text-xs font-medium',
-          'bg-black/70 text-white whitespace-nowrap'
+          'mt-1 px-2 py-0.5 rounded-lg text-xs font-medium',
+          'bg-black/70 text-white whitespace-nowrap',
+          isSelected && 'bg-gradient-to-r from-pink-500/80 to-violet-500/80'
         )}
       >
         {member.name}
