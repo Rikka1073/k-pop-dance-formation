@@ -10,8 +10,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses = {
   primary:
-    'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 focus:ring-purple-500',
-  secondary: 'bg-gray-700 text-white hover:bg-gray-600 focus:ring-gray-500',
+    'bg-gradient-to-r from-pink-400 via-rose-400 to-violet-400 text-white font-semibold shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/40 hover:-translate-y-0.5 focus:ring-pink-400',
+  secondary: 'bg-gray-700 text-white hover:bg-gray-600 hover:-translate-y-0.5 focus:ring-gray-500',
   ghost:
     'bg-transparent text-gray-300 hover:text-white hover:bg-white/10 focus:ring-white/20',
 }
@@ -28,7 +28,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center font-medium rounded-lg transition-all',
+          'inline-flex items-center justify-center font-medium rounded-2xl transition-all duration-200',
           'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900',
           variantClasses[variant],
           sizeClasses[size],

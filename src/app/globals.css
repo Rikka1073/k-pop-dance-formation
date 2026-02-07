@@ -3,6 +3,27 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Primary - Pink系（より華やか） */
+  --primary: #f472b6;        /* pink-400 */
+  --primary-light: #f9a8d4;  /* pink-300 */
+  --primary-dark: #ec4899;   /* pink-500 */
+
+  /* Accent - Violet（補助色） */
+  --accent: #a78bfa;         /* violet-400 */
+  --accent-light: #c4b5fd;   /* violet-300 */
+
+  /* Cute Colors（かわいさ要素） */
+  --cute-pink: #fda4af;      /* rose-300 */
+  --cute-lavender: #ddd6fe;  /* violet-200 */
+  --cute-peach: #fed7aa;     /* orange-200 */
+
+  /* Energy Colors（躍動感） */
+  --energy-cyan: #22d3ee;    /* cyan-400 */
+  --energy-yellow: #fde047;  /* yellow-300 */
+
+  /* Gradient */
+  --gradient-primary: linear-gradient(135deg, #f472b6, #a78bfa);
 }
 
 @theme inline {
