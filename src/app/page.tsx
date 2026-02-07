@@ -76,16 +76,21 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 py-12">
         {/* ヒーローセクション */}
         <section className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            K-POP Formation Viewer
-          </h1>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="text-3xl">✨</span>
+            <h1 className="text-5xl font-bold">
+              <span className="text-pink-400">K-POP Formation</span>{' '}
+              <span className="text-violet-400">Viewer</span>
+            </h1>
+            <span className="text-3xl">💫</span>
+          </div>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-8">
             Watch K-POP dance videos with synchronized formation visualization.
             Perfect for learning choreography and understanding member positions.
           </p>
           <Link
             href="/editor"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-400 via-rose-400 to-violet-400 text-white font-semibold rounded-2xl shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/40 hover:-translate-y-0.5 transition-all duration-200"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -103,12 +108,12 @@ export default function HomePage() {
               <div className="text-gray-400">Loading...</div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
               {videos.map((video) => (
                 <Link
                   key={video.id}
                   href={`/viewer/${video.id}`}
-                  className="group bg-gray-800 rounded-xl overflow-hidden hover:ring-2 hover:ring-purple-500 transition-all"
+                  className="group bg-gray-800 rounded-2xl overflow-hidden hover:ring-2 hover:ring-pink-400 hover:shadow-lg hover:shadow-pink-500/20 hover:-translate-y-1 transition-all duration-200"
                 >
                   {/* サムネイル */}
                   <div className="relative aspect-video bg-gray-900">
@@ -147,7 +152,7 @@ export default function HomePage() {
 
                   {/* コンテンツ */}
                   <div className="p-4">
-                    <h3 className="text-white font-semibold mb-1 group-hover:text-purple-400 transition-colors truncate">
+                    <h3 className="text-white font-semibold mb-1 group-hover:text-pink-400 transition-colors truncate">
                       {video.title}
                     </h3>
                     <p className="text-gray-400 text-sm mb-3">{video.artistName}</p>
@@ -185,7 +190,7 @@ export default function HomePage() {
               {/* プレースホルダーカード */}
               <Link
                 href="/editor"
-                className="bg-gray-800/50 rounded-xl border-2 border-dashed border-gray-700 p-8 flex flex-col items-center justify-center text-center hover:border-purple-500 hover:bg-gray-800/70 transition-all"
+                className="bg-gray-800/50 rounded-2xl border-2 border-dashed border-gray-700 p-8 flex flex-col items-center justify-center text-center hover:border-pink-400 hover:bg-gray-800/70 hover:-translate-y-1 transition-all duration-200"
               >
                 <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center mb-4">
                   <svg
@@ -209,9 +214,9 @@ export default function HomePage() {
         </section>
 
         {/* 説明セクション */}
-        <section className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
+        <section className="mt-16 grid grid-cols-3 gap-8">
+          <div className="text-center group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
               <span className="text-2xl">🎬</span>
             </div>
             <h3 className="text-white font-semibold mb-2">Sync with Video</h3>
@@ -219,8 +224,8 @@ export default function HomePage() {
               Formation positions update in real-time as the video plays
             </p>
           </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center mx-auto mb-4">
+          <div className="text-center group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
               <span className="text-2xl">👥</span>
             </div>
             <h3 className="text-white font-semibold mb-2">Track Members</h3>
@@ -228,8 +233,8 @@ export default function HomePage() {
               Select a member to highlight their position and movement path
             </p>
           </div>
-          <div className="text-center">
-            <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center mx-auto mb-4">
+          <div className="text-center group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
               <span className="text-2xl">➡️</span>
             </div>
             <h3 className="text-white font-semibold mb-2">See Movement</h3>

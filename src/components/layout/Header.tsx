@@ -10,9 +10,11 @@ export function Header({ title }: HeaderProps) {
   return (
     <header className="bg-gray-900 border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl">💃</span>
-          <span className="text-white font-bold text-lg">Formation Viewer</span>
+        <Link href="/" className="flex items-center gap-1 group">
+          <span className="text-2xl group-hover:animate-pulse">✨</span>
+          <span className="text-pink-400 font-bold text-lg">Formation</span>
+          <span className="text-violet-400 font-bold text-lg">Viewer</span>
+          <span className="text-2xl group-hover:animate-pulse">💫</span>
         </Link>
 
         {title && (
