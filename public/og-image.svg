@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#030712"/>
+      <stop offset="100%" style="stop-color:#1f2937"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="600" y="280" text-anchor="middle" fill="#f472b6" font-family="system-ui, sans-serif" font-size="72" font-weight="bold">K-POP Formation Viewer</text>
+  <text x="600" y="380" text-anchor="middle" fill="#9ca3af" font-family="system-ui, sans-serif" font-size="32">フォーメーションを動画と同期して確認</text>
+  <circle cx="400" cy="500" r="20" fill="#f472b6" opacity="0.8"/>
+  <circle cx="500" cy="480" r="20" fill="#60a5fa" opacity="0.8"/>
+  <circle cx="600" cy="500" r="20" fill="#34d399" opacity="0.8"/>
+  <circle cx="700" cy="480" r="20" fill="#fbbf24" opacity="0.8"/>
+  <circle cx="800" cy="500" r="20" fill="#a78bfa" opacity="0.8"/>
+</svg>
