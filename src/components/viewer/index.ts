@@ -1,4 +1,5 @@
 export { YouTubePlayer } from './YouTubePlayer'
+export type { YouTubePlayerHandle } from './YouTubePlayer'
 export { FormationStage } from './FormationStage'
 export { MemberIcon } from './MemberIcon'
 export { MovementArrow } from './MovementArrow'

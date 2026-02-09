@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { Header } from '@/components/layout'
 import {
   YouTubePlayer,
+  YouTubePlayerHandle,
   FormationStage,
   Timeline,
   MemberList,
@@ -37,6 +38,9 @@ export default function ViewerPage() {
   const [viewerData, setViewerData] = useState<ViewerData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Player ref
+  const playerRef = useRef<YouTubePlayerHandle>(null)
 
   // 状態管理
   const [currentTime, setCurrentTime] = useState(0)
@@ -192,6 +196,10 @@ export default function ViewerPage() {
     setSelectedMemberId(memberId)
   }, [])
 
+  const handleSeek = useCallback((time: number) => {
+    playerRef.current?.seekTo(time)
+  }, [])
+
   // Loading state
   if (isLoading) {
     return (
@@ -230,6 +238,7 @@ export default function ViewerPage() {
           <div>
             <h2 className="text-white/60 text-sm font-medium mb-2">Video</h2>
             <YouTubePlayer
+              ref={playerRef}
               videoId={viewerData.youtubeVideoId}
               onTimeUpdate={handleTimeUpdate}
               onDurationChange={handleDurationChange}
@@ -257,6 +266,7 @@ export default function ViewerPage() {
             currentTime={currentTime}
             duration={duration}
             currentFormationName={currentFormation?.name}
+            onSeek={handleSeek}
           />
         </div>
 

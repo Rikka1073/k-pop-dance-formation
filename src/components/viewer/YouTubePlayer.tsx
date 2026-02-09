@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useImperativeHandle, forwardRef } from 'react'
 import { useYouTubePlayer } from '@/hooks'
 
 interface YouTubePlayerProps {
@@ -11,14 +11,18 @@ interface YouTubePlayerProps {
   onDurationChange?: (duration: number) => void
 }
 
-export function YouTubePlayer({
+export interface YouTubePlayerHandle {
+  seekTo: (seconds: number) => void
+}
+
+export const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(function YouTubePlayer({
   videoId,
   onTimeUpdate,
   onStateChange,
   onReady,
   onDurationChange,
-}: YouTubePlayerProps) {
-  const { playerRef, isReady, playerState, currentTime, duration } = useYouTubePlayer({
+}, ref) {
+  const { playerRef, isReady, playerState, currentTime, duration, seekTo } = useYouTubePlayer({
     videoId,
     onReady: () => {
       onReady?.()
@@ -27,6 +31,10 @@ export function YouTubePlayer({
       onStateChange?.(state === 'playing')
     },
   })
+
+  useImperativeHandle(ref, () => ({
+    seekTo,
+  }), [seekTo])
 
   // 時間更新の通知
   useEffect(() => {
@@ -52,4 +60,4 @@ export function YouTubePlayer({
       )}
     </div>
   )
-}
+})
