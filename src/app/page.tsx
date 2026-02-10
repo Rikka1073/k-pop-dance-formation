@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Header } from '@/components/layout'
+import { Header, Footer } from '@/components/layout'
 import { sampleArtist, sampleVideo, sampleFormationData } from '@/data/mock/sample-formation'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { getVideos, VideoWithArtist } from '@/lib/supabase/queries'
@@ -245,12 +245,9 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* フッター */}
-      <footer className="border-t border-gray-800 mt-16">
-        <div className="max-w-7xl mx-auto px-4 py-8 text-center text-gray-500 text-sm">
-          K-POP Formation Viewer - Phase 2
-        </div>
-      </footer>
+      <div className="mt-16">
+        <Footer />
+      </div>
     </div>
   )
 }
