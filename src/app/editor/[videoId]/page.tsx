@@ -8,6 +8,7 @@ import {
   EditorStage,
   FormationList,
   MemberSettings,
+  CoordinateInput,
 } from '@/components/editor'
 import { YouTubePlayer } from '@/components/viewer'
 import { Member, Position } from '@/types'
@@ -404,14 +405,19 @@ export default function EditVideoPage() {
 
           {/* Right: Settings */}
           <div className="space-y-4">
-            {/* Members (read-only display) */}
+            {/* Members (clickable for selection) */}
             <div className="bg-gray-800 rounded-2xl p-4">
               <h3 className="text-pink-400 font-semibold mb-3">Members</h3>
               <div className="space-y-2">
                 {members.map((member) => (
                   <div
                     key={member.id}
-                    className="flex items-center gap-3 p-2 bg-gray-700/50 rounded-xl"
+                    onClick={() => setSelectedMemberId(member.id)}
+                    className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all ${
+                      selectedMemberId === member.id
+                        ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
+                        : 'bg-gray-700/50 hover:bg-gray-700'
+                    }`}
                   >
                     <div
                       className="w-8 h-8 rounded-full"
@@ -422,6 +428,21 @@ export default function EditVideoPage() {
                 ))}
               </div>
             </div>
+
+            {/* Coordinate Input (when member selected) */}
+            {selectedMemberId && currentFormation && (() => {
+              const selectedMember = members.find((m) => m.id === selectedMemberId)
+              const position = currentFormation.positions.find((p) => p.memberId === selectedMemberId)
+              if (!selectedMember || !position) return null
+              return (
+                <CoordinateInput
+                  member={selectedMember}
+                  x={position.x}
+                  y={position.y}
+                  onPositionChange={handlePositionChange}
+                />
+              )
+            })()}
 
             {/* Formations */}
             <FormationList
