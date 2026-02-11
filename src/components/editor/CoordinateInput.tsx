@@ -5,10 +5,15 @@ import { Member } from '@/types'
 
 interface CoordinateInputProps {
   member: Member
-  x: number
-  y: number
+  x: number  // Internal: 0-100 (0=left, 100=right)
+  y: number  // Internal: 0-100 (0=top, 100=bottom)
   onPositionChange: (memberId: string, x: number, y: number) => void
 }
+
+// Convert internal coords (0-100) to display coords (-50 to +50, center=0)
+const toDisplay = (internal: number) => Math.round(internal - 50)
+// Convert display coords to internal coords
+const toInternal = (display: number) => display + 50
 
 export function CoordinateInput({
   member,
@@ -16,39 +21,42 @@ export function CoordinateInput({
   y,
   onPositionChange,
 }: CoordinateInputProps) {
-  const [localX, setLocalX] = useState(x.toString())
-  const [localY, setLocalY] = useState(y.toString())
+  // Display values: -50 (left/top) to +50 (right/bottom), 0 = center
+  const [localX, setLocalX] = useState(toDisplay(x).toString())
+  const [localY, setLocalY] = useState(toDisplay(y).toString())
 
   // Sync with props when they change externally (e.g., from drag)
   useEffect(() => {
-    setLocalX(Math.round(x).toString())
-    setLocalY(Math.round(y).toString())
+    setLocalX(toDisplay(x).toString())
+    setLocalY(toDisplay(y).toString())
   }, [x, y])
 
   const handleXChange = (value: string) => {
     setLocalX(value)
-    const num = parseFloat(value)
-    if (!isNaN(num) && num >= 0 && num <= 100) {
-      onPositionChange(member.id, num, y)
+    const displayVal = parseInt(value)
+    if (!isNaN(displayVal) && displayVal >= -50 && displayVal <= 50) {
+      onPositionChange(member.id, toInternal(displayVal), y)
     }
   }
 
   const handleYChange = (value: string) => {
     setLocalY(value)
-    const num = parseFloat(value)
-    if (!isNaN(num) && num >= 0 && num <= 100) {
-      onPositionChange(member.id, x, num)
+    const displayVal = parseInt(value)
+    if (!isNaN(displayVal) && displayVal >= -50 && displayVal <= 50) {
+      onPositionChange(member.id, x, toInternal(displayVal))
     }
   }
 
   const adjustX = (delta: number) => {
-    const newX = Math.max(0, Math.min(100, Math.round(x) + delta))
-    onPositionChange(member.id, newX, y)
+    const currentDisplay = toDisplay(x)
+    const newDisplay = Math.max(-50, Math.min(50, currentDisplay + delta))
+    onPositionChange(member.id, toInternal(newDisplay), y)
   }
 
   const adjustY = (delta: number) => {
-    const newY = Math.max(0, Math.min(100, Math.round(y) + delta))
-    onPositionChange(member.id, x, newY)
+    const currentDisplay = toDisplay(y)
+    const newDisplay = Math.max(-50, Math.min(50, currentDisplay + delta))
+    onPositionChange(member.id, x, toInternal(newDisplay))
   }
 
   return (
@@ -68,9 +76,9 @@ export function CoordinateInput({
 
       {/* Coordinate inputs */}
       <div className="space-y-3">
-        {/* X coordinate */}
+        {/* X coordinate (horizontal: - = left, + = right) */}
         <div className="flex items-center gap-2">
-          <label className="text-gray-400 text-sm w-8">X:</label>
+          <label className="text-gray-400 text-sm w-6">X:</label>
           <button
             onClick={() => adjustX(-5)}
             className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm"
@@ -87,9 +95,9 @@ export function CoordinateInput({
             type="number"
             value={localX}
             onChange={(e) => handleXChange(e.target.value)}
-            onBlur={() => setLocalX(Math.round(x).toString())}
-            min={0}
-            max={100}
+            onBlur={() => setLocalX(toDisplay(x).toString())}
+            min={-50}
+            max={50}
             className="w-16 bg-gray-700 text-white text-center px-2 py-1.5 rounded-lg border-none outline-none focus:ring-2 focus:ring-pink-400"
           />
           <button
@@ -104,12 +112,11 @@ export function CoordinateInput({
           >
             +5
           </button>
-          <span className="text-gray-500 text-xs">%</span>
         </div>
 
-        {/* Y coordinate */}
+        {/* Y coordinate (vertical: - = front/top, + = back/bottom) */}
         <div className="flex items-center gap-2">
-          <label className="text-gray-400 text-sm w-8">Y:</label>
+          <label className="text-gray-400 text-sm w-6">Y:</label>
           <button
             onClick={() => adjustY(-5)}
             className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm"
@@ -126,9 +133,9 @@ export function CoordinateInput({
             type="number"
             value={localY}
             onChange={(e) => handleYChange(e.target.value)}
-            onBlur={() => setLocalY(Math.round(y).toString())}
-            min={0}
-            max={100}
+            onBlur={() => setLocalY(toDisplay(y).toString())}
+            min={-50}
+            max={50}
             className="w-16 bg-gray-700 text-white text-center px-2 py-1.5 rounded-lg border-none outline-none focus:ring-2 focus:ring-pink-400"
           />
           <button
@@ -143,14 +150,14 @@ export function CoordinateInput({
           >
             +5
           </button>
-          <span className="text-gray-500 text-xs">%</span>
         </div>
       </div>
 
-      {/* Hint */}
-      <p className="text-gray-500 text-xs mt-3">
-        0-100%の範囲で指定（左上が0,0）
-      </p>
+      {/* Legend */}
+      <div className="mt-4 pt-3 border-t border-gray-700 text-xs text-gray-500 space-y-1">
+        <p>X: <span className="text-gray-400">-50</span> ← 左 | 中央 <span className="text-pink-400">0</span> | 右 → <span className="text-gray-400">+50</span></p>
+        <p>Y: <span className="text-gray-400">-50</span> ← 前 | 中央 <span className="text-pink-400">0</span> | 奥 → <span className="text-gray-400">+50</span></p>
+      </div>
     </div>
   )
 }
