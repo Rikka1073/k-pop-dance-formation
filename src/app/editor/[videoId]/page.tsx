@@ -363,73 +363,100 @@ export default function EditVideoPage() {
           </div>
         </div>
 
-        {/* Editor UI */}
-        <div className="grid grid-cols-3 gap-6">
-          {/* Left: Video + Stage */}
-          <div className="col-span-2 space-y-4">
-            {/* Video */}
-            <div>
-              <h2 className="text-white/60 text-sm font-medium mb-2">
-                Video Reference
-              </h2>
-              <YouTubePlayer
-                videoId={youtubeVideoId}
-                onDurationChange={handleDurationChange}
-                onTimeUpdate={handleTimeUpdate}
-              />
-            </div>
-
-            {/* Stage */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-white/60 text-sm font-medium">
-                  Formation Stage
-                  {currentFormation && (
-                    <span className="ml-2 text-pink-400">
-                      - {currentFormation.name} ({currentFormation.time}s)
-                    </span>
-                  )}
-                </h2>
-                <span className="text-white/40 text-xs">
-                  Current: {currentTime.toFixed(1)}s / {videoDuration.toFixed(1)}s
-                </span>
-              </div>
-              <EditorStage
-                positions={currentFormation?.positions || []}
-                selectedMemberId={selectedMemberId}
-                onPositionChange={handlePositionChange}
-                onMemberSelect={setSelectedMemberId}
-              />
-            </div>
+        {/* Main Content - Video & Formation side by side (same as Viewer) */}
+        <div className="grid grid-cols-2 gap-6 mb-6">
+          {/* Video */}
+          <div>
+            <h2 className="text-white/60 text-sm font-medium mb-2">Video</h2>
+            <YouTubePlayer
+              videoId={youtubeVideoId}
+              onDurationChange={handleDurationChange}
+              onTimeUpdate={handleTimeUpdate}
+            />
           </div>
 
-          {/* Right: Settings */}
-          <div className="space-y-4">
-            {/* Members (clickable for selection) */}
-            <div className="bg-gray-800 rounded-2xl p-4">
-              <h3 className="text-pink-400 font-semibold mb-3">Members</h3>
-              <div className="space-y-2">
-                {members.map((member) => (
+          {/* Formation Stage */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-white/60 text-sm font-medium">
+                Formation
+                {currentFormation && (
+                  <span className="ml-2 text-pink-400">
+                    - {currentFormation.name}
+                  </span>
+                )}
+              </h2>
+              <span className="text-white/40 text-xs">
+                {currentTime.toFixed(1)}s / {videoDuration.toFixed(1)}s
+              </span>
+            </div>
+            <EditorStage
+              positions={currentFormation?.positions || []}
+              selectedMemberId={selectedMemberId}
+              onPositionChange={handlePositionChange}
+              onMemberSelect={setSelectedMemberId}
+            />
+          </div>
+        </div>
+
+        {/* Bottom Controls - 3 columns */}
+        <div className="grid grid-cols-3 gap-4">
+          {/* Left: Members */}
+          <div className="bg-gray-800 rounded-2xl p-4">
+            <h3 className="text-pink-400 font-semibold mb-3">Members</h3>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {members.map((member) => (
+                <div
+                  key={member.id}
+                  onClick={() => setSelectedMemberId(member.id)}
+                  className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all ${
+                    selectedMemberId === member.id
+                      ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
+                      : 'bg-gray-700/50 hover:bg-gray-700'
+                  }`}
+                >
                   <div
-                    key={member.id}
-                    onClick={() => setSelectedMemberId(member.id)}
-                    className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all ${
-                      selectedMemberId === member.id
-                        ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
-                        : 'bg-gray-700/50 hover:bg-gray-700'
-                    }`}
-                  >
-                    <div
-                      className="w-8 h-8 rounded-full"
-                      style={{ backgroundColor: member.color }}
-                    />
-                    <span className="text-white text-sm">{member.name}</span>
-                  </div>
-                ))}
-              </div>
+                    className="w-8 h-8 rounded-full"
+                    style={{ backgroundColor: member.color }}
+                  />
+                  <span className="text-white text-sm">{member.name}</span>
+                </div>
+              ))}
             </div>
 
             {/* Coordinate Input (when member selected) */}
+            {selectedMemberId && currentFormation && (() => {
+              const selectedMember = members.find((m) => m.id === selectedMemberId)
+              const position = currentFormation.positions.find((p) => p.memberId === selectedMemberId)
+              if (!selectedMember || !position) return null
+              return (
+                <div className="mt-4 pt-4 border-t border-gray-700">
+                  <p className="text-gray-400 text-xs mb-2">Position</p>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-gray-400">X:</span>
+                    <span className="text-white">{Math.round(position.x - 50)}</span>
+                    <span className="text-gray-400 ml-2">Y:</span>
+                    <span className="text-white">{Math.round(position.y - 50)}</span>
+                  </div>
+                </div>
+              )
+            })()}
+          </div>
+
+          {/* Center: Formations List */}
+          <FormationList
+            formations={formations}
+            currentFormationId={currentFormationId}
+            onFormationSelect={handleSelectFormation}
+            onFormationAdd={handleAddFormation}
+            onFormationDelete={handleDeleteFormation}
+            onFormationTimeChange={handleFormationTimeChange}
+            onFormationNameChange={handleFormationNameChange}
+          />
+
+          {/* Right: Position & Save */}
+          <div className="space-y-4">
+            {/* Coordinate Input (detailed) */}
             {selectedMemberId && currentFormation && (() => {
               const selectedMember = members.find((m) => m.id === selectedMemberId)
               const position = currentFormation.positions.find((p) => p.memberId === selectedMemberId)
@@ -444,39 +471,30 @@ export default function EditVideoPage() {
               )
             })()}
 
-            {/* Formations */}
-            <FormationList
-              formations={formations}
-              currentFormationId={currentFormationId}
-              onFormationSelect={handleSelectFormation}
-              onFormationAdd={handleAddFormation}
-              onFormationDelete={handleDeleteFormation}
-              onFormationTimeChange={handleFormationTimeChange}
-              onFormationNameChange={handleFormationNameChange}
-            />
-
             {/* Save Button */}
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={handleSave}
-              disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
-            >
-              {isSaving ? 'Saving...' : 'Save Changes'}
-            </Button>
+            <div className="bg-gray-800 rounded-2xl p-4">
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={handleSave}
+                disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
+              >
+                {isSaving ? 'Saving...' : 'Save Changes'}
+              </Button>
 
-            {videoId === sampleVideo.id && (
-              <p className="text-yellow-500 text-xs text-center">
-                サンプルデータは編集できません
-              </p>
-            )}
+              {videoId === sampleVideo.id && (
+                <p className="text-yellow-500 text-xs text-center mt-2">
+                  サンプルデータは編集できません
+                </p>
+              )}
 
-            {/* Error Message */}
-            {saveError && (
-              <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
-                {saveError}
-              </div>
-            )}
+              {/* Error Message */}
+              {saveError && (
+                <div className="mt-3 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
+                  {saveError}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
