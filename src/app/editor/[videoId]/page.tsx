@@ -364,7 +364,7 @@ export default function EditVideoPage() {
         </div>
 
         {/* Editor UI */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-4">
           {/* Left: Video + Stage */}
           <div className="col-span-2 space-y-4">
             {/* Video */}
