@@ -259,8 +259,9 @@ export default function EditVideoPage() {
   // ============ Save Handler ============
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  const handleSave = async () => {
+  const handleSave = async (redirectToViewer: boolean = false) => {
     if (videoId === sampleVideo.id) {
       alert('サンプルデータは編集できません')
       return
@@ -305,8 +306,11 @@ export default function EditVideoPage() {
         }
       }
 
-      alert('保存が完了しました！')
-      router.push(`/viewer/${videoId}`)
+      setLastSaved(new Date())
+
+      if (redirectToViewer) {
+        router.push(`/viewer/${videoId}`)
+      }
     } catch (error) {
       console.error('Save error:', error)
       setSaveError(error instanceof Error ? error.message : '保存に失敗しました')
@@ -471,19 +475,37 @@ export default function EditVideoPage() {
               )
             })()}
 
-            {/* Save Button */}
-            <div className="bg-gray-800 rounded-2xl p-4">
+            {/* Save Buttons */}
+            <div className="bg-gray-800 rounded-2xl p-4 space-y-3">
+              {/* Quick Save */}
+              <Button
+                className="w-full"
+                variant="secondary"
+                onClick={() => handleSave(false)}
+                disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
+              >
+                {isSaving ? 'Saving...' : '保存'}
+              </Button>
+
+              {/* Save & View */}
               <Button
                 className="w-full"
                 size="lg"
-                onClick={handleSave}
+                onClick={() => handleSave(true)}
                 disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
               >
-                {isSaving ? 'Saving...' : 'Save Changes'}
+                {isSaving ? 'Saving...' : '保存して確認'}
               </Button>
 
+              {/* Last saved time */}
+              {lastSaved && (
+                <p className="text-green-400 text-xs text-center">
+                  ✓ 保存済み ({lastSaved.toLocaleTimeString('ja-JP')})
+                </p>
+              )}
+
               {videoId === sampleVideo.id && (
-                <p className="text-yellow-500 text-xs text-center mt-2">
+                <p className="text-yellow-500 text-xs text-center">
                   サンプルデータは編集できません
                 </p>
               )}
