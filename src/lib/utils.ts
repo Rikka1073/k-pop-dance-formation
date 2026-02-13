@@ -35,7 +35,7 @@ export function getCurrentFormations(
 }
 
 /**
- * 2つのフォーメーション間でメンバー位置を線形補間
+ * 現在のフォーメーション位置を取得（補間なし、即座に切り替わる）
  */
 export function interpolatePositions(
   current: Formation,
@@ -43,33 +43,11 @@ export function interpolatePositions(
   currentTime: number,
   members: Member[]
 ): InterpolatedPosition[] {
-  if (!next) {
-    // 次のフォーメーションがない場合は現在の位置をそのまま返す
-    return current.positions.map((pos) => ({
-      ...pos,
-      member: members.find((m) => m.id === pos.memberId)!,
-    }))
-  }
-
-  const duration = next.time - current.time
-  const elapsed = currentTime - current.time
-  const progress = Math.max(0, Math.min(1, elapsed / duration))
-
-  return current.positions.map((currentPos) => {
-    const nextPos = next.positions.find((p) => p.memberId === currentPos.memberId)
-    const member = members.find((m) => m.id === currentPos.memberId)!
-
-    if (!nextPos) {
-      return { ...currentPos, member }
-    }
-
-    return {
-      memberId: currentPos.memberId,
-      x: currentPos.x + (nextPos.x - currentPos.x) * progress,
-      y: currentPos.y + (nextPos.y - currentPos.y) * progress,
-      member,
-    }
-  })
+  // 補間なし: 現在のフォーメーション位置をそのまま返す
+  return current.positions.map((pos) => ({
+    ...pos,
+    member: members.find((m) => m.id === pos.memberId)!,
+  }))
 }
 
 /**
