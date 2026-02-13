@@ -12,6 +12,7 @@ interface EditorStageProps {
   selectedMemberId: string | null
   onPositionChange: (memberId: string, x: number, y: number) => void
   onMemberSelect: (memberId: string | null) => void
+  flipped?: boolean // true = 観客側が下（デフォルト）
 }
 
 export function EditorStage({
@@ -19,7 +20,12 @@ export function EditorStage({
   selectedMemberId,
   onPositionChange,
   onMemberSelect,
+  flipped = true,
 }: EditorStageProps) {
+  // Y座標を反転（flipped=trueの時、観客側が下になる）
+  const transformY = (y: number) => flipped ? 100 - y : y
+  // ドラッグ時は逆変換が必要
+  const inverseTransformY = (y: number) => flipped ? 100 - y : y
   return (
     <div
       className="relative w-full aspect-video bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden border-2 border-dashed border-gray-600"
@@ -48,10 +54,10 @@ export function EditorStage({
 
       {/* ラベル */}
       <div className="absolute top-2 left-1/2 -translate-x-1/2 text-white/50 text-xs font-medium">
-        FRONT (観客側)
+        {flipped ? 'BACK' : 'FRONT (観客側)'}
       </div>
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/50 text-xs font-medium">
-        BACK
+        {flipped ? 'FRONT (観客側)' : 'BACK'}
       </div>
       <div className="absolute left-2 top-1/2 -translate-y-1/2 text-white/50 text-xs font-medium rotate-[-90deg]">
         LEFT
@@ -66,9 +72,9 @@ export function EditorStage({
           key={pos.memberId}
           member={pos.member}
           x={pos.x}
-          y={pos.y}
+          y={transformY(pos.y)}
           isSelected={selectedMemberId === pos.memberId}
-          onPositionChange={(x, y) => onPositionChange(pos.memberId, x, y)}
+          onPositionChange={(x, y) => onPositionChange(pos.memberId, x, inverseTransformY(y))}
           onClick={() => onMemberSelect(pos.memberId)}
         />
       ))}

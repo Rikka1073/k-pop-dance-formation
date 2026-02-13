@@ -10,6 +10,7 @@ interface FormationStageProps {
   selectedMemberId: string | null
   showMovementArrows: boolean
   onMemberClick?: (memberId: string) => void
+  flipped?: boolean // true = 観客側が下（デフォルト）
 }
 
 export function FormationStage({
@@ -18,7 +19,10 @@ export function FormationStage({
   selectedMemberId,
   showMovementArrows,
   onMemberClick,
+  flipped = true,
 }: FormationStageProps) {
+  // Y座標を反転（flipped=trueの時、観客側が下になる）
+  const transformY = (y: number) => flipped ? 100 - y : y
   return (
     <div className="relative w-full aspect-video bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden">
       {/* ステージグリッド（背景） */}
@@ -44,10 +48,10 @@ export function FormationStage({
 
       {/* 「前方」「後方」ラベル */}
       <div className="absolute top-2 left-1/2 -translate-x-1/2 text-white/40 text-xs">
-        FRONT
+        {flipped ? 'BACK' : 'FRONT'}
       </div>
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/40 text-xs">
-        BACK
+        {flipped ? 'FRONT (観客側)' : 'BACK'}
       </div>
 
       {/* 動線矢印 */}
@@ -63,9 +67,9 @@ export function FormationStage({
             <MovementArrow
               key={`arrow-${pos.memberId}`}
               fromX={pos.x}
-              fromY={pos.y}
+              fromY={transformY(pos.y)}
               toX={nextPos.x}
-              toY={nextPos.y}
+              toY={transformY(nextPos.y)}
               member={pos.member}
               isHighlighted={selectedMemberId === pos.memberId}
             />
@@ -78,7 +82,7 @@ export function FormationStage({
           key={pos.memberId}
           member={pos.member}
           x={pos.x}
-          y={pos.y}
+          y={transformY(pos.y)}
           isSelected={selectedMemberId === pos.memberId}
           onClick={() => onMemberClick?.(pos.memberId)}
         />

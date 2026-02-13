@@ -48,6 +48,7 @@ export default function ViewerPage() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null)
   const [showMovementArrows, setShowMovementArrows] = useState(true)
+  const [stageFlipped, setStageFlipped] = useState(true) // デフォルト: 観客側が下
 
   // Load data
   useEffect(() => {
@@ -255,6 +256,7 @@ export default function ViewerPage() {
               selectedMemberId={selectedMemberId}
               showMovementArrows={showMovementArrows}
               onMemberClick={handleMemberSelect}
+              flipped={stageFlipped}
             />
           </div>
         </div>
@@ -292,6 +294,17 @@ export default function ViewerPage() {
                   className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
                 />
                 <span className="text-white text-sm group-hover:text-pink-300 transition-colors">Show movement arrows</span>
+              </label>
+
+              {/* ステージ反転 */}
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={stageFlipped}
+                  onChange={(e) => setStageFlipped(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
+                />
+                <span className="text-white text-sm group-hover:text-pink-300 transition-colors">観客視点（観客側を下に）</span>
               </label>
 
               {/* 現在のフォーメーション情報 */}

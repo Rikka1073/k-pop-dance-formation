@@ -61,6 +61,9 @@ export default function EditVideoPage() {
   const [members, setMembers] = useState<Member[]>([])
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null)
 
+  // Stage view option
+  const [stageFlipped, setStageFlipped] = useState(true) // デフォルト: 観客側が下
+
   // Formations
   const [formations, setFormations] = useState<EditorFormation[]>([])
   const [currentFormationId, setCurrentFormationId] = useState<string | null>(null)
@@ -390,15 +393,27 @@ export default function EditVideoPage() {
                   </span>
                 )}
               </h2>
-              <span className="text-white/40 text-xs">
-                {currentTime.toFixed(1)}s / {videoDuration.toFixed(1)}s
-              </span>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={stageFlipped}
+                    onChange={(e) => setStageFlipped(e.target.checked)}
+                    className="w-3 h-3 rounded border-gray-600 bg-gray-700 text-pink-500"
+                  />
+                  <span className="text-white/40 text-xs">観客視点</span>
+                </label>
+                <span className="text-white/40 text-xs">
+                  {currentTime.toFixed(1)}s / {videoDuration.toFixed(1)}s
+                </span>
+              </div>
             </div>
             <EditorStage
               positions={currentFormation?.positions || []}
               selectedMemberId={selectedMemberId}
               onPositionChange={handlePositionChange}
               onMemberSelect={setSelectedMemberId}
+              flipped={stageFlipped}
             />
           </div>
         </div>
