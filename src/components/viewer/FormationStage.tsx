@@ -24,7 +24,7 @@ export function FormationStage({
   // Y座標を反転（flipped=trueの時、観客側が下になる）
   const transformY = (y: number) => flipped ? 100 - y : y
   return (
-    <div className="relative w-full aspect-video bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden">
+    <div className="relative w-full aspect-video bg-gradient-to-b from-[var(--stage-bg)] to-[var(--stage-bg-secondary)] rounded-2xl overflow-hidden">
       {/* ステージグリッド（背景） */}
       <div className="absolute inset-0 opacity-20">
         <svg className="w-full h-full">
@@ -43,14 +43,14 @@ export function FormationStage({
       </div>
 
       {/* センターライン */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/30" />
-      <div className="absolute top-1/2 left-0 right-0 h-px bg-white/30" />
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[var(--stage-line)]" />
+      <div className="absolute top-1/2 left-0 right-0 h-px bg-[var(--stage-line)]" />
 
       {/* 「前方」「後方」ラベル */}
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 text-white/40 text-xs">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[var(--foreground-muted)] text-xs">
         {flipped ? 'BACK' : 'FRONT'}
       </div>
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/40 text-xs">
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[var(--foreground-muted)] text-xs">
         {flipped ? 'FRONT (観客側)' : 'BACK'}
       </div>
 

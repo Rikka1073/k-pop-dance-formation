@@ -28,18 +28,18 @@ export function FormationList({
   onFormationNameChange,
 }: FormationListProps) {
   return (
-    <div className="bg-gray-800 rounded-2xl p-4">
+    <div className="bg-[var(--card-bg)] rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-pink-400 font-semibold">Formations</h3>
+        <h3 className="text-pink-400 font-semibold">フォーメーション</h3>
         <Button size="sm" onClick={onFormationAdd}>
-          + Add
+          + 追加
         </Button>
       </div>
 
       <div className="space-y-2 max-h-[400px] overflow-y-auto">
         {formations.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center py-4">
-            No formations yet. Click &quot;+ Add&quot; to create one.
+          <p className="text-[var(--foreground-muted)] text-sm text-center py-4">
+            フォーメーションがありません。「+ 追加」をクリックして作成してください。
           </p>
         ) : (
           formations.map((formation, index) => (
@@ -49,13 +49,13 @@ export function FormationList({
                 'p-3 rounded-xl cursor-pointer transition-all duration-200',
                 currentFormationId === formation.id
                   ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
-                  : 'bg-gray-700/50 hover:bg-gray-700'
+                  : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)]'
               )}
               onClick={() => onFormationSelect(formation.id)}
             >
               <div className="flex items-center gap-3">
                 {/* 番号 */}
-                <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs text-white font-medium">
+                <div className="w-6 h-6 rounded-full bg-[var(--background-secondary)] flex items-center justify-center text-xs text-[var(--foreground)] font-medium">
                   {index + 1}
                 </div>
 
@@ -64,8 +64,8 @@ export function FormationList({
                   type="text"
                   value={formation.name || ''}
                   onChange={(e) => onFormationNameChange(formation.id, e.target.value)}
-                  placeholder="Formation name"
-                  className="flex-1 bg-transparent text-white text-sm border-none outline-none placeholder:text-gray-500"
+                  placeholder="フォーメーション名"
+                  className="flex-1 bg-transparent text-[var(--foreground)] text-sm border-none outline-none placeholder:text-[var(--foreground-muted)]"
                   onClick={(e) => e.stopPropagation()}
                 />
 
@@ -88,10 +88,10 @@ export function FormationList({
                       }
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="w-20 px-2 py-1 bg-gray-600 text-white text-sm rounded-lg border border-gray-500 outline-none text-center focus:border-pink-400"
+                    className="w-20 px-2 py-1 bg-[var(--background-secondary)] text-[var(--foreground)] text-sm rounded-lg border border-[var(--card-border)] outline-none text-center focus:border-pink-400"
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <span className="text-gray-400 text-xs">秒</span>
+                  <span className="text-[var(--foreground-muted)] text-xs">秒</span>
                 </div>
 
                 {/* 削除ボタン */}
@@ -100,7 +100,7 @@ export function FormationList({
                     e.stopPropagation()
                     onFormationDelete(formation.id)
                   }}
-                  className="p-1 text-gray-400 hover:text-red-400 transition-colors"
+                  className="p-1 text-[var(--foreground-muted)] hover:text-red-400 transition-colors"
                 >
                   <svg
                     className="w-4 h-4"
@@ -119,7 +119,7 @@ export function FormationList({
               </div>
 
               {/* ミニプレビュー */}
-              <div className="mt-2 h-8 bg-gray-800 rounded relative overflow-hidden">
+              <div className="mt-2 h-8 bg-[var(--card-bg)] rounded relative overflow-hidden">
                 {formation.positions.map((pos) => (
                   <div
                     key={pos.memberId}

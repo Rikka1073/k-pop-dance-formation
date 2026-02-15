@@ -28,7 +28,7 @@ export function EditorStage({
   const inverseTransformY = (y: number) => flipped ? 100 - y : y
   return (
     <div
-      className="relative w-full aspect-video bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden border-2 border-dashed border-gray-600"
+      className="relative w-full aspect-video bg-gradient-to-b from-[var(--stage-bg)] to-[var(--stage-bg-secondary)] rounded-2xl overflow-hidden border-2 border-dashed border-[var(--card-border)]"
       onClick={() => onMemberSelect(null)}
     >
       {/* グリッド */}
@@ -49,21 +49,21 @@ export function EditorStage({
       </div>
 
       {/* センターライン */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/40" />
-      <div className="absolute top-1/2 left-0 right-0 h-px bg-white/40" />
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[var(--stage-line)]" />
+      <div className="absolute top-1/2 left-0 right-0 h-px bg-[var(--stage-line)]" />
 
       {/* ラベル */}
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 text-white/50 text-xs font-medium">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[var(--foreground-muted)] text-xs font-medium">
         {flipped ? 'BACK' : 'FRONT (観客側)'}
       </div>
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/50 text-xs font-medium">
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[var(--foreground-muted)] text-xs font-medium">
         {flipped ? 'FRONT (観客側)' : 'BACK'}
       </div>
-      <div className="absolute left-2 top-1/2 -translate-y-1/2 text-white/50 text-xs font-medium rotate-[-90deg]">
-        LEFT
+      <div className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-xs font-medium rotate-[-90deg]">
+        左
       </div>
-      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-white/50 text-xs font-medium rotate-90">
-        RIGHT
+      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-xs font-medium rotate-90">
+        右
       </div>
 
       {/* ドラッグ可能なメンバーアイコン */}
@@ -80,8 +80,8 @@ export function EditorStage({
       ))}
 
       {/* 編集ヒント */}
-      <div className="absolute bottom-2 right-2 text-white/40 text-xs">
-        Drag members to position
+      <div className="absolute bottom-2 right-2 text-[var(--foreground-muted)] text-xs">
+        ドラッグで位置調整
       </div>
     </div>
   )

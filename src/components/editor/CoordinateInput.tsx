@@ -60,34 +60,34 @@ export function CoordinateInput({
   }
 
   return (
-    <div className="bg-gray-800 rounded-2xl p-4">
-      <h3 className="text-pink-400 font-semibold mb-3">Position</h3>
+    <div className="bg-[var(--card-bg)] rounded-2xl p-4">
+      <h3 className="text-pink-400 font-semibold mb-3">座標</h3>
 
       {/* Member info */}
-      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-700">
+      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-[var(--card-border)]">
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+          className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--foreground)] text-sm font-bold"
           style={{ backgroundColor: member.color }}
         >
           {member.name.charAt(0)}
         </div>
-        <span className="text-white font-medium">{member.name}</span>
+        <span className="text-[var(--foreground)] font-medium">{member.name}</span>
       </div>
 
       {/* Coordinate inputs */}
       <div className="space-y-3">
         {/* X coordinate (horizontal: - = left, + = right) */}
         <div className="flex items-center gap-2">
-          <label className="text-gray-400 text-sm w-6">X:</label>
+          <label className="text-[var(--foreground-muted)] text-sm w-6">X:</label>
           <button
             onClick={() => adjustX(-5)}
-            className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors text-sm"
           >
             -5
           </button>
           <button
             onClick={() => adjustX(-1)}
-            className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors"
           >
             -
           </button>
@@ -98,17 +98,17 @@ export function CoordinateInput({
             onBlur={() => setLocalX(toDisplay(x).toString())}
             min={-50}
             max={50}
-            className="w-16 bg-gray-700 text-white text-center px-2 py-1.5 rounded-lg border-none outline-none focus:ring-2 focus:ring-pink-400"
+            className="w-16 bg-[var(--background-tertiary)] text-[var(--foreground)] text-center px-2 py-1.5 rounded-lg border-none outline-none focus:ring-2 focus:ring-pink-400"
           />
           <button
             onClick={() => adjustX(1)}
-            className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors"
           >
             +
           </button>
           <button
             onClick={() => adjustX(5)}
-            className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors text-sm"
           >
             +5
           </button>
@@ -116,16 +116,16 @@ export function CoordinateInput({
 
         {/* Y coordinate (vertical: - = front/top, + = back/bottom) */}
         <div className="flex items-center gap-2">
-          <label className="text-gray-400 text-sm w-6">Y:</label>
+          <label className="text-[var(--foreground-muted)] text-sm w-6">Y:</label>
           <button
             onClick={() => adjustY(-5)}
-            className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors text-sm"
           >
             -5
           </button>
           <button
             onClick={() => adjustY(-1)}
-            className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors"
           >
             -
           </button>
@@ -136,17 +136,17 @@ export function CoordinateInput({
             onBlur={() => setLocalY(toDisplay(y).toString())}
             min={-50}
             max={50}
-            className="w-16 bg-gray-700 text-white text-center px-2 py-1.5 rounded-lg border-none outline-none focus:ring-2 focus:ring-pink-400"
+            className="w-16 bg-[var(--background-tertiary)] text-[var(--foreground)] text-center px-2 py-1.5 rounded-lg border-none outline-none focus:ring-2 focus:ring-pink-400"
           />
           <button
             onClick={() => adjustY(1)}
-            className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors"
           >
             +
           </button>
           <button
             onClick={() => adjustY(5)}
-            className="w-8 h-8 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors text-sm"
           >
             +5
           </button>
@@ -154,9 +154,9 @@ export function CoordinateInput({
       </div>
 
       {/* Legend */}
-      <div className="mt-4 pt-3 border-t border-gray-700 text-xs text-gray-500 space-y-1">
-        <p>X: <span className="text-gray-400">-50</span> ← 左 | 中央 <span className="text-pink-400">0</span> | 右 → <span className="text-gray-400">+50</span></p>
-        <p>Y: <span className="text-gray-400">-50</span> ← 前 | 中央 <span className="text-pink-400">0</span> | 奥 → <span className="text-gray-400">+50</span></p>
+      <div className="mt-4 pt-3 border-t border-[var(--card-border)] text-xs text-[var(--foreground-muted)] space-y-1">
+        <p>X: <span className="text-[var(--foreground-muted)]">-50</span> ← 左 | 中央 <span className="text-pink-400">0</span> | 右 → <span className="text-[var(--foreground-muted)]">+50</span></p>
+        <p>Y: <span className="text-[var(--foreground-muted)]">-50</span> ← 前 | 中央 <span className="text-pink-400">0</span> | 奥 → <span className="text-[var(--foreground-muted)]">+50</span></p>
       </div>
     </div>
   )

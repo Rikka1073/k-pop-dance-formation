@@ -391,22 +391,22 @@ export default function EditorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Header title="Formation Editor" />
+    <div className="min-h-screen bg-[var(--background)]">
+      <Header title="フォーメーション作成" />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Step 1: Video Setup */}
         {!isVideoLoaded ? (
           <div className="max-w-xl mx-auto">
-            <div className="bg-gray-800 rounded-2xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">
-                Step 1: Video Setup
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6">
+              <h2 className="text-xl font-bold text-[var(--foreground)] mb-6">
+                ステップ1: 動画設定
               </h2>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">
-                    YouTube Video ID or URL
+                  <label className="block text-sm text-[var(--foreground-muted)] mb-1">
+                    YouTube動画IDまたはURL
                   </label>
                   <input
                     type="text"
@@ -419,28 +419,28 @@ export default function EditorPage() {
                       )
                       setYoutubeVideoId(match ? match[1] : input)
                     }}
-                    placeholder="e.g., dQw4w9WgXcQ or https://youtube.com/watch?v=..."
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
+                    placeholder="例: dQw4w9WgXcQ または https://youtube.com/watch?v=..."
+                    className="w-full px-3 py-2 bg-[var(--background-tertiary)] text-[var(--foreground)] rounded-xl border border-[var(--card-border)] focus:border-pink-400 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">
-                    Video Title
+                  <label className="block text-sm text-[var(--foreground-muted)] mb-1">
+                    動画タイトル
                   </label>
                   <input
                     type="text"
                     value={videoTitle}
                     onChange={(e) => setVideoTitle(e.target.value)}
-                    placeholder="e.g., BLACKPINK - DDU-DU DDU-DU Dance Practice"
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
+                    placeholder="例: BLACKPINK - DDU-DU DDU-DU Dance Practice"
+                    className="w-full px-3 py-2 bg-[var(--background-tertiary)] text-[var(--foreground)] rounded-xl border border-[var(--card-border)] focus:border-pink-400 outline-none"
                   />
                 </div>
 
                 {/* Artist Selection */}
                 <div>
-                  <label className="block text-sm text-gray-400 mb-2">
-                    Artist/Group
+                  <label className="block text-sm text-[var(--foreground-muted)] mb-2">
+                    アーティスト/グループ
                   </label>
 
                   {/* Artist Mode Toggle */}
@@ -450,8 +450,8 @@ export default function EditorPage() {
                         onClick={() => handleArtistModeChange('existing')}
                         className={`flex-1 px-3 py-2 rounded-xl text-sm transition-colors ${
                           artistMode === 'existing'
-                            ? 'bg-gradient-to-r from-pink-400 to-violet-400 text-white'
-                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                            ? 'bg-gradient-to-r from-pink-400 to-violet-400 text-[var(--foreground)]'
+                            : 'bg-[var(--background-tertiary)] text-[var(--foreground)] hover:bg-[var(--background-secondary)]'
                         }`}
                       >
                         既存のアーティスト
@@ -460,8 +460,8 @@ export default function EditorPage() {
                         onClick={() => handleArtistModeChange('new')}
                         className={`flex-1 px-3 py-2 rounded-xl text-sm transition-colors ${
                           artistMode === 'new'
-                            ? 'bg-gradient-to-r from-pink-400 to-violet-400 text-white'
-                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                            ? 'bg-gradient-to-r from-pink-400 to-violet-400 text-[var(--foreground)]'
+                            : 'bg-[var(--background-tertiary)] text-[var(--foreground)] hover:bg-[var(--background-secondary)]'
                         }`}
                       >
                         新規アーティスト
@@ -474,9 +474,9 @@ export default function EditorPage() {
                       <select
                         value={selectedArtistId || ''}
                         onChange={(e) => handleArtistSelect(e.target.value)}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
+                        className="w-full px-3 py-2 bg-[var(--background-tertiary)] text-[var(--foreground)] rounded-xl border border-[var(--card-border)] focus:border-pink-400 outline-none"
                       >
-                        <option value="">アーティストを選択...</option>
+                        <option value="">-- 選択してください --</option>
                         {existingArtists.map((artist) => (
                           <option key={artist.id} value={artist.id}>
                             {artist.name} ({artist.members.length}人)
@@ -486,19 +486,19 @@ export default function EditorPage() {
 
                       {/* Show selected artist's members */}
                       {selectedArtistId && members.length > 0 && (
-                        <div className="mt-3 p-3 bg-gray-700/50 rounded-lg">
-                          <p className="text-xs text-gray-400 mb-2">メンバー:</p>
+                        <div className="mt-3 p-3 bg-[var(--background-tertiary)]/50 rounded-lg">
+                          <p className="text-xs text-[var(--foreground-muted)] mb-2">メンバー:</p>
                           <div className="flex flex-wrap gap-2">
                             {members.map((m) => (
                               <div
                                 key={m.id}
-                                className="flex items-center gap-1.5 px-2 py-1 bg-gray-600 rounded-full"
+                                className="flex items-center gap-1.5 px-2 py-1 bg-[var(--background-secondary)] rounded-full"
                               >
                                 <div
                                   className="w-3 h-3 rounded-full"
                                   style={{ backgroundColor: m.color }}
                                 />
-                                <span className="text-white text-xs">{m.name}</span>
+                                <span className="text-[var(--foreground)] text-xs">{m.name}</span>
                               </div>
                             ))}
                           </div>
@@ -511,21 +511,21 @@ export default function EditorPage() {
                       value={artistName}
                       onChange={(e) => setArtistName(e.target.value)}
                       placeholder="e.g., BLACKPINK"
-                      className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
+                      className="w-full px-3 py-2 bg-[var(--background-tertiary)] text-[var(--foreground)] rounded-xl border border-[var(--card-border)] focus:border-pink-400 outline-none"
                     />
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">
-                    Your Name (Optional)
+                  <label className="block text-sm text-[var(--foreground-muted)] mb-1">
+                    お名前（任意）
                   </label>
                   <input
                     type="text"
                     value={contributorName}
                     onChange={(e) => setContributorName(e.target.value)}
-                    placeholder="e.g., DanceFan123"
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-pink-400 outline-none"
+                    placeholder="例: ダンスファン123"
+                    className="w-full px-3 py-2 bg-[var(--background-tertiary)] text-[var(--foreground)] rounded-xl border border-[var(--card-border)] focus:border-pink-400 outline-none"
                   />
                 </div>
 
@@ -539,11 +539,11 @@ export default function EditorPage() {
                     (artistMode === 'existing' && !selectedArtistId)
                   }
                 >
-                  Load Video & Continue
+                  動画を読み込む
                 </Button>
 
                 {isLoadingArtists && (
-                  <p className="text-gray-400 text-sm text-center">
+                  <p className="text-[var(--foreground-muted)] text-sm text-center">
                     アーティスト情報を読み込み中...
                   </p>
                 )}
@@ -558,8 +558,8 @@ export default function EditorPage() {
               <div className="col-span-2 space-y-4">
                 {/* Video */}
                 <div>
-                  <h2 className="text-white/60 text-sm font-medium mb-2">
-                    Video Reference
+                  <h2 className="text-[var(--foreground-muted)] text-sm font-medium mb-2">
+                    動画
                   </h2>
                   <YouTubePlayer
                     videoId={youtubeVideoId}
@@ -572,16 +572,16 @@ export default function EditorPage() {
                 {/* Stage */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-white/60 text-sm font-medium">
-                      Formation Stage
+                    <h2 className="text-[var(--foreground-muted)] text-sm font-medium">
+                      フォーメーション
                       {currentFormation && (
                         <span className="ml-2 text-pink-400">
-                          - {currentFormation.name} ({currentFormation.time}s)
+                          - {currentFormation.name} ({currentFormation.time}秒)
                         </span>
                       )}
                     </h2>
-                    <span className="text-white/40 text-xs">
-                      Current: {currentTime.toFixed(1)}s / {videoDuration.toFixed(1)}s
+                    <span className="text-[var(--foreground-muted)] text-xs">
+                      現在: {currentTime.toFixed(1)}秒 / {videoDuration.toFixed(1)}秒
                     </span>
                   </div>
                   <EditorStage
@@ -624,7 +624,7 @@ export default function EditorPage() {
                   onClick={handleSave}
                   disabled={members.length === 0 || formations.length === 0 || isSaving}
                 >
-                  {isSaving ? 'Saving...' : 'Save Formation Data'}
+                  {isSaving ? '保存中...' : '保存する'}
                 </Button>
 
                 {/* Error Message */}
@@ -635,17 +635,17 @@ export default function EditorPage() {
                 )}
 
                 {/* Info */}
-                <div className="bg-gray-800/50 rounded-2xl p-3 text-xs text-gray-400">
+                <div className="bg-[var(--card-bg)]/50 rounded-2xl p-3 text-xs text-[var(--foreground-muted)]">
                   <p className="mb-2">
-                    <strong className="text-white">Tips:</strong>
+                    <strong className="text-[var(--foreground)]">ヒント:</strong>
                   </p>
                   <ul className="list-disc list-inside space-y-1">
                     {artistMode === 'new' && (
-                      <li>First add members, then create formations</li>
+                      <li>まずメンバーを追加し、フォーメーションを作成</li>
                     )}
-                    <li>Drag members on the stage to position them</li>
-                    <li>Set the time for each formation to match the video</li>
-                    <li>Preview by playing the video</li>
+                    <li>ステージ上でメンバーをドラッグして配置</li>
+                    <li>動画に合わせてフォーメーションの時間を設定</li>
+                    <li>動画を再生してプレビュー</li>
                   </ul>
                 </div>
               </div>

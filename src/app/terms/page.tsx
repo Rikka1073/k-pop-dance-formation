@@ -86,22 +86,22 @@ export default function TermsPage() {
   const t = content[lang]
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-[var(--background)]">
       <Header />
 
       <main className="max-w-3xl mx-auto px-4 py-12">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-white">{t.title}</h1>
+          <h1 className="text-3xl font-bold text-[var(--foreground)]">{t.title}</h1>
           <LanguageToggle lang={lang} onToggle={setLang} />
         </div>
 
         <div className="prose prose-invert prose-pink max-w-none space-y-8">
           {t.sections.map((section, idx) => (
             <section key={idx}>
-              <h2 className="text-xl font-semibold text-white mb-4">{section.heading}</h2>
-              <p className="text-gray-300 leading-relaxed">{section.body}</p>
+              <h2 className="text-xl font-semibold text-[var(--foreground)] mb-4">{section.heading}</h2>
+              <p className="text-[var(--foreground-muted)] leading-relaxed">{section.body}</p>
               {section.list && (
-                <ul className="list-disc list-inside text-gray-300 space-y-2 mt-3">
+                <ul className="list-disc list-inside text-[var(--foreground-muted)] space-y-2 mt-3">
                   {section.list.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
@@ -110,7 +110,7 @@ export default function TermsPage() {
             </section>
           ))}
 
-          <p className="text-gray-500 text-sm pt-8 border-t border-gray-800">
+          <p className="text-[var(--foreground-muted)] text-sm pt-8 border-t border-[var(--card-border)]">
             {t.effectiveDate}
           </p>
         </div>

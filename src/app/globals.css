@@ -1,29 +1,65 @@
 @import "tailwindcss";
 
+/* Light Theme (default) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --background-secondary: #e2e8f0;
+  --background-tertiary: #cbd5e1;
+  --foreground: #1e293b;
+  --foreground-muted: #64748b;
+
+  /* Card / Panel backgrounds */
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
 
   /* Primary - Pink系（より華やか） */
-  --primary: #f472b6;        /* pink-400 */
-  --primary-light: #f9a8d4;  /* pink-300 */
-  --primary-dark: #ec4899;   /* pink-500 */
+  --primary: #ec4899;
+  --primary-light: #f472b6;
+  --primary-dark: #db2777;
 
   /* Accent - Violet（補助色） */
-  --accent: #a78bfa;         /* violet-400 */
-  --accent-light: #c4b5fd;   /* violet-300 */
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
 
-  /* Cute Colors（かわいさ要素） */
-  --cute-pink: #fda4af;      /* rose-300 */
-  --cute-lavender: #ddd6fe;  /* violet-200 */
-  --cute-peach: #fed7aa;     /* orange-200 */
+  /* Stage background */
+  --stage-bg: #f1f5f9;
+  --stage-bg-secondary: #e2e8f0;
+  --stage-grid: #94a3b8;
+  --stage-line: #64748b;
 
-  /* Energy Colors（躍動感） */
-  --energy-cyan: #22d3ee;    /* cyan-400 */
-  --energy-yellow: #fde047;  /* yellow-300 */
+  /* Text on dark backgrounds (for member icons etc) */
+  --text-on-color: #ffffff;
+}
 
-  /* Gradient */
-  --gradient-primary: linear-gradient(135deg, #f472b6, #a78bfa);
+/* Dark Theme */
+.dark {
+  --background: #030712;
+  --background-secondary: #111827;
+  --background-tertiary: #1f2937;
+  --foreground: #f9fafb;
+  --foreground-muted: #9ca3af;
+
+  /* Card / Panel backgrounds */
+  --card-bg: #1f2937;
+  --card-border: #374151;
+
+  /* Primary - Pink系 */
+  --primary: #f472b6;
+  --primary-light: #f9a8d4;
+  --primary-dark: #ec4899;
+
+  /* Accent - Violet */
+  --accent: #a78bfa;
+  --accent-light: #c4b5fd;
+
+  /* Stage background */
+  --stage-bg: #1f2937;
+  --stage-bg-secondary: #111827;
+  --stage-grid: #4b5563;
+  --stage-line: #6b7280;
+
+  /* Text on dark backgrounds */
+  --text-on-color: #ffffff;
 }
 
 @theme inline {
@@ -33,15 +69,14 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth transitions for theme switching */
+*, *::before, *::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }

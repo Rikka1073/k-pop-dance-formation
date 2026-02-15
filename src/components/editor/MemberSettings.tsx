@@ -35,29 +35,29 @@ export function MemberSettings({
   readOnly = false,
 }: MemberSettingsProps) {
   return (
-    <div className="bg-gray-800 rounded-2xl p-4">
+    <div className="bg-[var(--card-bg)] rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-pink-400 font-semibold">
-          Members
+          メンバー
           {readOnly && (
-            <span className="ml-2 text-xs text-gray-400 font-normal">
+            <span className="ml-2 text-xs text-[var(--foreground-muted)] font-normal">
               (読み取り専用)
             </span>
           )}
         </h3>
         {!readOnly && (
           <Button size="sm" variant="secondary" onClick={onMemberAdd}>
-            + Add
+            + 追加
           </Button>
         )}
       </div>
 
       <div className="space-y-2">
         {members.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center py-4">
+          <p className="text-[var(--foreground-muted)] text-sm text-center py-4">
             {readOnly
               ? 'アーティストを選択してください'
-              : 'No members yet. Click "+ Add" to add members.'}
+              : 'メンバーがいません。「+ 追加」をクリックして追加してください。'}
           </p>
         ) : (
           members.map((member) => (
@@ -67,7 +67,7 @@ export function MemberSettings({
                 'p-3 rounded-xl transition-all duration-200',
                 selectedMemberId === member.id
                   ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
-                  : 'bg-gray-700/50 hover:bg-gray-700'
+                  : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)]'
               )}
               onClick={() => onMemberSelect(member.id)}
             >
@@ -95,14 +95,14 @@ export function MemberSettings({
 
                 {/* 名前 */}
                 {readOnly ? (
-                  <span className="flex-1 text-white text-sm">{member.name}</span>
+                  <span className="flex-1 text-[var(--foreground)] text-sm">{member.name}</span>
                 ) : (
                   <input
                     type="text"
                     value={member.name}
                     onChange={(e) => onMemberUpdate(member.id, { name: e.target.value })}
-                    placeholder="Member name"
-                    className="flex-1 bg-gray-600 text-white text-sm px-2 py-1 rounded border-none outline-none"
+                    placeholder="メンバー名"
+                    className="flex-1 bg-[var(--background-secondary)] text-[var(--foreground)] text-sm px-2 py-1 rounded border-none outline-none"
                   />
                 )}
 
@@ -113,7 +113,7 @@ export function MemberSettings({
                       e.stopPropagation()
                       onMemberDelete(member.id)
                     }}
-                    className="p-1 text-gray-400 hover:text-red-400 transition-colors"
+                    className="p-1 text-[var(--foreground-muted)] hover:text-red-400 transition-colors"
                   >
                     <svg
                       className="w-4 h-4"
@@ -140,7 +140,7 @@ export function MemberSettings({
                       key={color}
                       className={cn(
                         'w-5 h-5 rounded-full transition-transform hover:scale-110',
-                        member.color === color && 'ring-2 ring-white ring-offset-2 ring-offset-gray-800'
+                        member.color === color && 'ring-2 ring-white ring-offset-2 ring-offset-[var(--card-bg)]'
                       )}
                       style={{ backgroundColor: color }}
                       onClick={(e) => {

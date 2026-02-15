@@ -204,10 +204,10 @@ export default function ViewerPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950">
+      <div className="min-h-screen bg-[var(--background)]">
         <Header />
         <div className="flex items-center justify-center h-[60vh]">
-          <div className="text-white">Loading...</div>
+          <div className="text-white">読み込み中...</div>
         </div>
       </div>
     )
@@ -216,7 +216,7 @@ export default function ViewerPage() {
   // Error state
   if (error || !viewerData) {
     return (
-      <div className="min-h-screen bg-gray-950">
+      <div className="min-h-screen bg-[var(--background)]">
         <Header />
         <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
           <div className="text-red-400">{error || 'データが見つかりません'}</div>
@@ -229,7 +229,7 @@ export default function ViewerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-[var(--background)]">
       <Header title={viewerData.videoTitle} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
@@ -237,7 +237,7 @@ export default function ViewerPage() {
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* YouTube Player */}
           <div>
-            <h2 className="text-white/60 text-sm font-medium mb-2">Video</h2>
+            <h2 className="text-[var(--foreground-muted)] text-sm font-medium mb-2">動画</h2>
             <YouTubePlayer
               ref={playerRef}
               videoId={viewerData.youtubeVideoId}
@@ -249,7 +249,7 @@ export default function ViewerPage() {
 
           {/* Formation Stage */}
           <div>
-            <h2 className="text-white/60 text-sm font-medium mb-2">Formation</h2>
+            <h2 className="text-[var(--foreground-muted)] text-sm font-medium mb-2">フォーメーション</h2>
             <FormationStage
               positions={interpolatedPositions}
               nextFormation={nextFormation}
@@ -282,8 +282,8 @@ export default function ViewerPage() {
           />
 
           {/* オプション */}
-          <div className="bg-gray-800 rounded-2xl p-4">
-            <h3 className="text-pink-400 font-semibold mb-3">Options</h3>
+          <div className="bg-[var(--card-bg)] rounded-2xl p-4">
+            <h3 className="text-pink-400 font-semibold mb-3">オプション</h3>
             <div className="space-y-3">
               {/* 動線表示切替 */}
               <label className="flex items-center gap-3 cursor-pointer group">
@@ -291,9 +291,9 @@ export default function ViewerPage() {
                   type="checkbox"
                   checked={showMovementArrows}
                   onChange={(e) => setShowMovementArrows(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
+                  className="w-4 h-4 rounded border-[var(--card-border)] bg-[var(--background-tertiary)] text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
                 />
-                <span className="text-white text-sm group-hover:text-pink-300 transition-colors">Show movement arrows</span>
+                <span className="text-[var(--foreground)] text-sm group-hover:text-pink-300 transition-colors">移動矢印を表示</span>
               </label>
 
               {/* ステージ反転 */}
@@ -302,24 +302,24 @@ export default function ViewerPage() {
                   type="checkbox"
                   checked={stageFlipped}
                   onChange={(e) => setStageFlipped(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
+                  className="w-4 h-4 rounded border-[var(--card-border)] bg-[var(--background-tertiary)] text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
                 />
-                <span className="text-white text-sm group-hover:text-pink-300 transition-colors">観客視点（観客側を下に）</span>
+                <span className="text-[var(--foreground)] text-sm group-hover:text-pink-300 transition-colors">観客視点（観客側を下に）</span>
               </label>
 
               {/* 現在のフォーメーション情報 */}
-              <div className="pt-3 border-t border-gray-700">
-                <p className="text-gray-400 text-xs mb-1">Current Formation</p>
-                <p className="text-white font-medium">
-                  {currentFormation?.name || 'N/A'}
+              <div className="pt-3 border-t border-[var(--card-border)]">
+                <p className="text-[var(--foreground-muted)] text-xs mb-1">現在のフォーメーション</p>
+                <p className="text-[var(--foreground)] font-medium">
+                  {currentFormation?.name || 'なし'}
                 </p>
               </div>
 
               {/* 次のフォーメーション情報 */}
               {nextFormation && (
                 <div>
-                  <p className="text-gray-400 text-xs mb-1">Next Formation</p>
-                  <p className="text-white font-medium">{nextFormation.name}</p>
+                  <p className="text-[var(--foreground-muted)] text-xs mb-1">次のフォーメーション</p>
+                  <p className="text-[var(--foreground)] font-medium">{nextFormation.name}</p>
                 </div>
               )}
             </div>
@@ -327,25 +327,25 @@ export default function ViewerPage() {
         </div>
 
         {/* アーティスト情報 + Edit */}
-        <div className="mt-6 p-4 bg-gray-800/50 rounded-2xl flex items-center justify-between">
-          <p className="text-gray-400 text-sm">
+        <div className="mt-6 p-4 bg-[var(--card-bg)]/50 rounded-2xl flex items-center justify-between">
+          <p className="text-[var(--foreground-muted)] text-sm">
             <span className="text-pink-300 font-medium">{viewerData.artistName}</span>
             {' • '}
-            {viewerData.members.length} members
+            {viewerData.members.length}人
             {' • '}
-            {viewerData.formations.length} formations
+            {viewerData.formations.length}フォーメーション
             {viewerData.contributorName && (
               <>
                 {' • '}
-                Contributed by {viewerData.contributorName}
+                作成者: {viewerData.contributorName}
               </>
             )}
           </p>
           <a
             href={`/editor/${videoId}`}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-xl hover:-translate-y-0.5 transition-all duration-200"
+            className="px-4 py-2 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] text-sm rounded-xl hover:-translate-y-0.5 transition-all duration-200"
           >
-            Edit Formation
+            編集
           </a>
         </div>
       </main>

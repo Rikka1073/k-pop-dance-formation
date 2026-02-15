@@ -11,10 +11,10 @@ interface MemberListProps {
 
 export function MemberList({ members, selectedMemberId, onMemberSelect }: MemberListProps) {
   return (
-    <div className="bg-gray-800 rounded-2xl p-4">
-      <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-        <span className="text-pink-400">Members</span>
-        <span className="text-xs text-gray-500">({members.length})</span>
+    <div className="bg-[var(--card-bg)] rounded-2xl p-4">
+      <h3 className="text-[var(--foreground)] font-semibold mb-3 flex items-center gap-2">
+        <span className="text-pink-400">メンバー</span>
+        <span className="text-xs text-[var(--foreground-muted)]">({members.length})</span>
       </h3>
       <div className="space-y-2">
         {members.map((member) => {
@@ -27,7 +27,7 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
                 'w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200',
                 isSelected
                   ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50 shadow-lg shadow-pink-500/10'
-                  : 'bg-white/5 hover:bg-white/10 hover:-translate-x-1'
+                  : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)] hover:-translate-x-1'
               )}
               onClick={() => onMemberSelect(isSelected ? null : member.id)}
             >
@@ -48,14 +48,14 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
               {/* 名前 */}
               <span className={cn(
                 'text-sm font-medium transition-colors',
-                isSelected ? 'text-pink-300' : 'text-white'
+                isSelected ? 'text-pink-300' : 'text-[var(--foreground)]'
               )}>{member.name}</span>
 
               {/* 選択インジケーター */}
               {isSelected && (
                 <span className="ml-auto text-xs text-pink-400/80 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-                  Selected
+                  選択中
                 </span>
               )}
             </button>
@@ -66,10 +66,10 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
       {/* 選択解除ボタン */}
       {selectedMemberId && (
         <button
-          className="w-full mt-3 py-2 text-sm text-gray-400 hover:text-pink-400 rounded-xl hover:bg-white/5 transition-all duration-200"
+          className="w-full mt-3 py-2 text-sm text-[var(--foreground-muted)] hover:text-pink-400 rounded-xl hover:bg-[var(--background-tertiary)]/50 transition-all duration-200"
           onClick={() => onMemberSelect(null)}
         >
-          Clear Selection
+          選択解除
         </button>
       )}
     </div>

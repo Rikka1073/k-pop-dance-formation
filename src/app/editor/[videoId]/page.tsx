@@ -325,10 +325,10 @@ export default function EditVideoPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950">
-        <Header title="Formation Editor" />
+      <div className="min-h-screen bg-[var(--background)]">
+        <Header title="フォーメーション編集" />
         <div className="flex items-center justify-center h-[60vh]">
-          <div className="text-white">Loading...</div>
+          <div className="text-white">読み込み中...</div>
         </div>
       </div>
     )
@@ -337,8 +337,8 @@ export default function EditVideoPage() {
   // Error state
   if (loadError) {
     return (
-      <div className="min-h-screen bg-gray-950">
-        <Header title="Formation Editor" />
+      <div className="min-h-screen bg-[var(--background)]">
+        <Header title="フォーメーション編集" />
         <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
           <div className="text-red-400">{loadError}</div>
           <a href="/" className="text-pink-400 hover:underline">
@@ -350,22 +350,22 @@ export default function EditVideoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Header title={`Edit: ${videoTitle}`} />
+    <div className="min-h-screen bg-[var(--background)]">
+      <Header title={`編集: ${videoTitle}`} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Video Info Banner */}
-        <div className="bg-gray-800 rounded-2xl p-4 mb-6">
+        <div className="bg-[var(--card-bg)] rounded-2xl p-4 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-white font-semibold">{videoTitle}</h2>
-              <p className="text-gray-400 text-sm">{artistName}</p>
+              <h2 className="text-[var(--foreground)] font-semibold">{videoTitle}</h2>
+              <p className="text-[var(--foreground-muted)] text-sm">{artistName}</p>
             </div>
             <a
               href={`/viewer/${videoId}`}
               className="text-pink-400 hover:text-pink-300 text-sm"
             >
-              View Mode →
+              再生モード →
             </a>
           </div>
         </div>
@@ -374,7 +374,7 @@ export default function EditVideoPage() {
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* Video */}
           <div>
-            <h2 className="text-white/60 text-sm font-medium mb-2">Video</h2>
+            <h2 className="text-[var(--foreground-muted)] text-sm font-medium mb-2">動画</h2>
             <YouTubePlayer
               videoId={youtubeVideoId}
               onDurationChange={handleDurationChange}
@@ -385,8 +385,8 @@ export default function EditVideoPage() {
           {/* Formation Stage */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-white/60 text-sm font-medium">
-                Formation
+              <h2 className="text-[var(--foreground-muted)] text-sm font-medium">
+                フォーメーション
                 {currentFormation && (
                   <span className="ml-2 text-pink-400">
                     - {currentFormation.name}
@@ -399,11 +399,11 @@ export default function EditVideoPage() {
                     type="checkbox"
                     checked={stageFlipped}
                     onChange={(e) => setStageFlipped(e.target.checked)}
-                    className="w-3 h-3 rounded border-gray-600 bg-gray-700 text-pink-500"
+                    className="w-3 h-3 rounded border-gray-600 bg-[var(--background-tertiary)] text-pink-500"
                   />
-                  <span className="text-white/40 text-xs">観客視点</span>
+                  <span className="text-[var(--foreground-muted)] text-xs">観客視点</span>
                 </label>
-                <span className="text-white/40 text-xs">
+                <span className="text-[var(--foreground-muted)] text-xs">
                   {currentTime.toFixed(1)}s / {videoDuration.toFixed(1)}s
                 </span>
               </div>
@@ -421,8 +421,8 @@ export default function EditVideoPage() {
         {/* Bottom Controls - 3 columns */}
         <div className="grid grid-cols-3 gap-4">
           {/* Left: Members */}
-          <div className="bg-gray-800 rounded-2xl p-4">
-            <h3 className="text-pink-400 font-semibold mb-3">Members</h3>
+          <div className="bg-[var(--card-bg)] rounded-2xl p-4">
+            <h3 className="text-pink-400 font-semibold mb-3">メンバー</h3>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {members.map((member) => (
                 <div
@@ -431,14 +431,14 @@ export default function EditVideoPage() {
                   className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all ${
                     selectedMemberId === member.id
                       ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
-                      : 'bg-gray-700/50 hover:bg-gray-700'
+                      : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)]'
                   }`}
                 >
                   <div
                     className="w-8 h-8 rounded-full"
                     style={{ backgroundColor: member.color }}
                   />
-                  <span className="text-white text-sm">{member.name}</span>
+                  <span className="text-[var(--foreground)] text-sm">{member.name}</span>
                 </div>
               ))}
             </div>
@@ -449,12 +449,12 @@ export default function EditVideoPage() {
               const position = currentFormation.positions.find((p) => p.memberId === selectedMemberId)
               if (!selectedMember || !position) return null
               return (
-                <div className="mt-4 pt-4 border-t border-gray-700">
-                  <p className="text-gray-400 text-xs mb-2">Position</p>
+                <div className="mt-4 pt-4 border-t border-[var(--card-border)]">
+                  <p className="text-[var(--foreground-muted)] text-xs mb-2">位置</p>
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-400">X:</span>
+                    <span className="text-[var(--foreground-muted)]">X:</span>
                     <span className="text-white">{Math.round(position.x - 50)}</span>
-                    <span className="text-gray-400 ml-2">Y:</span>
+                    <span className="text-[var(--foreground-muted)] ml-2">Y:</span>
                     <span className="text-white">{Math.round(position.y - 50)}</span>
                   </div>
                 </div>
@@ -491,7 +491,7 @@ export default function EditVideoPage() {
             })()}
 
             {/* Save Buttons */}
-            <div className="bg-gray-800 rounded-2xl p-4 space-y-3">
+            <div className="bg-[var(--card-bg)] rounded-2xl p-4 space-y-3">
               {/* Quick Save */}
               <Button
                 className="w-full"
@@ -499,7 +499,7 @@ export default function EditVideoPage() {
                 onClick={() => handleSave(false)}
                 disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
               >
-                {isSaving ? 'Saving...' : '保存'}
+                {isSaving ? '保存中...' : '保存'}
               </Button>
 
               {/* Save & View */}
@@ -509,7 +509,7 @@ export default function EditVideoPage() {
                 onClick={() => handleSave(true)}
                 disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
               >
-                {isSaving ? 'Saving...' : '保存して確認'}
+                {isSaving ? '保存中...' : '保存して確認'}
               </Button>
 
               {/* Last saved time */}
