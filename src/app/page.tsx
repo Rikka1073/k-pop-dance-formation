@@ -31,8 +31,6 @@ export default function HomePage() {
 
   // Intersection Observer ref for infinite scroll
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  // Ref to prevent double loading in Strict Mode
-  const demoInitializedRef = useRef(false)
 
   // Load real videos
   useEffect(() => {
@@ -82,16 +80,6 @@ export default function HomePage() {
     loadVideos()
   }, [])
 
-  // Load initial demo videos when demo mode is enabled
-  useEffect(() => {
-    if (demoMode && demoVideos.length === 0 && !demoInitializedRef.current) {
-      demoInitializedRef.current = true
-      const initial = generateDemoVideos(DEMO_PAGE_SIZE, 0)
-      setDemoVideos(initial)
-      setDemoPage(1)
-      setHasMoreDemo(DEMO_PAGE_SIZE < DEMO_VIDEO_TOTAL)
-    }
-  }, [demoMode, demoVideos.length])
 
   // Load more demo videos
   const loadMoreDemoVideos = useCallback(() => {
@@ -143,12 +131,17 @@ export default function HomePage() {
       setDemoVideos([])
       setDemoPage(0)
       setHasMoreDemo(true)
-      demoInitializedRef.current = false
+      setDemoMode(false)
     } else {
-      // デモモードをONにする時は新しいセッションIDを生成
-      setDemoSessionId(Date.now())
+      // デモモードをONにする時は新しいセッションIDを生成して初期データをロード
+      const newSessionId = Date.now()
+      setDemoSessionId(newSessionId)
+      const initial = generateDemoVideos(DEMO_PAGE_SIZE, 0)
+      setDemoVideos(initial)
+      setDemoPage(1)
+      setHasMoreDemo(DEMO_PAGE_SIZE < DEMO_VIDEO_TOTAL)
+      setDemoMode(true)
     }
-    setDemoMode(prev => !prev)
   }
 
   // Combined videos list
