@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { Header, Footer } from '@/components/layout'
+import { VideoCard } from '@/components/home'
 import { sampleArtist, sampleVideo, sampleFormationData } from '@/data/mock/sample-formation'
+import { generateDemoVideos, DEMO_VIDEO_TOTAL, DEMO_PAGE_SIZE, DemoVideo } from '@/data/mock/demo-videos'
 import { isSupabaseConfigured } from '@/lib/supabase'
-import { getVideos, VideoWithArtist } from '@/lib/supabase/queries'
+import { getVideos } from '@/lib/supabase/queries'
 
 interface VideoCardData {
   id: string
@@ -14,17 +16,26 @@ interface VideoCardData {
   youtubeVideoId: string
   members: { id: string; name: string; color: string }[]
   formationCount?: number
+  isDemo?: boolean
 }
 
 export default function HomePage() {
   const [videos, setVideos] = useState<VideoCardData[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [demoMode, setDemoMode] = useState(false)
+  const [demoVideos, setDemoVideos] = useState<DemoVideo[]>([])
+  const [demoPage, setDemoPage] = useState(0)
+  const [hasMoreDemo, setHasMoreDemo] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
+  // Intersection Observer ref for infinite scroll
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+
+  // Load real videos
   useEffect(() => {
     async function loadVideos() {
       setIsLoading(true)
 
-      // Start with sample video
       const allVideos: VideoCardData[] = [
         {
           id: sampleVideo.id,
@@ -40,7 +51,6 @@ export default function HomePage() {
         },
       ]
 
-      // Load from Supabase if configured
       if (isSupabaseConfigured()) {
         try {
           const dbVideos = await getVideos()
@@ -68,6 +78,72 @@ export default function HomePage() {
 
     loadVideos()
   }, [])
+
+  // Load initial demo videos when demo mode is enabled
+  useEffect(() => {
+    if (demoMode && demoVideos.length === 0) {
+      const initial = generateDemoVideos(DEMO_PAGE_SIZE, 0)
+      setDemoVideos(initial)
+      setDemoPage(1)
+      setHasMoreDemo(DEMO_PAGE_SIZE < DEMO_VIDEO_TOTAL)
+    }
+  }, [demoMode, demoVideos.length])
+
+  // Load more demo videos
+  const loadMoreDemoVideos = useCallback(() => {
+    if (isLoadingMore || !hasMoreDemo) return
+
+    setIsLoadingMore(true)
+
+    // Simulate network delay
+    setTimeout(() => {
+      const startIndex = demoPage * DEMO_PAGE_SIZE
+      const newVideos = generateDemoVideos(DEMO_PAGE_SIZE, startIndex)
+
+      setDemoVideos(prev => [...prev, ...newVideos])
+      setDemoPage(prev => prev + 1)
+      setHasMoreDemo(startIndex + DEMO_PAGE_SIZE < DEMO_VIDEO_TOTAL)
+      setIsLoadingMore(false)
+    }, 500)
+  }, [demoPage, hasMoreDemo, isLoadingMore])
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    if (!demoMode || !hasMoreDemo) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMoreDemoVideos()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    const currentRef = loadMoreRef.current
+    if (currentRef) {
+      observer.observe(currentRef)
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef)
+      }
+    }
+  }, [demoMode, hasMoreDemo, loadMoreDemoVideos])
+
+  // Toggle demo mode
+  const toggleDemoMode = () => {
+    setDemoMode(prev => !prev)
+  }
+
+  // Combined videos list
+  const displayVideos: VideoCardData[] = demoMode
+    ? [
+        ...videos,
+        ...demoVideos.map(v => ({ ...v, isDemo: true })),
+      ]
+    : videos
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
@@ -101,115 +177,113 @@ export default function HomePage() {
 
         {/* コンテンツ */}
         <section>
-          <h2 className="text-2xl font-bold text-[var(--foreground)] mb-6">フォーメーション一覧</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-[var(--foreground)]">
+              フォーメーション一覧
+              {demoMode && (
+                <span className="ml-3 text-sm font-normal text-pink-400">
+                  ({displayVideos.length} / {videos.length + DEMO_VIDEO_TOTAL})
+                </span>
+              )}
+            </h2>
+
+            {/* デモモードトグル */}
+            <button
+              onClick={toggleDemoMode}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                demoMode
+                  ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/25'
+                  : 'bg-[var(--card-bg)] text-[var(--foreground-muted)] hover:bg-[var(--background-tertiary)]'
+              }`}
+            >
+              {demoMode ? 'デモモード ON' : 'デモモード'}
+            </button>
+          </div>
 
           {isLoading ? (
             <div className="text-center py-12">
               <div className="text-[var(--foreground-muted)]">読み込み中...</div>
             </div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.map((video) => (
-                <Link
-                  key={video.id}
-                  href={`/viewer/${video.id}`}
-                  className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden hover:ring-2 hover:ring-pink-400 hover:shadow-lg hover:shadow-pink-500/20 hover:-translate-y-1 transition-all duration-200"
-                >
-                  {/* サムネイル */}
-                  <div className="relative aspect-video bg-[var(--background-secondary)]">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                        <svg
-                          className="w-8 h-8 text-white ml-1"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </div>
-                    </div>
-                    {/* メンバープレビュー */}
-                    <div className="absolute inset-0 opacity-50">
-                      {video.members.slice(0, 8).map((member, idx) => {
-                        const angle = (idx / video.members.length) * 2 * Math.PI
-                        const x = 50 + 25 * Math.cos(angle)
-                        const y = 50 + 25 * Math.sin(angle)
-                        return (
-                          <div
-                            key={member.id}
-                            className="absolute w-3 h-3 rounded-full"
-                            style={{
-                              left: `${x}%`,
-                              top: `${y}%`,
-                              backgroundColor: member.color,
-                              transform: 'translate(-50%, -50%)',
-                            }}
-                          />
-                        )
-                      })}
-                    </div>
-                  </div>
+            <>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                {displayVideos.map((video) => (
+                  <VideoCard
+                    key={video.id}
+                    id={video.id}
+                    title={video.title}
+                    artistName={video.artistName}
+                    members={video.members}
+                    formationCount={video.formationCount}
+                    isDemo={video.isDemo}
+                  />
+                ))}
 
-                  {/* コンテンツ */}
-                  <div className="p-4">
-                    <h3 className="text-[var(--foreground)] font-semibold mb-1 group-hover:text-pink-400 transition-colors truncate">
-                      {video.title}
-                    </h3>
-                    <p className="text-[var(--foreground-muted)] text-sm mb-3">{video.artistName}</p>
-
-                    {/* メンバーアイコン */}
-                    <div className="flex gap-1 flex-wrap">
-                      {video.members.slice(0, 8).map((member) => (
-                        <div
-                          key={member.id}
-                          className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                          style={{ backgroundColor: member.color }}
-                          title={member.name}
-                        >
-                          {member.name.charAt(0)}
-                        </div>
-                      ))}
-                      {video.members.length > 8 && (
-                        <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[var(--background-tertiary)] text-[var(--foreground)] text-xs">
-                          +{video.members.length - 8}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* メタ情報 */}
-                    <div className="mt-3 pt-3 border-t border-[var(--card-border)] flex items-center gap-4 text-xs text-[var(--foreground-muted)]">
-                      {video.formationCount !== undefined && (
-                        <span>{video.formationCount}個のフォーメーション</span>
-                      )}
-                      <span>{video.members.length}人</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-
-              {/* プレースホルダーカード */}
-              <Link
-                href="/editor"
-                className="bg-[var(--card-bg)]/50 rounded-2xl border-2 border-dashed border-[var(--card-border)] p-8 flex flex-col items-center justify-center text-center hover:border-pink-400 hover:bg-[var(--card-bg)]/70 hover:-translate-y-1 transition-all duration-200"
-              >
-                <div className="w-12 h-12 rounded-full bg-[var(--background-tertiary)] flex items-center justify-center mb-4">
-                  <svg
-                    className="w-6 h-6 text-[var(--foreground-muted)]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                {/* プレースホルダーカード（デモモードでない時のみ） */}
+                {!demoMode && (
+                  <Link
+                    href="/editor"
+                    className="bg-[var(--card-bg)]/50 rounded-2xl border-2 border-dashed border-[var(--card-border)] p-8 flex flex-col items-center justify-center text-center hover:border-pink-400 hover:bg-[var(--card-bg)]/70 hover:-translate-y-1 transition-all duration-200"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
+                    <div className="w-12 h-12 rounded-full bg-[var(--background-tertiary)] flex items-center justify-center mb-4">
+                      <svg
+                        className="w-6 h-6 text-[var(--foreground-muted)]"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-[var(--foreground-muted)] text-sm">新しいフォーメーションを追加</p>
+                  </Link>
+                )}
+              </div>
+
+              {/* 無限スクロール用のローディング表示 */}
+              {demoMode && hasMoreDemo && (
+                <div
+                  ref={loadMoreRef}
+                  className="flex justify-center items-center py-12"
+                >
+                  {isLoadingMore ? (
+                    <div className="flex items-center gap-3 text-[var(--foreground-muted)]">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      <span>読み込み中...</span>
+                    </div>
+                  ) : (
+                    <div className="h-10" />
+                  )}
                 </div>
-                <p className="text-[var(--foreground-muted)] text-sm">新しいフォーメーションを追加</p>
-              </Link>
-            </div>
+              )}
+
+              {/* デモモードで全て読み込み完了 */}
+              {demoMode && !hasMoreDemo && (
+                <div className="text-center py-8 text-[var(--foreground-muted)]">
+                  全 {displayVideos.length} 件を表示中
+                </div>
+              )}
+            </>
           )}
         </section>
 

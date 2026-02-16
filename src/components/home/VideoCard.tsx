@@ -1,0 +1,120 @@
+'use client'
+
+import Link from 'next/link'
+
+interface VideoCardProps {
+  id: string
+  title: string
+  artistName: string
+  members: { id: string; name: string; color: string }[]
+  formationCount?: number
+  isDemo?: boolean
+}
+
+export function VideoCard({
+  id,
+  title,
+  artistName,
+  members,
+  formationCount,
+  isDemo = false,
+}: VideoCardProps) {
+  const href = isDemo ? '#' : `/viewer/${id}`
+
+  const CardContent = (
+    <>
+      {/* サムネイル */}
+      <div className="relative aspect-video bg-[var(--background-secondary)]">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+            <svg
+              className="w-8 h-8 text-white ml-1"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+        {/* メンバープレビュー */}
+        <div className="absolute inset-0 opacity-50">
+          {members.slice(0, 8).map((member, idx) => {
+            const angle = (idx / members.length) * 2 * Math.PI
+            const x = 50 + 25 * Math.cos(angle)
+            const y = 50 + 25 * Math.sin(angle)
+            return (
+              <div
+                key={member.id}
+                className="absolute w-3 h-3 rounded-full"
+                style={{
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  backgroundColor: member.color,
+                  transform: 'translate(-50%, -50%)',
+                }}
+              />
+            )
+          })}
+        </div>
+        {/* デモバッジ */}
+        {isDemo && (
+          <div className="absolute top-2 right-2 px-2 py-0.5 bg-pink-500/80 text-white text-xs rounded-full">
+            デモ
+          </div>
+        )}
+      </div>
+
+      {/* コンテンツ */}
+      <div className="p-4">
+        <h3 className="text-[var(--foreground)] font-semibold mb-1 group-hover:text-pink-400 transition-colors truncate">
+          {title}
+        </h3>
+        <p className="text-[var(--foreground-muted)] text-sm mb-3">{artistName}</p>
+
+        {/* メンバーアイコン */}
+        <div className="flex gap-1 flex-wrap">
+          {members.slice(0, 8).map((member) => (
+            <div
+              key={member.id}
+              className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
+              style={{ backgroundColor: member.color }}
+              title={member.name}
+            >
+              {member.name.charAt(0)}
+            </div>
+          ))}
+          {members.length > 8 && (
+            <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[var(--background-tertiary)] text-[var(--foreground)] text-xs">
+              +{members.length - 8}
+            </div>
+          )}
+        </div>
+
+        {/* メタ情報 */}
+        <div className="mt-3 pt-3 border-t border-[var(--card-border)] flex items-center gap-4 text-xs text-[var(--foreground-muted)]">
+          {formationCount !== undefined && (
+            <span>{formationCount}個のフォーメーション</span>
+          )}
+          <span>{members.length}人</span>
+        </div>
+      </div>
+    </>
+  )
+
+  if (isDemo) {
+    return (
+      <div className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden cursor-not-allowed opacity-90">
+        {CardContent}
+      </div>
+    )
+  }
+
+  return (
+    <Link
+      href={href}
+      className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden hover:ring-2 hover:ring-pink-400 hover:shadow-lg hover:shadow-pink-500/20 hover:-translate-y-1 transition-all duration-200"
+    >
+      {CardContent}
+    </Link>
+  )
+}
