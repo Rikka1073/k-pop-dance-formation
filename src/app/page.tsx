@@ -31,6 +31,8 @@ export default function HomePage() {
 
   // Intersection Observer ref for infinite scroll
   const loadMoreRef = useRef<HTMLDivElement>(null)
+  // Ref to prevent double loading in Strict Mode
+  const demoInitializedRef = useRef(false)
 
   // Load real videos
   useEffect(() => {
@@ -82,7 +84,8 @@ export default function HomePage() {
 
   // Load initial demo videos when demo mode is enabled
   useEffect(() => {
-    if (demoMode && demoVideos.length === 0) {
+    if (demoMode && demoVideos.length === 0 && !demoInitializedRef.current) {
+      demoInitializedRef.current = true
       const initial = generateDemoVideos(DEMO_PAGE_SIZE, 0)
       setDemoVideos(initial)
       setDemoPage(1)
@@ -140,6 +143,7 @@ export default function HomePage() {
       setDemoVideos([])
       setDemoPage(0)
       setHasMoreDemo(true)
+      demoInitializedRef.current = false
     } else {
       // デモモードをONにする時は新しいセッションIDを生成
       setDemoSessionId(Date.now())
