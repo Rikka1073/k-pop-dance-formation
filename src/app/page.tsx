@@ -27,6 +27,7 @@ export default function HomePage() {
   const [demoPage, setDemoPage] = useState(0)
   const [hasMoreDemo, setHasMoreDemo] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [demoSessionId, setDemoSessionId] = useState(0)
 
   // Intersection Observer ref for infinite scroll
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -139,6 +140,9 @@ export default function HomePage() {
       setDemoVideos([])
       setDemoPage(0)
       setHasMoreDemo(true)
+    } else {
+      // デモモードをONにする時は新しいセッションIDを生成
+      setDemoSessionId(Date.now())
     }
     setDemoMode(prev => !prev)
   }
@@ -147,7 +151,11 @@ export default function HomePage() {
   const displayVideos: VideoCardData[] = demoMode
     ? [
         ...videos,
-        ...demoVideos.map(v => ({ ...v, isDemo: true })),
+        ...demoVideos.map(v => ({
+          ...v,
+          id: `${demoSessionId}-${v.id}`, // セッションIDを追加してユニークにする
+          isDemo: true
+        })),
       ]
     : videos
 
