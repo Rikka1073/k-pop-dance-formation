@@ -134,6 +134,12 @@ export default function HomePage() {
 
   // Toggle demo mode
   const toggleDemoMode = () => {
+    if (demoMode) {
+      // デモモードをOFFにする時はデータをリセット
+      setDemoVideos([])
+      setDemoPage(0)
+      setHasMoreDemo(true)
+    }
     setDemoMode(prev => !prev)
   }
 
