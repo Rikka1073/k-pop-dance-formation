@@ -224,6 +224,7 @@ export default function HomePage() {
                     id={video.id}
                     title={video.title}
                     artistName={video.artistName}
+                    youtubeVideoId={video.youtubeVideoId}
                     members={video.members}
                     formationCount={video.formationCount}
                     isDemo={video.isDemo}

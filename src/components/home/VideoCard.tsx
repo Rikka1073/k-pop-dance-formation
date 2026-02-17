@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface VideoCardProps {
   id: string
   title: string
   artistName: string
+  youtubeVideoId: string
   members: { id: string; name: string; color: string }[]
   formationCount?: number
   isDemo?: boolean
@@ -15,46 +17,37 @@ export function VideoCard({
   id,
   title,
   artistName,
+  youtubeVideoId,
   members,
   formationCount,
   isDemo = false,
 }: VideoCardProps) {
   const href = isDemo ? '#' : `/viewer/${id}`
+  const thumbnailUrl = `https://img.youtube.com/vi/${youtubeVideoId}/mqdefault.jpg`
 
   const CardContent = (
     <>
       {/* サムネイル */}
-      <div className="relative aspect-video bg-[var(--background-secondary)]">
+      <div className="relative aspect-video bg-[var(--background-secondary)] overflow-hidden">
+        {/* YouTubeサムネイル */}
+        <img
+          src={thumbnailUrl}
+          alt={title}
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+        {/* オーバーレイ */}
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+        {/* 再生ボタン */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+          <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center group-hover:bg-pink-500/80 group-hover:scale-110 transition-all duration-200">
             <svg
-              className="w-8 h-8 text-white ml-1"
+              className="w-6 h-6 text-white ml-1"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>
-        </div>
-        {/* メンバープレビュー */}
-        <div className="absolute inset-0 opacity-50">
-          {members.slice(0, 8).map((member, idx) => {
-            const angle = (idx / members.length) * 2 * Math.PI
-            const x = 50 + 25 * Math.cos(angle)
-            const y = 50 + 25 * Math.sin(angle)
-            return (
-              <div
-                key={member.id}
-                className="absolute w-3 h-3 rounded-full"
-                style={{
-                  left: `${x}%`,
-                  top: `${y}%`,
-                  backgroundColor: member.color,
-                  transform: 'translate(-50%, -50%)',
-                }}
-              />
-            )
-          })}
         </div>
         {/* デモバッジ */}
         {isDemo && (
