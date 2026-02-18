@@ -64,6 +64,7 @@ export default function EditorPage() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const [videoDuration, setVideoDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
+  const [isFetchingVideoInfo, setIsFetchingVideoInfo] = useState(false)
 
   // Members
   const [members, setMembers] = useState<Member[]>([])
@@ -132,11 +133,79 @@ export default function EditorPage() {
     }
   }
 
+  // ============ Video Info Fetch ============
+
+  // タイトルからアーティスト名を推測
+  const extractArtistFromTitle = (title: string): string | null => {
+    // パターン: "ARTIST - Song Title" or "ARTIST 'Song Title'" or "[MV] ARTIST - Song"
+    const patterns = [
+      /^\[?(?:MV|M\/V|Official|公式)?\]?\s*([^-–—]+?)\s*[-–—]/i,
+      /^([^''"「『]+?)\s*[''""「『]/,
+      /^(.+?)\s*[-–—]\s*.+(?:Dance Practice|안무|練習|Choreography)/i,
+    ]
+
+    for (const pattern of patterns) {
+      const match = title.match(pattern)
+      if (match) {
+        return match[1].trim()
+      }
+    }
+    return null
+  }
+
+  // YouTube oEmbed APIから動画情報を取得
+  const fetchVideoInfo = useCallback(async (videoId: string) => {
+    if (!videoId || videoId.length < 5) return
+
+    setIsFetchingVideoInfo(true)
+    try {
+      const response = await fetch(
+        `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`
+      )
+      if (response.ok) {
+        const data = await response.json()
+        // タイトルを自動設定
+        if (data.title && !videoTitle) {
+          setVideoTitle(data.title)
+        }
+        // アーティスト名を推測して自動設定（新規アーティストモードの場合のみ）
+        if (data.title && artistMode === 'new' && !artistName) {
+          const extracted = extractArtistFromTitle(data.title)
+          if (extracted) {
+            setArtistName(extracted)
+          } else if (data.author_name) {
+            // フォールバック: チャンネル名を使用
+            setArtistName(data.author_name)
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch video info:', error)
+    } finally {
+      setIsFetchingVideoInfo(false)
+    }
+  }, [videoTitle, artistMode, artistName])
+
   // ============ Video Handlers ============
 
   const handleLoadVideo = () => {
     if (!youtubeVideoId.trim()) return
     setIsVideoLoaded(true)
+  }
+
+  // YouTube IDが変わったら情報を取得
+  const handleVideoIdChange = (input: string) => {
+    // Extract video ID from URL if needed
+    const match = input.match(
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/
+    )
+    const videoId = match ? match[1] : input
+    setYoutubeVideoId(videoId)
+
+    // 有効なIDの場合は情報を取得
+    if (videoId && videoId.length >= 11) {
+      fetchVideoInfo(videoId)
+    }
   }
 
   const handleVideoReady = () => {
@@ -407,21 +476,20 @@ export default function EditorPage() {
                 <div>
                   <label className="block text-sm text-[var(--foreground-muted)] mb-1">
                     YouTube動画IDまたはURL
+                    {isFetchingVideoInfo && (
+                      <span className="ml-2 text-pink-400">情報を取得中...</span>
+                    )}
                   </label>
                   <input
                     type="text"
                     value={youtubeVideoId}
-                    onChange={(e) => {
-                      // Extract video ID from URL if needed
-                      const input = e.target.value
-                      const match = input.match(
-                        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/
-                      )
-                      setYoutubeVideoId(match ? match[1] : input)
-                    }}
+                    onChange={(e) => handleVideoIdChange(e.target.value)}
                     placeholder="例: dQw4w9WgXcQ または https://youtube.com/watch?v=..."
                     className="w-full px-3 py-2 bg-[var(--background-tertiary)] text-[var(--foreground)] rounded-xl border border-[var(--card-border)] focus:border-pink-400 outline-none"
                   />
+                  <p className="mt-1 text-xs text-[var(--foreground-muted)]">
+                    URLを入力するとタイトルとアーティスト名を自動取得します
+                  </p>
                 </div>
 
                 <div>
