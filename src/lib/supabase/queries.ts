@@ -170,6 +170,25 @@ export async function getVideoById(id: string): Promise<VideoWithArtist | null> 
   return data as VideoWithArtist
 }
 
+export async function getVideoByYoutubeId(youtubeVideoId: string): Promise<VideoWithArtist | null> {
+  const client = getSupabaseClient()
+  const { data, error } = await client
+    .from('videos')
+    .select(`
+      *,
+      artist:artists (
+        *,
+        members (*)
+      )
+    `)
+    .eq('youtube_video_id', youtubeVideoId)
+    .limit(1)
+
+  if (error) throw error
+  if (!data || data.length === 0) return null
+  return data[0] as VideoWithArtist
+}
+
 export async function createVideo(
   artistId: string,
   youtubeVideoId: string,

@@ -14,6 +14,7 @@ import { Member, Position } from '@/types'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import {
   getArtists,
+  getVideoByYoutubeId,
   createArtist,
   createMember,
   createVideo,
@@ -22,6 +23,7 @@ import {
   createPosition,
   ArtistWithMembers,
 } from '@/lib/supabase/queries'
+import { sampleVideo } from '@/data/mock/sample-formation'
 
 // Generate unique ID
 function generateId() {
@@ -65,6 +67,7 @@ export default function EditorPage() {
   const [videoDuration, setVideoDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [isFetchingVideoInfo, setIsFetchingVideoInfo] = useState(false)
+  const [duplicateError, setDuplicateError] = useState<string | null>(null)
 
   // Members
   const [members, setMembers] = useState<Member[]>([])
@@ -153,12 +156,43 @@ export default function EditorPage() {
     return null
   }
 
+  // 重複チェック
+  const checkDuplicate = useCallback(async (videoId: string): Promise<string | null> => {
+    // サンプル動画との重複チェック
+    if (videoId === sampleVideo.youtubeVideoId) {
+      return `この動画は既にサンプルとして登録されています（${sampleVideo.title}）`
+    }
+
+    // Supabase内の動画との重複チェック
+    if (isSupabaseConfigured()) {
+      try {
+        const existingVideo = await getVideoByYoutubeId(videoId)
+        if (existingVideo) {
+          return `この動画は既に登録されています（${existingVideo.title}）`
+        }
+      } catch (error) {
+        console.error('Failed to check duplicate:', error)
+      }
+    }
+
+    return null
+  }, [])
+
   // YouTube oEmbed APIから動画情報を取得
   const fetchVideoInfo = useCallback(async (videoId: string) => {
     if (!videoId || videoId.length < 5) return
 
     setIsFetchingVideoInfo(true)
+    setDuplicateError(null)
+
     try {
+      // 重複チェック
+      const duplicateMessage = await checkDuplicate(videoId)
+      if (duplicateMessage) {
+        setDuplicateError(duplicateMessage)
+      }
+
+      // 動画情報を取得
       const response = await fetch(
         `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`
       )
@@ -184,7 +218,7 @@ export default function EditorPage() {
     } finally {
       setIsFetchingVideoInfo(false)
     }
-  }, [videoTitle, artistMode, artistName])
+  }, [videoTitle, artistMode, artistName, checkDuplicate])
 
   // ============ Video Handlers ============
 
@@ -201,6 +235,7 @@ export default function EditorPage() {
     )
     const videoId = match ? match[1] : input
     setYoutubeVideoId(videoId)
+    setDuplicateError(null) // 入力が変わったらエラーをクリア
 
     // 有効なIDの場合は情報を取得
     if (videoId && videoId.length >= 11) {
@@ -597,6 +632,16 @@ export default function EditorPage() {
                   />
                 </div>
 
+                {/* 重複エラー表示 */}
+                {duplicateError && (
+                  <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-xl text-red-400 text-sm flex items-start gap-2">
+                    <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>{duplicateError}</span>
+                  </div>
+                )}
+
                 <Button
                   className="w-full"
                   onClick={handleLoadVideo}
@@ -604,7 +649,8 @@ export default function EditorPage() {
                     !youtubeVideoId.trim() ||
                     !videoTitle.trim() ||
                     (artistMode === 'new' && !artistName.trim()) ||
-                    (artistMode === 'existing' && !selectedArtistId)
+                    (artistMode === 'existing' && !selectedArtistId) ||
+                    !!duplicateError
                   }
                 >
                   動画を読み込む
