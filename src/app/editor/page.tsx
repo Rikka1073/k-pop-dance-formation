@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Header } from '@/components/layout'
 import { Button } from '@/components/ui'
 import {
@@ -502,6 +503,17 @@ export default function EditorPage() {
         {/* Step 1: Video Setup */}
         {!isVideoLoaded ? (
           <div className="max-w-xl mx-auto">
+            {/* 戻るボタン */}
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] mb-4 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>ホームに戻る</span>
+            </Link>
+
             <div className="bg-[var(--card-bg)] rounded-2xl p-6">
               <h2 className="text-xl font-bold text-[var(--foreground)] mb-6">
                 ステップ1: 動画設定
@@ -667,6 +679,32 @@ export default function EditorPage() {
         ) : (
           <>
             {/* Editor UI */}
+            {/* 戻るボタン */}
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={() => {
+                  if (formations.length > 0) {
+                    if (confirm('編集内容は保存されません。戻りますか？')) {
+                      router.push('/')
+                    }
+                  } else {
+                    router.push('/')
+                  }
+                }}
+                className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>ホームに戻る</span>
+              </button>
+              <div className="text-sm text-[var(--foreground-muted)]">
+                <span className="text-[var(--foreground)]">{videoTitle}</span>
+                <span className="mx-2">-</span>
+                <span>{artistName}</span>
+              </div>
+            </div>
+
             <div className="grid grid-cols-3 gap-6">
               {/* Left: Video + Stage */}
               <div className="col-span-2 space-y-4">
