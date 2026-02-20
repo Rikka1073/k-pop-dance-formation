@@ -139,6 +139,27 @@ export default function EditorPage() {
 
   // ============ Video Info Fetch ============
 
+  // チャンネル名から不要な文言を除去
+  const cleanChannelName = (channelName: string): string => {
+    let name = channelName
+
+    // "| レーベル名" や "｜ レーベル名" を除去
+    name = name.replace(/\s*[|｜]\s*.+$/, '')
+
+    // 括弧内の不要ワードを除去: "(Official)", "[Official Channel]" など
+    name = name.replace(/\s*[\[(]\s*(?:official|공식|公式|channel|youtube|music)[\w\s]*[\])]/gi, '')
+
+    // 末尾の不要ワードを繰り返し除去（複数単語対応: "Official YouTube Channel"）
+    const noisePattern = /\s+(?:official|공식|公式|channel|youtube|tv|music|entertainment|records|label|labels)\s*$/gi
+    let prev = ''
+    while (prev !== name) {
+      prev = name
+      name = name.replace(noisePattern, '')
+    }
+
+    return name.trim()
+  }
+
   // タイトルからアーティスト名を推測
   const extractArtistFromTitle = (title: string): string | null => {
     // パターン: "ARTIST - Song Title" or "ARTIST 'Song Title'" or "[MV] ARTIST - Song"
@@ -204,13 +225,14 @@ export default function EditorPage() {
           setVideoTitle(data.title)
         }
         // アーティスト名を推測して自動設定（新規アーティストモードの場合のみ）
-        if (data.title && artistMode === 'new' && !artistName) {
-          const extracted = extractArtistFromTitle(data.title)
+        if (artistMode === 'new' && !artistName) {
+          const extracted = data.title ? extractArtistFromTitle(data.title) : null
           if (extracted) {
             setArtistName(extracted)
           } else if (data.author_name) {
-            // フォールバック: チャンネル名を使用
-            setArtistName(data.author_name)
+            // フォールバック: チャンネル名からノイズワードを除去して使用
+            const cleaned = cleanChannelName(data.author_name)
+            if (cleaned) setArtistName(cleaned)
           }
         }
       }
