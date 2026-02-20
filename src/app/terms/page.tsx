@@ -40,7 +40,7 @@ const content = {
         body: '運営者は、必要に応じて本規約を変更することができます。変更後の規約は、本サービス上に掲載した時点で効力を生じるものとします。',
       },
     ],
-    effectiveDate: '制定日：2025年2月10日',
+    effectiveDate: '制定日：2026年2月10日',
   },
   en: {
     title: 'Terms of Service',
@@ -77,7 +77,7 @@ const content = {
         body: 'The operator may change these Terms as necessary. The revised Terms shall take effect upon posting on the Service.',
       },
     ],
-    effectiveDate: 'Effective Date: February 10, 2025',
+    effectiveDate: 'Effective Date: February 10, 2026',
   },
 }
 

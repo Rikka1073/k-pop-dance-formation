@@ -54,7 +54,7 @@ const content = {
         body: '本ポリシーは予告なく変更される場合があります。変更後のポリシーは、本サービス上に掲載した時点で効力を生じます。',
       },
     ],
-    effectiveDate: '制定日：2025年2月10日',
+    effectiveDate: '制定日：2026年2月10日',
   },
   en: {
     title: 'Privacy Policy',
@@ -105,7 +105,7 @@ const content = {
         body: 'This Policy may be changed without prior notice. The revised Policy shall take effect upon posting on the Service.',
       },
     ],
-    effectiveDate: 'Effective Date: February 10, 2025',
+    effectiveDate: 'Effective Date: February 10, 2026',
   },
 }
 

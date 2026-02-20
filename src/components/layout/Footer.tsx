@@ -6,7 +6,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[var(--foreground-muted)] text-sm">
-            © 2025 K-POP Formation Viewer
+            © 2026 K-POP Formation Viewer
           </p>
           <nav className="flex items-center gap-6">
             <Link
