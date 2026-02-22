@@ -224,15 +224,21 @@ export default function EditorPage() {
         if (data.title && !videoTitle) {
           setVideoTitle(data.title)
         }
-        // アーティスト名を推測して自動設定（新規アーティストモードの場合のみ）
-        if (artistMode === 'new' && !artistName) {
-          const extracted = data.title ? extractArtistFromTitle(data.title) : null
-          if (extracted) {
-            setArtistName(extracted)
-          } else if (data.author_name) {
-            // フォールバック: チャンネル名からノイズワードを除去して使用
-            const cleaned = cleanChannelName(data.author_name)
-            if (cleaned) setArtistName(cleaned)
+        // アーティスト名を検出: タイトルから推測、フォールバックはチャンネル名
+        const extracted = data.title ? extractArtistFromTitle(data.title) : null
+        const detectedName = extracted || (data.author_name ? cleanChannelName(data.author_name) : null)
+
+        if (detectedName) {
+          if (artistMode === 'new' && !artistName) {
+            // 新規モード: テキスト入力に設定
+            setArtistName(detectedName)
+          } else if (artistMode === 'existing' && !selectedArtistId) {
+            // 既存モード: 一致するアーティストをドロップダウンで自動選択
+            const match = existingArtists.find((a) =>
+              a.name.toLowerCase().includes(detectedName.toLowerCase()) ||
+              detectedName.toLowerCase().includes(a.name.toLowerCase())
+            )
+            if (match) handleArtistSelect(match.id)
           }
         }
       }
@@ -241,7 +247,7 @@ export default function EditorPage() {
     } finally {
       setIsFetchingVideoInfo(false)
     }
-  }, [videoTitle, artistMode, artistName, checkDuplicate])
+  }, [videoTitle, artistMode, artistName, selectedArtistId, existingArtists, checkDuplicate])
 
   // ============ Video Handlers ============
 
