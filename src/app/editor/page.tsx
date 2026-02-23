@@ -661,7 +661,7 @@ export default function EditorPage() {
 
                 <div>
                   <label className="block text-sm text-[var(--foreground-muted)] mb-1">
-                    お名前（任意）
+                    投稿者名（任意）
                   </label>
                   <input
                     type="text"
