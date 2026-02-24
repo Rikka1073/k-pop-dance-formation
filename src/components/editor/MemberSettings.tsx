@@ -73,7 +73,7 @@ export function MemberSettings({
             >
               <div className="flex items-center gap-3">
                 {/* カラー表示 */}
-                <div className="relative">
+                <div className="relative group/color flex-shrink-0">
                   <div
                     className={cn(
                       'w-8 h-8 rounded-full border-2 border-white/30',
@@ -82,14 +82,23 @@ export function MemberSettings({
                     style={{ backgroundColor: member.color }}
                   />
                   {!readOnly && (
-                    <input
-                      type="color"
-                      value={member.color}
-                      onChange={(e) =>
-                        onMemberUpdate(member.id, { color: e.target.value })
-                      }
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
+                    <>
+                      {/* ホバー時のペンアイコン */}
+                      <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover/color:opacity-100 transition-opacity pointer-events-none">
+                        <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="color"
+                        value={member.color}
+                        onChange={(e) =>
+                          onMemberUpdate(member.id, { color: e.target.value })
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                    </>
                   )}
                 </div>
 
@@ -134,21 +143,35 @@ export function MemberSettings({
 
               {/* プリセットカラー（編集可能時のみ） */}
               {!readOnly && selectedMemberId === member.id && (
-                <div className="mt-2 flex gap-1 flex-wrap">
-                  {PRESET_COLORS.map((color) => (
-                    <button
-                      key={color}
-                      className={cn(
-                        'w-5 h-5 rounded-full transition-transform hover:scale-110',
-                        member.color === color && 'ring-2 ring-white ring-offset-2 ring-offset-[var(--card-bg)]'
-                      )}
-                      style={{ backgroundColor: color }}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onMemberUpdate(member.id, { color })
-                      }}
-                    />
-                  ))}
+                <div className="mt-3" onClick={(e) => e.stopPropagation()}>
+                  <p className="text-xs text-[var(--foreground-muted)] mb-1.5">カラー選択</p>
+                  <div className="flex gap-1.5 flex-wrap">
+                    {PRESET_COLORS.map((color) => (
+                      <button
+                        key={color}
+                        className={cn(
+                          'w-6 h-6 rounded-full transition-transform hover:scale-110',
+                          member.color === color && 'ring-2 ring-white ring-offset-2 ring-offset-[var(--card-bg)]'
+                        )}
+                        style={{ backgroundColor: color }}
+                        onClick={() => onMemberUpdate(member.id, { color })}
+                      />
+                    ))}
+                    {/* カスタムカラー */}
+                    <div className="relative group/custom">
+                      <div className="w-6 h-6 rounded-full border-2 border-dashed border-[var(--foreground-muted)] flex items-center justify-center hover:border-pink-400 transition-colors cursor-pointer">
+                        <svg className="w-3 h-3 text-[var(--foreground-muted)] group-hover/custom:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                      </div>
+                      <input
+                        type="color"
+                        value={member.color}
+                        onChange={(e) => onMemberUpdate(member.id, { color: e.target.value })}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
