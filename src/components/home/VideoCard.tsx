@@ -96,7 +96,7 @@ export function VideoCard({
 
   if (isDemo) {
     return (
-      <div className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden cursor-not-allowed opacity-90">
+      <div className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden cursor-not-allowed opacity-90 border border-[var(--card-border)] shadow-sm">
         {CardContent}
       </div>
     )
@@ -105,7 +105,7 @@ export function VideoCard({
   return (
     <Link
       href={href}
-      className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden hover:ring-2 hover:ring-pink-400 hover:shadow-lg hover:shadow-pink-500/20 hover:-translate-y-1 transition-all duration-200"
+      className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden border border-[var(--card-border)] shadow-sm hover:ring-2 hover:ring-pink-400 hover:shadow-lg hover:shadow-pink-500/20 hover:-translate-y-1 transition-all duration-200"
     >
       {CardContent}
     </Link>
