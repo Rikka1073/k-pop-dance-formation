@@ -27,8 +27,6 @@ export function VideoCard({
 
   const CardContent = (
     <>
-      {/* グラデーションアクセント */}
-      <div className="h-1 bg-gradient-to-r from-pink-400 via-fuchsia-400 to-violet-400" />
       {/* サムネイル */}
       <div className="relative aspect-video bg-[var(--background-secondary)] overflow-hidden">
         {/* YouTubeサムネイル */}
