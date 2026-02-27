@@ -11,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variantClasses = {
   primary:
     'bg-gradient-to-r from-pink-400 via-rose-400 to-violet-400 text-white font-semibold shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/40 hover:-translate-y-0.5 focus:ring-pink-400',
-  secondary: 'bg-gray-700 text-white hover:bg-gray-600 hover:-translate-y-0.5 focus:ring-gray-500',
+  secondary: 'bg-[var(--background-tertiary)] text-[var(--foreground)] border border-[var(--card-border)] hover:border-pink-400/60 hover:bg-[var(--background-secondary)] hover:-translate-y-0.5 focus:ring-pink-400/50',
   ghost:
     'bg-transparent text-gray-300 hover:text-white hover:bg-white/10 focus:ring-white/20',
 }

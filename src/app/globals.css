@@ -2,15 +2,15 @@
 
 /* Light Theme (default) */
 :root {
-  --background: #f8fafc;
-  --background-secondary: #e2e8f0;
-  --background-tertiary: #cbd5e1;
+  --background: #fdf4ff;
+  --background-secondary: #f3e8ff;
+  --background-tertiary: #e9d5ff;
   --foreground: #1e293b;
   --foreground-muted: #64748b;
 
   /* Card / Panel backgrounds */
   --card-bg: #ffffff;
-  --card-border: #cbd5e1;
+  --card-border: #ddd0f0;
 
   /* Primary - Pink系（より華やか） */
   --primary: #ec4899;
@@ -33,15 +33,15 @@
 
 /* Dark Theme */
 .dark {
-  --background: #030712;
-  --background-secondary: #111827;
-  --background-tertiary: #1f2937;
+  --background: #08051a;
+  --background-secondary: #110c26;
+  --background-tertiary: #1c1535;
   --foreground: #f9fafb;
   --foreground-muted: #ffffff;
 
   /* Card / Panel backgrounds */
-  --card-bg: #1f2937;
-  --card-border: #374151;
+  --card-bg: #1c1535;
+  --card-border: #2e2050;
 
   /* Primary - Pink系 */
   --primary: #f472b6;
@@ -74,6 +74,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ダークモード: ページ上部に紫のグロー */
+.dark body {
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(149, 40, 220, 0.12), transparent),
+    var(--background);
 }
 
 /* Smooth transitions for theme switching */

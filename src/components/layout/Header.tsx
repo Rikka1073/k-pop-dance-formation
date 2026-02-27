@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export function Header({ title }: HeaderProps) {
   return (
-    <header className="bg-[var(--card-bg)] border-b border-[var(--card-border)]">
+    <header className="bg-[var(--card-bg)] relative">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-1 group">
           <span className="text-2xl group-hover:animate-pulse">✨</span>
@@ -27,6 +27,8 @@ export function Header({ title }: HeaderProps) {
           <ThemeToggle />
         </div>
       </div>
+      {/* グラデーション下線 */}
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-400 via-fuchsia-400 to-violet-400" />
     </header>
   )
 }

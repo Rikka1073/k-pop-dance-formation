@@ -162,25 +162,33 @@ export default function HomePage() {
 
       <main className="max-w-7xl mx-auto px-4 py-12">
         {/* ヒーローセクション */}
-        <section className="text-center mb-16">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <span className="text-3xl">✨</span>
-            <h1 className="text-5xl font-bold">
-              <span className="text-pink-400">K-POP Formation</span>{' '}
-              <span className="text-violet-400">Viewer</span>
-            </h1>
-            <span className="text-3xl">💫</span>
+        <section className="text-center mb-16 relative">
+          {/* 背景グロー */}
+          <div className="absolute inset-0 -z-10 flex items-center justify-center">
+            <div className="w-[600px] h-[250px] bg-gradient-to-r from-pink-500/15 via-fuchsia-500/15 to-violet-500/15 blur-3xl rounded-full" />
           </div>
-          <p className="text-[var(--foreground-muted)] text-lg max-w-2xl mx-auto mb-8">
+          <div className="flex items-center justify-center gap-3 mb-5">
+            <span className="text-4xl">✨</span>
+            <h1 className="text-6xl font-black tracking-tight">
+              <span className="bg-gradient-to-r from-pink-400 via-fuchsia-400 to-rose-400 bg-clip-text text-transparent">
+                K-POP Formation
+              </span>{' '}
+              <span className="bg-gradient-to-r from-violet-400 to-purple-500 bg-clip-text text-transparent">
+                Viewer
+              </span>
+            </h1>
+            <span className="text-4xl">💫</span>
+          </div>
+          <p className="text-[var(--foreground-muted)] text-lg max-w-2xl mx-auto mb-10">
             K-POPダンス動画とフォーメーションを同期表示。
             振り付けの学習やメンバーの位置確認に最適です。
           </p>
           <Link
             href="/editor"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-400 via-rose-400 to-violet-400 text-white font-semibold rounded-2xl shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/40 hover:-translate-y-0.5 transition-all duration-200"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 text-white font-bold rounded-2xl shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/50 hover:-translate-y-1 hover:scale-105 transition-all duration-200 text-base"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
             </svg>
             新規作成
           </Link>
