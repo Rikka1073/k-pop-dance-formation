@@ -499,7 +499,7 @@ export default function EditVideoPage() {
                 onClick={() => handleSave(false)}
                 disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
               >
-                {isSaving ? '保存中...' : '保存'}
+                {isSaving ? '保存中...' : '上書き保存'}
               </Button>
 
               {/* Save & View */}
@@ -509,7 +509,7 @@ export default function EditVideoPage() {
                 onClick={() => handleSave(true)}
                 disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
               >
-                {isSaving ? '保存中...' : '保存して確認'}
+                {isSaving ? '保存中...' : '保存してビューアーへ'}
               </Button>
 
               {/* Last saved time */}

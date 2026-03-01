@@ -804,7 +804,7 @@ export default function EditorPage() {
                   onClick={handleSave}
                   disabled={members.length === 0 || formations.length === 0 || isSaving}
                 >
-                  {isSaving ? '保存中...' : '保存する'}
+                  {isSaving ? '保存中...' : '登録してビューアーへ'}
                 </Button>
 
                 {/* Error Message */}
