@@ -35,7 +35,7 @@ export function MemberSettings({
   readOnly = false,
 }: MemberSettingsProps) {
   return (
-    <div className="bg-[var(--card-bg)] rounded-2xl p-4">
+    <div className="p-2">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-pink-400 font-semibold">
           メンバー
