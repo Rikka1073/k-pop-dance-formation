@@ -403,9 +403,7 @@ export default function EditVideoPage() {
                   />
                   <span className="text-[var(--foreground-muted)] text-xs">観客視点</span>
                 </label>
-                <span className="text-[var(--foreground-muted)] text-xs">
-                  {currentTime.toFixed(1)}s / {videoDuration.toFixed(1)}s
-                </span>
+
               </div>
             </div>
             <EditorStage
