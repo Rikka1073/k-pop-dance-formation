@@ -423,7 +423,7 @@ export default function EditVideoPage() {
           {/* Left: Members */}
           <div className="bg-[var(--card-bg)] rounded-2xl p-4">
             <h3 className="text-pink-400 font-semibold mb-3">メンバー</h3>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
+            <div className="space-y-2 max-h-64 overflow-y-auto px-1 py-1">
               {members.map((member) => {
                 const isSelected = selectedMemberId === member.id
                 return (

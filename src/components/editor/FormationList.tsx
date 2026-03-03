@@ -36,7 +36,7 @@ export function FormationList({
         </Button>
       </div>
 
-      <div className="space-y-2 max-h-[400px] overflow-y-auto">
+      <div className="space-y-2 max-h-[400px] overflow-y-auto px-1 py-1">
         {formations.length === 0 ? (
           <p className="text-[var(--foreground-muted)] text-sm text-center py-4">
             フォーメーションがありません。「+ 追加」をクリックして作成してください。
@@ -48,8 +48,8 @@ export function FormationList({
               className={cn(
                 'p-3 rounded-xl cursor-pointer transition-all duration-200',
                 currentFormationId === formation.id
-                  ? ''
-                  : 'hover:bg-[var(--background-tertiary)]/50'
+                  ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50 shadow-lg shadow-pink-500/10'
+                  : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)]'
               )}
               onClick={() => onFormationSelect(formation.id)}
             >

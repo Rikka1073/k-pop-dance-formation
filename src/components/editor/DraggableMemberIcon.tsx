@@ -87,14 +87,22 @@ export function DraggableMemberIcon({
         className={cn(
           'w-12 h-12 rounded-full flex items-center justify-center',
           'text-white font-bold text-sm shadow-lg',
-          'border-2 border-white/50'
         )}
         style={{
           backgroundColor: member.color,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+          boxShadow: isSelected
+            ? `0 0 0 3px white, 0 0 0 5px ${member.color}, 0 4px 16px rgba(0,0,0,0.4)`
+            : '0 2px 8px rgba(0,0,0,0.2)',
         }}
-        animate={{ scale: isDragging ? 1.1 : 1 }}
+        animate={
+          isDragging
+            ? { scale: 1.1 }
+            : isSelected
+            ? { scale: [1, 1.05, 1], transition: { repeat: Infinity, duration: 2 } }
+            : { scale: 1 }
+        }
         whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         {member.name.charAt(0)}
       </motion.div>
@@ -102,8 +110,9 @@ export function DraggableMemberIcon({
       {/* 名前ラベル */}
       <div
         className={cn(
-          'mt-1 px-2 py-0.5 rounded text-xs font-medium',
-          'bg-black/80 text-white whitespace-nowrap'
+          'mt-1 px-2 py-0.5 rounded-lg text-xs font-medium',
+          'bg-black/70 text-white whitespace-nowrap',
+          isSelected && 'bg-gradient-to-r from-pink-500/80 to-violet-500/80'
         )}
       >
         {member.name}
