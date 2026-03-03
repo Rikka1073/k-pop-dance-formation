@@ -66,8 +66,8 @@ export function MemberSettings({
               className={cn(
                 'p-3 rounded-xl transition-all duration-200',
                 selectedMemberId === member.id
-                  ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20'
-                  : 'hover:bg-[var(--background-tertiary)]/50'
+                  ? 'border-l-2 border-pink-400'
+                  : 'border-l-2 border-transparent hover:bg-[var(--background-tertiary)]/50'
               )}
               onClick={() => onMemberSelect(member.id)}
             >
