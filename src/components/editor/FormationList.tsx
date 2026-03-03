@@ -48,8 +48,8 @@ export function FormationList({
               className={cn(
                 'p-3 rounded-xl cursor-pointer transition-all duration-200',
                 currentFormationId === formation.id
-                  ? 'border-l-2 border-pink-400'
-                  : 'border-l-2 border-transparent hover:bg-[var(--background-tertiary)]/50'
+                  ? ''
+                  : 'hover:bg-[var(--background-tertiary)]/50'
               )}
               onClick={() => onFormationSelect(formation.id)}
             >
