@@ -430,8 +430,8 @@ export default function EditVideoPage() {
                   onClick={() => setSelectedMemberId(member.id)}
                   className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all ${
                     selectedMemberId === member.id
-                      ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50'
-                      : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)]'
+                      ? 'bg-[var(--background-tertiary)]'
+                      : 'hover:bg-[var(--background-tertiary)]/50'
                   }`}
                 >
                   <div
