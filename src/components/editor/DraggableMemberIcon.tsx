@@ -91,9 +91,7 @@ export function DraggableMemberIcon({
         )}
         style={{
           backgroundColor: member.color,
-          boxShadow: isSelected
-            ? `0 0 0 3px white, 0 0 0 5px ${member.color}, 0 4px 12px rgba(0,0,0,0.3)`
-            : '0 2px 8px rgba(0,0,0,0.2)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
         }}
         animate={{ scale: isDragging ? 1.1 : 1 }}
         whileHover={{ scale: 1.05 }}

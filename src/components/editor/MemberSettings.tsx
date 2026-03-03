@@ -111,7 +111,7 @@ export function MemberSettings({
                     value={member.name}
                     onChange={(e) => onMemberUpdate(member.id, { name: e.target.value })}
                     placeholder="メンバー名"
-                    className="flex-1 bg-[var(--background-secondary)] text-[var(--foreground)] text-sm px-2 py-1 rounded border-none outline-none"
+                    className="flex-1 bg-transparent text-[var(--foreground)] text-sm px-2 py-1 border-none outline-none"
                   />
                 )}
 
