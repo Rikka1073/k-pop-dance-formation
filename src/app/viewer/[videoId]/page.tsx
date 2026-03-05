@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { Header } from '@/components/layout'
+import { LoadingSpinner } from '@/components/ui'
 import {
   YouTubePlayer,
   YouTubePlayerHandle,
@@ -207,7 +208,7 @@ export default function ViewerPage() {
       <div className="min-h-screen bg-[var(--background)]">
         <Header />
         <div className="flex items-center justify-center h-[60vh]">
-          <div className="text-white">読み込み中...</div>
+          <LoadingSpinner />
         </div>
       </div>
     )

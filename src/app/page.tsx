@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { Header, Footer } from '@/components/layout'
 import { VideoCard } from '@/components/home'
+import { VideoCardSkeleton } from '@/components/ui'
 import { sampleArtist, sampleVideo, sampleFormationData } from '@/data/mock/sample-formation'
 import { generateDemoVideos, DEMO_VIDEO_TOTAL, DEMO_PAGE_SIZE, DemoVideo } from '@/data/mock/demo-videos'
 import { isSupabaseConfigured } from '@/lib/supabase'
@@ -220,8 +221,10 @@ export default function HomePage() {
           </div>
 
           {isLoading ? (
-            <div className="text-center py-12">
-              <div className="text-[var(--foreground-muted)]">読み込み中...</div>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <VideoCardSkeleton key={i} />
+              ))}
             </div>
           ) : (
             <>

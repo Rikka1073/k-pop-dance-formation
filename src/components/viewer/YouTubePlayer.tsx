@@ -2,6 +2,7 @@
 
 import { useEffect, useImperativeHandle, forwardRef } from 'react'
 import { useYouTubePlayer } from '@/hooks'
+import { LoadingSpinner } from '@/components/ui'
 
 interface YouTubePlayerProps {
   videoId: string
@@ -55,7 +56,7 @@ export const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>
       <div ref={playerRef} className="absolute inset-0" />
       {!isReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
-          <div className="text-white text-sm">Loading...</div>
+          <LoadingSpinner />
         </div>
       )}
     </div>
