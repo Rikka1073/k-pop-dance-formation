@@ -11,12 +11,28 @@ interface MemberListProps {
 
 export function MemberList({ members, selectedMemberId, onMemberSelect }: MemberListProps) {
   return (
-    <div className="bg-[var(--card-bg)] rounded-2xl p-4">
-      <h3 className="text-[var(--foreground)] font-semibold mb-3 flex items-center gap-2">
-        <span className="text-pink-400">メンバー</span>
-        <span className="text-xs text-[var(--foreground-muted)]">({members.length})</span>
-      </h3>
-      <div className="space-y-2">
+    <div
+      className="rounded-2xl p-4"
+      style={{
+        backdropFilter: 'blur(24px) saturate(160%)',
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,45,120,0.16)',
+      }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--foreground)]">
+          Members
+        </h3>
+        <span
+          className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+          style={{ background: 'rgba(255,45,120,0.12)', color: '#FF6BA8', border: '1px solid rgba(255,45,120,0.2)' }}
+        >
+          {members.length}
+        </span>
+      </div>
+
+      <div className="space-y-1.5">
         {members.map((member) => {
           const isSelected = selectedMemberId === member.id
 
@@ -24,22 +40,26 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
             <button
               key={member.id}
               className={cn(
-                'w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200',
-                isSelected
-                  ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50 shadow-lg shadow-pink-500/10'
-                  : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)] hover:-translate-x-1'
+                'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left',
+                isSelected ? '' : 'hover:-translate-x-0.5'
               )}
+              style={isSelected ? {
+                background: `linear-gradient(135deg, ${member.color}18, rgba(124,58,237,0.12))`,
+                border: `1px solid ${member.color}50`,
+                boxShadow: `0 0 16px ${member.color}20`,
+              } : {
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid transparent',
+              }}
               onClick={() => onMemberSelect(isSelected ? null : member.id)}
             >
               {/* カラーアイコン */}
               <div
-                className={cn(
-                  'w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-transform duration-200',
-                  isSelected && 'scale-110'
-                )}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs flex-shrink-0 transition-all duration-200"
                 style={{
                   backgroundColor: member.color,
-                  boxShadow: isSelected ? `0 0 12px ${member.color}` : 'none'
+                  boxShadow: isSelected ? `0 0 14px ${member.color}80, 0 0 4px ${member.color}` : `0 0 0 ${member.color}00`,
+                  transform: isSelected ? 'scale(1.1)' : 'scale(1)',
                 }}
               >
                 {member.name.charAt(0)}
@@ -47,16 +67,18 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
 
               {/* 名前 */}
               <span className={cn(
-                'text-sm font-medium transition-colors',
-                isSelected ? 'text-pink-300' : 'text-[var(--foreground)]'
-              )}>{member.name}</span>
+                'text-sm font-semibold transition-colors flex-1 truncate tracking-wide',
+                isSelected ? 'text-white' : 'text-[var(--foreground-muted)]'
+              )}>
+                {member.name}
+              </span>
 
               {/* 選択インジケーター */}
               {isSelected && (
-                <span className="ml-auto text-xs text-pink-400/80 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-                  選択中
-                </span>
+                <span
+                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: member.color, boxShadow: `0 0 6px ${member.color}`, animation: 'neon-pulse 2s ease infinite' }}
+                />
               )}
             </button>
           )
@@ -66,7 +88,8 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
       {/* 選択解除ボタン */}
       {selectedMemberId && (
         <button
-          className="w-full mt-3 py-2 text-sm text-[var(--foreground-muted)] hover:text-pink-400 rounded-xl hover:bg-[var(--background-tertiary)]/50 transition-all duration-200"
+          className="w-full mt-3 py-2 text-xs font-semibold tracking-widest uppercase transition-all duration-200 rounded-xl hover:bg-white/[0.04]"
+          style={{ color: 'var(--foreground-muted)', borderTop: '1px solid rgba(255,45,120,0.1)', marginTop: '12px', paddingTop: '12px' }}
           onClick={() => onMemberSelect(null)}
         >
           選択解除

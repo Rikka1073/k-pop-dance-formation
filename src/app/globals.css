@@ -1,89 +1,188 @@
 @import "tailwindcss";
 
-/* Light Theme (default) */
 :root {
-  --background: #fdf4ff;
-  --background-secondary: #f3e8ff;
-  --background-tertiary: #e9d5ff;
-  --foreground: #1e293b;
-  --foreground-muted: #64748b;
+  --background: #08051A;
+  --background-secondary: #0E0B26;
+  --background-tertiary: #161235;
+  --foreground: #F9FAFB;
+  --foreground-muted: #8B9CB8;
 
   /* Card / Panel backgrounds */
-  --card-bg: #ffffff;
-  --card-border: #ddd0f0;
+  --card-bg: #161235;
+  --card-border: rgba(255, 45, 120, 0.18);
 
-  /* Primary - Pink系（より華やか） */
-  --primary: #ec4899;
-  --primary-light: #f472b6;
-  --primary-dark: #db2777;
-
-  /* Accent - Violet（補助色） */
-  --accent: #8b5cf6;
-  --accent-light: #a78bfa;
-
-  /* Stage background */
-  --stage-bg: #f1f5f9;
-  --stage-bg-secondary: #e2e8f0;
-  --stage-grid: #94a3b8;
-  --stage-line: #64748b;
-
-  /* Text on dark backgrounds (for member icons etc) */
-  --text-on-color: #ffffff;
-}
-
-/* Dark Theme */
-.dark {
-  --background: #08051a;
-  --background-secondary: #110c26;
-  --background-tertiary: #1c1535;
-  --foreground: #f9fafb;
-  --foreground-muted: #ffffff;
-
-  /* Card / Panel backgrounds */
-  --card-bg: #1c1535;
-  --card-border: #2e2050;
-
-  /* Primary - Pink系 */
-  --primary: #f472b6;
-  --primary-light: #f9a8d4;
-  --primary-dark: #ec4899;
+  /* Primary - Pink */
+  --primary: #FF2D78;
+  --primary-light: #FF6BA8;
+  --primary-dark: #E01060;
 
   /* Accent - Violet */
-  --accent: #a78bfa;
-  --accent-light: #c4b5fd;
+  --accent: #7C3AED;
+  --accent-light: #9D5CF0;
 
   /* Stage background */
-  --stage-bg: #1f2937;
-  --stage-bg-secondary: #111827;
-  --stage-grid: #4b5563;
-  --stage-line: #6b7280;
+  --stage-bg: #0A0820;
+  --stage-bg-secondary: #0F0C28;
+  --stage-grid: rgba(255, 255, 255, 0.05);
+  --stage-line: rgba(255, 255, 255, 0.1);
 
   /* Text on dark backgrounds */
   --text-on-color: #ffffff;
+
+  /* Glow intensities */
+  --glow-pink: 0 0 20px rgba(255, 45, 120, 0.35), 0 0 60px rgba(255, 45, 120, 0.15);
+  --glow-violet: 0 0 20px rgba(124, 58, 237, 0.35), 0 0 60px rgba(124, 58, 237, 0.15);
+  --glow-pink-sm: 0 0 8px rgba(255, 45, 120, 0.5), 0 0 20px rgba(255, 45, 120, 0.2);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-montserrat);
   --font-mono: var(--font-geist-mono);
 }
 
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+
+@keyframes neon-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+@keyframes glow-ping {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 45, 120, 0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(255, 45, 120, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 45, 120, 0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes float-orb {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50%       { transform: translateY(-18px) scale(1.04); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scan-line {
+  0%   { top: -4px; }
+  100% { top: 100%; }
+}
+
+@keyframes border-spin {
+  to { --angle: 360deg; }
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
 body {
-  background: var(--background);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 15% 0%,  rgba(255, 45, 120, 0.10), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 85% 20%, rgba(124, 58, 237, 0.12), transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 90%, rgba(124, 58, 237, 0.06), transparent 50%);
+  background-attachment: fixed;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: var(--font-montserrat), Arial, sans-serif;
 }
 
-/* ダークモード: ページ上部に紫のグロー */
-.dark body {
-  background:
-    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(149, 40, 220, 0.12), transparent),
-    var(--background);
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF2D78, #7C3AED);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FF6BA8, #9D5CF0);
 }
 
-/* Smooth transitions for theme switching */
+/* ============================================================
+   GLASSMORPHISM UTILITY
+   ============================================================ */
+
+.glass {
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 45, 120, 0.15);
+}
+
+.glass-strong {
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 45, 120, 0.22);
+}
+
+/* ============================================================
+   NEON GLOW UTILITIES
+   ============================================================ */
+
+.neon-text-pink {
+  color: #FF2D78;
+  text-shadow: 0 0 10px rgba(255, 45, 120, 0.8), 0 0 30px rgba(255, 45, 120, 0.4);
+}
+
+.neon-border-pink {
+  box-shadow: var(--glow-pink);
+  border-color: rgba(255, 45, 120, 0.5);
+}
+
+/* ============================================================
+   SHIMMER TEXT
+   ============================================================ */
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #FF2D78 0%,
+    #FF6BA8 25%,
+    #e879f9 50%,
+    #FF6BA8 75%,
+    #FF2D78 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ============================================================
+   SLIDE-UP ANIMATION
+   ============================================================ */
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease both;
+}
+
+/* ============================================================
+   TRANSITIONS
+   ============================================================ */
+
 *, *::before, *::after {
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }

@@ -283,44 +283,83 @@ export default function ViewerPage() {
           />
 
           {/* オプション */}
-          <div className="bg-[var(--card-bg)] rounded-2xl p-4">
-            <h3 className="text-pink-400 font-semibold mb-3">オプション</h3>
+          <div
+            className="rounded-2xl p-4"
+            style={{
+              backdropFilter: 'blur(24px) saturate(160%)',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,45,120,0.16)',
+            }}
+          >
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--foreground)] mb-4">Options</h3>
             <div className="space-y-3">
-              {/* 動線表示切替 */}
+              {/* Toggle: 動線 */}
               <label className="flex items-center gap-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={showMovementArrows}
-                  onChange={(e) => setShowMovementArrows(e.target.checked)}
-                  className="w-4 h-4 rounded border-[var(--card-border)] bg-[var(--background-tertiary)] text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
-                />
-                <span className="text-[var(--foreground)] text-sm group-hover:text-pink-300 transition-colors">移動矢印を表示</span>
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={showMovementArrows}
+                    onChange={(e) => setShowMovementArrows(e.target.checked)}
+                    className="sr-only"
+                  />
+                  <div
+                    className="w-9 h-5 rounded-full transition-all duration-200"
+                    style={{
+                      background: showMovementArrows
+                        ? 'linear-gradient(135deg,#FF2D78,#7C3AED)'
+                        : 'rgba(255,255,255,0.08)',
+                      boxShadow: showMovementArrows ? '0 0 10px rgba(255,45,120,0.4)' : 'none',
+                    }}
+                  >
+                    <div
+                      className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200"
+                      style={{ left: showMovementArrows ? '18px' : '2px' }}
+                    />
+                  </div>
+                </div>
+                <span className="text-[var(--foreground-muted)] text-sm group-hover:text-white transition-colors">移動矢印を表示</span>
               </label>
 
-              {/* ステージ反転 */}
+              {/* Toggle: ステージ反転 */}
               <label className="flex items-center gap-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={stageFlipped}
-                  onChange={(e) => setStageFlipped(e.target.checked)}
-                  className="w-4 h-4 rounded border-[var(--card-border)] bg-[var(--background-tertiary)] text-pink-500 focus:ring-pink-400 focus:ring-offset-gray-900"
-                />
-                <span className="text-[var(--foreground)] text-sm group-hover:text-pink-300 transition-colors">観客視点（観客側を下に）</span>
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={stageFlipped}
+                    onChange={(e) => setStageFlipped(e.target.checked)}
+                    className="sr-only"
+                  />
+                  <div
+                    className="w-9 h-5 rounded-full transition-all duration-200"
+                    style={{
+                      background: stageFlipped
+                        ? 'linear-gradient(135deg,#FF2D78,#7C3AED)'
+                        : 'rgba(255,255,255,0.08)',
+                      boxShadow: stageFlipped ? '0 0 10px rgba(255,45,120,0.4)' : 'none',
+                    }}
+                  >
+                    <div
+                      className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200"
+                      style={{ left: stageFlipped ? '18px' : '2px' }}
+                    />
+                  </div>
+                </div>
+                <span className="text-[var(--foreground-muted)] text-sm group-hover:text-white transition-colors">観客視点</span>
               </label>
 
               {/* 現在のフォーメーション情報 */}
-              <div className="pt-3 border-t border-[var(--card-border)]">
-                <p className="text-[var(--foreground-muted)] text-xs mb-1">現在のフォーメーション</p>
-                <p className="text-[var(--foreground)] font-medium">
-                  {currentFormation?.name || 'なし'}
+              <div className="pt-3" style={{ borderTop: '1px solid rgba(255,45,120,0.1)' }}>
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--foreground-muted)] mb-1.5">現在</p>
+                <p className="text-white font-semibold text-sm">
+                  {currentFormation?.name || '—'}
                 </p>
               </div>
 
               {/* 次のフォーメーション情報 */}
               {nextFormation && (
                 <div>
-                  <p className="text-[var(--foreground-muted)] text-xs mb-1">次のフォーメーション</p>
-                  <p className="text-[var(--foreground)] font-medium">{nextFormation.name}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--foreground-muted)] mb-1.5">次</p>
+                  <p className="text-[#FF6BA8] font-semibold text-sm">{nextFormation.name}</p>
                 </div>
               )}
             </div>
@@ -328,25 +367,32 @@ export default function ViewerPage() {
         </div>
 
         {/* アーティスト情報 + Edit */}
-        <div className="mt-6 p-4 bg-[var(--card-bg)]/50 rounded-2xl flex items-center justify-between">
-          <p className="text-[var(--foreground-muted)] text-sm">
-            <span className="text-pink-300 font-medium">{viewerData.artistName}</span>
-            {' • '}
-            {viewerData.members.length}人
-            {' • '}
-            {viewerData.formations.length}フォーメーション
+        <div
+          className="mt-6 px-5 py-3.5 rounded-2xl flex items-center justify-between"
+          style={{
+            background: 'rgba(255,255,255,0.025)',
+            border: '1px solid rgba(255,45,120,0.1)',
+          }}
+        >
+          <div className="flex items-center gap-4 text-xs text-[var(--foreground-muted)]">
+            <span className="font-black text-sm text-white tracking-wide">{viewerData.artistName}</span>
+            <span className="opacity-30">|</span>
+            <span>{viewerData.members.length} members</span>
+            <span className="opacity-30">|</span>
+            <span>{viewerData.formations.length} formations</span>
             {viewerData.contributorName && (
               <>
-                {' • '}
-                作成者: {viewerData.contributorName}
+                <span className="opacity-30">|</span>
+                <span>by {viewerData.contributorName}</span>
               </>
             )}
-          </p>
+          </div>
           <a
             href={`/editor/${videoId}`}
-            className="px-4 py-2 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] text-sm rounded-xl hover:-translate-y-0.5 transition-all duration-200"
+            className="px-4 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5"
+            style={{ background: 'rgba(255,45,120,0.1)', color: '#FF6BA8', border: '1px solid rgba(255,45,120,0.2)' }}
           >
-            編集
+            Edit
           </a>
         </div>
       </main>

@@ -355,19 +355,21 @@ export default function EditVideoPage() {
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Video Info Banner */}
-        <div className="bg-[var(--card-bg)] rounded-2xl p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-[var(--foreground)] font-semibold">{videoTitle}</h2>
-              <p className="text-[var(--foreground-muted)] text-sm">{artistName}</p>
-            </div>
-            <a
-              href={`/viewer/${videoId}`}
-              className="text-pink-400 hover:text-pink-300 text-sm"
-            >
-              再生モード →
-            </a>
+        <div
+          className="rounded-2xl px-5 py-3.5 mb-6 flex items-center justify-between"
+          style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,45,120,0.12)' }}
+        >
+          <div>
+            <h2 className="text-white font-black tracking-wide">{videoTitle}</h2>
+            <p className="text-[var(--foreground-muted)] text-xs mt-0.5 tracking-wide">{artistName}</p>
           </div>
+          <a
+            href={`/viewer/${videoId}`}
+            className="px-4 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5"
+            style={{ background: 'rgba(124,58,237,0.12)', color: '#9D5CF0', border: '1px solid rgba(124,58,237,0.25)' }}
+          >
+            View →
+          </a>
         </div>
 
         {/* Main Content - Video & Formation side by side (same as Viewer) */}
@@ -419,8 +421,8 @@ export default function EditVideoPage() {
         {/* Bottom Controls - 3 columns */}
         <div className="grid grid-cols-3 gap-4">
           {/* Left: Members */}
-          <div className="bg-[var(--card-bg)] rounded-2xl p-4">
-            <h3 className="text-pink-400 font-semibold mb-3">メンバー</h3>
+          <div className="rounded-2xl p-4" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--foreground)] mb-3">Members</h3>
             <div className="space-y-2 max-h-64 overflow-y-auto px-1 py-1">
               {members.map((member) => {
                 const isSelected = selectedMemberId === member.id
@@ -505,7 +507,7 @@ export default function EditVideoPage() {
             })()}
 
             {/* Save Buttons */}
-            <div className="bg-[var(--card-bg)] rounded-2xl p-4 space-y-3">
+            <div className="rounded-2xl p-4 space-y-3" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
               {/* Quick Save */}
               <Button
                 className="w-full"

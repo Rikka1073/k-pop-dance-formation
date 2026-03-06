@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 
 interface VideoCardProps {
   id: string
@@ -28,48 +27,78 @@ export function VideoCard({
   const CardContent = (
     <>
       {/* サムネイル */}
-      <div className="relative aspect-video bg-[var(--background-secondary)] overflow-hidden">
-        {/* YouTubeサムネイル */}
+      <div className="relative aspect-video overflow-hidden bg-[var(--background-secondary)]">
         <img
           src={thumbnailUrl}
           alt={title}
-          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        {/* オーバーレイ */}
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10 group-hover:from-black/40 transition-all duration-300" />
+
         {/* 再生ボタン */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center group-hover:bg-pink-500/80 group-hover:scale-110 transition-all duration-200">
-            <svg
-              className="w-6 h-6 text-white ml-1"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+            style={{
+              background: 'rgba(0,0,0,0.55)',
+              backdropFilter: 'blur(4px)',
+              border: '1px solid rgba(255,255,255,0.15)',
+            }}
+          >
+            <div
+              className="w-12 h-12 rounded-full absolute transition-all duration-300 opacity-0 group-hover:opacity-100"
+              style={{ background: 'rgba(255,45,120,0.75)', boxShadow: '0 0 20px rgba(255,45,120,0.6)' }}
+            />
+            <svg className="w-5 h-5 text-white ml-0.5 relative z-10" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>
         </div>
+
+        {/* Formation count badge */}
+        {formationCount !== undefined && (
+          <div
+            className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider"
+            style={{
+              background: 'rgba(8,5,26,0.75)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255,45,120,0.3)',
+              color: '#FF6BA8',
+            }}
+          >
+            {formationCount}
+            <span className="text-[var(--foreground-muted)] font-normal ml-0.5">formations</span>
+          </div>
+        )}
+
         {/* デモバッジ */}
         {isDemo && (
-          <div className="absolute top-2 right-2 px-2 py-0.5 bg-pink-500/80 text-white text-xs rounded-full">
-            デモ
+          <div
+            className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-xs font-semibold tracking-wider"
+            style={{ background: 'rgba(255,45,120,0.8)', color: '#fff' }}
+          >
+            DEMO
           </div>
         )}
       </div>
 
       {/* コンテンツ */}
       <div className="p-4">
-        <h3 className="text-[var(--foreground)] font-semibold mb-1 group-hover:text-pink-400 transition-colors truncate">
+        {/* Artist */}
+        <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#FF6BA8] mb-1">{artistName}</p>
+
+        {/* Title */}
+        <h3 className="text-[var(--foreground)] font-bold mb-3 group-hover:text-white transition-colors truncate text-sm leading-snug">
           {title}
         </h3>
-        <p className="text-[var(--foreground-muted)] text-sm mb-3">{artistName}</p>
 
         {/* メンバーアイコン */}
-        <div className="flex gap-1 flex-wrap">
+        <div className="flex items-center gap-1 flex-wrap">
           {members.slice(0, 8).map((member) => (
             <div
               key={member.id}
-              className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
+              className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-black ring-1 ring-black/40"
               style={{ backgroundColor: member.color }}
               title={member.name}
             >
@@ -77,26 +106,32 @@ export function VideoCard({
             </div>
           ))}
           {members.length > 8 && (
-            <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[var(--background-tertiary)] text-[var(--foreground)] text-xs">
+            <div
+              className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold"
+              style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--foreground-muted)' }}
+            >
               +{members.length - 8}
             </div>
           )}
-        </div>
-
-        {/* メタ情報 */}
-        <div className="mt-3 pt-3 border-t border-[var(--card-border)] flex items-center gap-4 text-xs text-[var(--foreground-muted)]">
-          {formationCount !== undefined && (
-            <span>{formationCount}個のフォーメーション</span>
-          )}
-          <span>{members.length}人</span>
+          <span className="ml-auto text-[10px] text-[var(--foreground-muted)]">{members.length}名</span>
         </div>
       </div>
     </>
   )
 
+  const cardBase = `group rounded-2xl overflow-hidden transition-all duration-300`
+  const cardStyle = {
+    background: 'rgba(22,18,53,0.8)',
+    backdropFilter: 'blur(16px)',
+    border: '1px solid rgba(255,45,120,0.14)',
+  }
+  const cardHoverClass = isDemo
+    ? 'cursor-not-allowed opacity-75'
+    : ''
+
   if (isDemo) {
     return (
-      <div className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden cursor-not-allowed opacity-90 border border-[var(--card-border)] shadow-sm">
+      <div className={`${cardBase} ${cardHoverClass}`} style={cardStyle}>
         {CardContent}
       </div>
     )
@@ -105,7 +140,20 @@ export function VideoCard({
   return (
     <Link
       href={href}
-      className="group bg-[var(--card-bg)] rounded-2xl overflow-hidden border border-[var(--card-border)] shadow-sm hover:ring-2 hover:ring-pink-400 hover:shadow-lg hover:shadow-pink-500/20 hover:-translate-y-1 transition-all duration-200"
+      className={cardBase}
+      style={cardStyle}
+      onMouseEnter={e => {
+        const el = e.currentTarget
+        el.style.borderColor = 'rgba(255,45,120,0.5)'
+        el.style.boxShadow = '0 0 24px rgba(255,45,120,0.2), 0 8px 32px rgba(0,0,0,0.4)'
+        el.style.transform = 'translateY(-4px)'
+      }}
+      onMouseLeave={e => {
+        const el = e.currentTarget
+        el.style.borderColor = 'rgba(255,45,120,0.14)'
+        el.style.boxShadow = ''
+        el.style.transform = ''
+      }}
     >
       {CardContent}
     </Link>

@@ -163,60 +163,90 @@ export default function HomePage() {
 
       <main className="max-w-7xl mx-auto px-4 py-12">
         {/* ヒーローセクション */}
-        <section className="text-center mb-16 relative">
-          {/* 背景グロー */}
-          <div className="absolute inset-0 -z-10 flex items-center justify-center">
-            <div className="w-[600px] h-[250px] bg-gradient-to-r from-pink-500/15 via-fuchsia-500/15 to-violet-500/15 blur-3xl rounded-full" />
+        <section className="text-center mb-20 relative pt-8">
+          {/* 背景: 複数のグローオーブ */}
+          <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+            <div
+              className="absolute top-[-60px] left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full blur-[80px] opacity-30"
+              style={{ background: 'radial-gradient(ellipse, #FF2D78 0%, #7C3AED 50%, transparent 70%)', animation: 'float-orb 7s ease-in-out infinite' }}
+            />
+            <div
+              className="absolute top-[40px] left-[15%] w-[200px] h-[200px] rounded-full blur-[60px] opacity-20"
+              style={{ background: '#FF2D78', animation: 'float-orb 5s ease-in-out infinite 1s' }}
+            />
+            <div
+              className="absolute top-[20px] right-[12%] w-[180px] h-[180px] rounded-full blur-[60px] opacity-20"
+              style={{ background: '#7C3AED', animation: 'float-orb 6s ease-in-out infinite 2s' }}
+            />
           </div>
-          <div className="flex items-center justify-center gap-3 mb-5">
-            <span className="text-4xl">✨</span>
-            <h1 className="text-6xl font-black tracking-tight">
-              <span className="bg-gradient-to-r from-pink-400 via-fuchsia-400 to-rose-400 bg-clip-text text-transparent">
-                K-POP Formation
-              </span>{' '}
-              <span className="bg-gradient-to-r from-violet-400 to-purple-500 bg-clip-text text-transparent">
-                Viewer
-              </span>
-            </h1>
-            <span className="text-4xl">💫</span>
+
+          {/* Eyebrow label */}
+          <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full glass border border-[#FF2D78]/25">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D78]" style={{ animation: 'glow-ping 2s ease infinite', boxShadow: '0 0 6px #FF2D78' }} />
+            <span className="text-xs font-semibold tracking-[0.18em] uppercase text-[var(--foreground-muted)]">
+              K-POP Dance Formation Tool
+            </span>
           </div>
-          <p className="text-[var(--foreground-muted)] text-lg max-w-2xl mx-auto mb-10">
-            K-POPダンス動画とフォーメーションを同期表示。
-            振り付けの学習やメンバーの位置確認に最適です。
+
+          {/* Headline */}
+          <h1 className="font-black tracking-tight mb-2 leading-none" style={{ fontSize: 'clamp(2.8rem, 7vw, 5.5rem)' }}>
+            <span className="shimmer-text">Formation</span>
+            <br />
+            <span
+              style={{ background: 'linear-gradient(135deg, #e2e8f0 30%, #8B9CB8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            >
+              Viewer
+            </span>
+          </h1>
+
+          <p className="text-[var(--foreground-muted)] text-base max-w-lg mx-auto mb-10 leading-relaxed mt-6" style={{ fontFamily: 'var(--font-noto-sans-jp)' }}>
+            K-POPダンス動画とフォーメーションをリアルタイム同期。<br />
+            振り付け学習・メンバー位置確認に最適なツール。
           </p>
+
+          {/* CTA */}
           <Link
             href="/editor"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-pink-500 via-fuchsia-500 to-violet-500 text-white font-bold rounded-2xl shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/50 hover:-translate-y-1 hover:scale-105 transition-all duration-200 text-base"
+            className="group inline-flex items-center gap-2.5 px-8 py-4 text-white font-bold rounded-2xl text-base relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, #FF2D78, #c026d3, #7C3AED)',
+              boxShadow: '0 0 30px rgba(255,45,120,0.35), 0 4px 20px rgba(124,58,237,0.25)',
+            }}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Shimmer overlay */}
+            <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)', backgroundSize: '200% auto' }} />
+            <svg className="w-4.5 h-4.5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
             </svg>
-            新規作成
+            <span className="relative z-10 tracking-wide">新規作成</span>
           </Link>
         </section>
 
         {/* コンテンツ */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-[var(--foreground)]">
-              フォーメーション一覧
+            <div className="flex items-baseline gap-3">
+              <h2 className="text-xl font-black uppercase tracking-widest text-[var(--foreground)]">
+                フォーメーション一覧
+              </h2>
               {demoMode && (
-                <span className="ml-3 text-sm font-normal text-pink-400">
-                  ({displayVideos.length} / {videos.length + DEMO_VIDEO_TOTAL})
+                <span className="text-xs font-medium text-[#FF6BA8] tracking-wide">
+                  {displayVideos.length} / {videos.length + DEMO_VIDEO_TOTAL}
                 </span>
               )}
-            </h2>
+            </div>
 
             {/* デモモードトグル */}
             <button
               onClick={toggleDemoMode}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                demoMode
-                  ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/25'
-                  : 'bg-[var(--card-bg)] text-[var(--foreground-muted)] hover:bg-[var(--background-tertiary)]'
-              }`}
+              className="px-4 py-2 rounded-xl text-xs font-semibold tracking-widest uppercase transition-all duration-200"
+              style={demoMode
+                ? { background: 'linear-gradient(135deg,#FF2D78,#7C3AED)', color: '#fff', boxShadow: '0 0 16px rgba(255,45,120,0.35)' }
+                : { background: 'rgba(255,255,255,0.04)', color: 'var(--foreground-muted)', border: '1px solid rgba(255,45,120,0.15)' }
+              }
             >
-              {demoMode ? 'デモモード ON' : 'デモモード'}
+              {demoMode ? '● Demo ON' : 'Demo'}
             </button>
           </div>
 
@@ -311,34 +341,52 @@ export default function HomePage() {
         </section>
 
         {/* 説明セクション */}
-        <section className="mt-16 grid grid-cols-3 gap-8">
-          <div className="text-center group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
-              <span className="text-2xl">🎬</span>
+        <section className="mt-20 grid grid-cols-3 gap-5">
+          {[
+            {
+              icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.893L15 14M4 8a2 2 0 012-2h9a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V8z" />
+                </svg>
+              ),
+              label: '動画と同期',
+              desc: '動画再生に合わせてフォーメーションがリアルタイムで更新',
+              accent: '#FF2D78',
+            },
+            {
+              icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              ),
+              label: 'メンバー追跡',
+              desc: 'メンバーを選択して位置と動線をハイライト表示',
+              accent: '#c026d3',
+            },
+            {
+              icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              ),
+              label: '動線表示',
+              desc: '矢印で各メンバーの次の移動先を表示',
+              accent: '#7C3AED',
+            },
+          ].map(({ icon, label, desc, accent }) => (
+            <div key={label} className="group glass rounded-2xl p-6 hover:border-[rgba(255,45,120,0.3)] transition-all duration-300 hover:-translate-y-1">
+              {/* Top accent line */}
+              <div className="h-px w-12 mb-5 rounded-full" style={{ background: accent, boxShadow: `0 0 8px ${accent}` }} />
+              {/* Icon */}
+              <div className="mb-4" style={{ color: accent }}>
+                {icon}
+              </div>
+              <h3 className="text-[var(--foreground)] font-bold mb-2 tracking-wide text-sm uppercase">{label}</h3>
+              <p className="text-[var(--foreground-muted)] text-sm leading-relaxed" style={{ fontFamily: 'var(--font-noto-sans-jp)' }}>
+                {desc}
+              </p>
             </div>
-            <h3 className="text-[var(--foreground)] font-semibold mb-2">動画と同期</h3>
-            <p className="text-[var(--foreground-muted)] text-sm">
-              動画再生に合わせてフォーメーションがリアルタイムで更新
-            </p>
-          </div>
-          <div className="text-center group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
-              <span className="text-2xl">👥</span>
-            </div>
-            <h3 className="text-[var(--foreground)] font-semibold mb-2">メンバー追跡</h3>
-            <p className="text-[var(--foreground-muted)] text-sm">
-              メンバーを選択して位置と動線をハイライト表示
-            </p>
-          </div>
-          <div className="text-center group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
-              <span className="text-2xl">➡️</span>
-            </div>
-            <h3 className="text-[var(--foreground)] font-semibold mb-2">動線表示</h3>
-            <p className="text-[var(--foreground-muted)] text-sm">
-              矢印で各メンバーの次の移動先を表示
-            </p>
-          </div>
+          ))}
         </section>
       </main>
 
