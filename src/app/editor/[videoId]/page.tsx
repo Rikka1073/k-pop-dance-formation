@@ -13,6 +13,7 @@ import {
 import { YouTubePlayer } from '@/components/viewer'
 import { Member, Position } from '@/types'
 import { isSupabaseConfigured } from '@/lib/supabase'
+import { TemplateType, getTemplatePositions } from '@/lib/formation-templates'
 import {
   getFormationDataByVideoId,
   getVideoById,
@@ -205,25 +206,18 @@ export default function EditVideoPage() {
 
   // ============ Formation Handlers ============
 
-  const handleAddFormation = () => {
-    // 円形に配置（上から時計回り）
-    const count = members.length
+  const handleAddFormation = (template: TemplateType = 'circle') => {
+    const pts = getTemplatePositions(template, members.length)
     const newFormation: EditorFormation = {
       id: generateId(),
       time: currentTime,
       name: `Formation ${formations.length + 1}`,
-      positions: members.map((m, index) => {
-        const angle = (index / count) * 2 * Math.PI - Math.PI / 2 // 上から始める
-        const radius = Math.min(25, 15 + count * 2) // メンバー数に応じて半径調整
-        const x = 50 + radius * Math.cos(angle)
-        const y = 50 + radius * Math.sin(angle)
-        return {
-          memberId: m.id,
-          x: Math.round(x),
-          y: Math.round(y),
-          member: m,
-        }
-      }),
+      positions: members.map((m, index) => ({
+        memberId: m.id,
+        x: pts[index]?.x ?? 50,
+        y: pts[index]?.y ?? 50,
+        member: m,
+      })),
     }
     setFormations((prev) => [...prev, newFormation].sort((a, b) => a.time - b.time))
     setCurrentFormationId(newFormation.id)
