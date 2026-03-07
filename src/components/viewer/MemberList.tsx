@@ -32,7 +32,7 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
         </span>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 overflow-y-auto max-h-64 pr-1">
         {members.map((member) => {
           const isSelected = selectedMemberId === member.id
 
