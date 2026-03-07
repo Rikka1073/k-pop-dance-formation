@@ -3,6 +3,25 @@
 import { Member, Position } from '@/types'
 import { DraggableMemberIcon } from './DraggableMemberIcon'
 
+const PERSPECTIVE_RATIO = 0.55
+const BACK_OFFSET = ((1 - PERSPECTIVE_RATIO) / 2) * 100 // 22.5
+
+/** 論理 X (0-100) → 表示 X (0-100) */
+function pX(logicalX: number, displayY: number, flipped: boolean): number {
+  const frontFactor = flipped ? displayY / 100 : (100 - displayY) / 100
+  const scale = PERSPECTIVE_RATIO + (1 - PERSPECTIVE_RATIO) * frontFactor
+  const offset = ((1 - scale) / 2) * 100
+  return offset + logicalX * scale
+}
+
+/** 表示 X → 論理 X (ドラッグ逆変換) */
+function inversePX(displayX: number, displayY: number, flipped: boolean): number {
+  const frontFactor = flipped ? displayY / 100 : (100 - displayY) / 100
+  const scale = PERSPECTIVE_RATIO + (1 - PERSPECTIVE_RATIO) * frontFactor
+  const offset = ((1 - scale) / 2) * 100
+  return (displayX - offset) / scale
+}
+
 interface EditorPosition extends Position {
   member: Member
 }
@@ -12,7 +31,7 @@ interface EditorStageProps {
   selectedMemberId: string | null
   onPositionChange: (memberId: string, x: number, y: number) => void
   onMemberSelect: (memberId: string | null) => void
-  flipped?: boolean // true = 観客側が下（デフォルト）
+  flipped?: boolean
 }
 
 export function EditorStage({
@@ -22,66 +41,123 @@ export function EditorStage({
   onMemberSelect,
   flipped = true,
 }: EditorStageProps) {
-  // Y座標を反転（flipped=trueの時、観客側が下になる）
-  const transformY = (y: number) => flipped ? 100 - y : y
-  // ドラッグ時は逆変換が必要
+  const transformY        = (y: number) => flipped ? 100 - y : y
   const inverseTransformY = (y: number) => flipped ? 100 - y : y
+
+  const backY  = flipped ? 0   : 100
+  const frontY = flipped ? 100 : 0
+
+  const trapPoints = flipped
+    ? `${BACK_OFFSET},0 ${100 - BACK_OFFSET},0 100,100 0,100`
+    : `0,0 100,0 ${100 - BACK_OFFSET},100 ${BACK_OFFSET},100`
+
+  const shadeLPoints = flipped
+    ? `0,0 ${BACK_OFFSET},0 0,100`
+    : `0,0 0,100 ${BACK_OFFSET},100`
+  const shadeRPoints = flipped
+    ? `${100 - BACK_OFFSET},0 100,0 100,100`
+    : `100,0 100,100 ${100 - BACK_OFFSET},100`
+
   return (
     <div
-      className="relative w-full aspect-video bg-gradient-to-b from-[var(--stage-bg)] to-[var(--stage-bg-secondary)] rounded-2xl overflow-hidden border-2 border-dashed border-[var(--card-border)]"
+      className="relative w-full aspect-video rounded-2xl overflow-hidden border border-dashed border-[var(--card-border)]"
+      style={{ background: 'linear-gradient(to bottom, var(--stage-bg), var(--stage-bg-secondary))' }}
       onClick={() => onMemberSelect(null)}
     >
-      {/* グリッド */}
-      <div className="absolute inset-0 opacity-30">
-        <svg className="w-full h-full">
-          <defs>
-            <pattern id="editor-grid" width="10%" height="10%" patternUnits="userSpaceOnUse">
-              <path
-                d="M 100 0 L 0 0 0 100"
-                fill="none"
-                stroke="white"
-                strokeWidth="0.5"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#editor-grid)" />
-        </svg>
-      </div>
+      {/* ━━━ パース付きグリッド ━━━ */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
+        {/* 台形外シェード */}
+        <polygon points={shadeLPoints} fill="rgba(0,0,0,0.38)" />
+        <polygon points={shadeRPoints} fill="rgba(0,0,0,0.38)" />
 
-      {/* センターライン */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[var(--stage-line)]" />
-      <div className="absolute top-1/2 left-0 right-0 h-px bg-[var(--stage-line)]" />
+        {/* 横パースライン */}
+        {[20, 40, 60, 80].map(dY => {
+          const ff  = flipped ? dY / 100 : (100 - dY) / 100
+          const sc  = PERSPECTIVE_RATIO + (1 - PERSPECTIVE_RATIO) * ff
+          const off = ((1 - sc) / 2) * 100
+          return (
+            <line key={dY}
+              x1={off} y1={dY} x2={100 - off} y2={dY}
+              stroke="rgba(255,255,255,0.08)" strokeWidth="0.4"
+            />
+          )
+        })}
+
+        {/* 縦収束ライン */}
+        {[25, 50, 75].map(lX => {
+          const xFront = lX
+          const xBack  = BACK_OFFSET + lX * PERSPECTIVE_RATIO
+          return (
+            <line key={lX}
+              x1={flipped ? xFront : xBack}  y1={frontY}
+              x2={flipped ? xBack  : xFront} y2={backY}
+              stroke={lX === 50 ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.07)'}
+              strokeWidth={lX === 50 ? '0.7' : '0.4'}
+            />
+          )
+        })}
+
+        {/* 台形アウトライン */}
+        <polygon
+          points={trapPoints}
+          fill="none"
+          stroke="rgba(255,45,120,0.3)"
+          strokeWidth="0.7"
+          strokeDasharray="3 2"
+        />
+
+        {/* FRONT ライン */}
+        <line
+          x1={flipped ? 0 : BACK_OFFSET} y1={frontY}
+          x2={flipped ? 100 : 100 - BACK_OFFSET} y2={frontY}
+          stroke="rgba(255,45,120,0.55)" strokeWidth="1.2"
+        />
+      </svg>
 
       {/* ラベル */}
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[var(--foreground-muted)] text-xs font-medium">
-        {flipped ? 'BACK' : 'FRONT (観客側)'}
+      <div
+        className="absolute left-1/2 -translate-x-1/2 text-[9px] tracking-[0.2em] uppercase font-bold text-[var(--foreground-muted)] opacity-40"
+        style={{ top: flipped ? '5px' : 'auto', bottom: flipped ? 'auto' : '5px' }}
+      >
+        BACK
       </div>
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[var(--foreground-muted)] text-xs font-medium">
-        {flipped ? 'FRONT (観客側)' : 'BACK'}
+      <div
+        className="absolute left-1/2 -translate-x-1/2 text-[9px] tracking-[0.2em] uppercase font-bold text-[#FF6BA8] opacity-70"
+        style={{ bottom: flipped ? '5px' : 'auto', top: flipped ? 'auto' : '5px' }}
+      >
+        FRONT
       </div>
-      <div className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-xs font-medium rotate-[-90deg]">
-        左
-      </div>
-      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)] text-xs font-medium rotate-90">
-        右
-      </div>
+      <div className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] font-bold uppercase tracking-wider text-[var(--foreground-muted)] opacity-35 -rotate-90">L</div>
+      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] font-bold uppercase tracking-wider text-[var(--foreground-muted)] opacity-35 rotate-90">R</div>
 
-      {/* ドラッグ可能なメンバーアイコン */}
-      {positions.map((pos) => (
-        <DraggableMemberIcon
-          key={pos.memberId}
-          member={pos.member}
-          x={pos.x}
-          y={transformY(pos.y)}
-          isSelected={selectedMemberId === pos.memberId}
-          onPositionChange={(x, y) => onPositionChange(pos.memberId, x, inverseTransformY(y))}
-          onClick={() => onMemberSelect(pos.memberId)}
-        />
-      ))}
+      {/* ドラッグ可能アイコン (透視変換) */}
+      {positions.map((pos) => {
+        const dY = transformY(pos.y)
+        const dX = pX(pos.x, dY, flipped)
+        return (
+          <DraggableMemberIcon
+            key={pos.memberId}
+            member={pos.member}
+            x={dX}
+            y={dY}
+            isSelected={selectedMemberId === pos.memberId}
+            onPositionChange={(displayX, displayY) => {
+              const logicalX = Math.max(0, Math.min(100, inversePX(displayX, displayY, flipped)))
+              const logicalY = inverseTransformY(displayY)
+              onPositionChange(pos.memberId, logicalX, logicalY)
+            }}
+            onClick={() => onMemberSelect(pos.memberId)}
+          />
+        )
+      })}
 
-      {/* 編集ヒント */}
-      <div className="absolute bottom-2 right-2 text-[var(--foreground-muted)] text-xs">
-        ドラッグで位置調整
+      {/* ヒント */}
+      <div className="absolute bottom-2 right-2 text-[9px] text-[var(--foreground-muted)] opacity-35 tracking-wider">
+        drag to move
       </div>
     </div>
   )
