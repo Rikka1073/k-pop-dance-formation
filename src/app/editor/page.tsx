@@ -31,14 +31,12 @@ function generateId() {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 }
 
-// Default member colors
+// Default member colors (20色)
 const DEFAULT_COLORS = [
-  '#FF6B9D',
-  '#4ECDC4',
-  '#FFE66D',
-  '#95E1D3',
-  '#FF8B5A',
-  '#B8A9C9',
+  '#FF2D78', '#FF6B9D', '#FFAAA5', '#FF8B5A', '#FFD166',
+  '#FFE66D', '#C8F7A6', '#88D8B0', '#06D6A0', '#95E1D3',
+  '#4ECDC4', '#45B7D1', '#4A90D9', '#7C3AED', '#9D5CF0',
+  '#C084FC', '#B8A9C9', '#F472B6', '#FB7185', '#A8DADC',
 ]
 
 interface EditorFormation {

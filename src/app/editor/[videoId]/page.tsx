@@ -19,6 +19,8 @@ import {
   createFormationData,
   createFormation,
   createPosition,
+  createMember,
+  updateMember,
   deleteFormation as deleteFormationFromDB,
   deleteFormationDataByVideoId,
 } from '@/lib/supabase/queries'
@@ -32,6 +34,13 @@ import {
 function generateId() {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 }
+
+const DEFAULT_COLORS = [
+  '#FF2D78', '#FF6B9D', '#FFAAA5', '#FF8B5A', '#FFD166',
+  '#FFE66D', '#C8F7A6', '#88D8B0', '#06D6A0', '#95E1D3',
+  '#4ECDC4', '#45B7D1', '#4A90D9', '#7C3AED', '#9D5CF0',
+  '#C084FC', '#B8A9C9', '#F472B6', '#FB7185', '#A8DADC',
+]
 
 interface EditorFormation {
   id: string
@@ -70,6 +79,11 @@ export default function EditVideoPage() {
 
   // DB IDs for updating
   const [formationDataId, setFormationDataId] = useState<string | null>(null)
+
+  // ローカルで追加した（未DB保存）メンバーのID集合
+  const [addedMemberLocalIds, setAddedMemberLocalIds] = useState<Set<string>>(new Set())
+  // 既存メンバーの変更追跡（name/color）
+  const [updatedMemberIds, setUpdatedMemberIds] = useState<Set<string>>(new Set())
 
   // Get current formation
   const currentFormation = formations.find((f) => f.id === currentFormationId)
@@ -259,6 +273,52 @@ export default function EditVideoPage() {
     )
   }
 
+  // ============ Member Handlers ============
+
+  const handleAddMember = () => {
+    const newId = generateId()
+    const artistId = members.find(m => !addedMemberLocalIds.has(m.id))?.artistId || ''
+    const newMember: Member = {
+      id: newId,
+      artistId,
+      name: `Member ${members.length + 1}`,
+      color: DEFAULT_COLORS[members.length % DEFAULT_COLORS.length],
+      order: members.length,
+    }
+    setMembers(prev => [...prev, newMember])
+    setAddedMemberLocalIds(prev => new Set([...prev, newId]))
+    // 全フォーメーションにセンター位置で追加
+    setFormations(prev => prev.map(f => ({
+      ...f,
+      positions: [...f.positions, { memberId: newId, x: 50, y: 50, member: newMember }],
+    })))
+  }
+
+  const handleUpdateMember = (memberId: string, updates: { name?: string; color?: string }) => {
+    setMembers(prev => prev.map(m => m.id === memberId ? { ...m, ...updates } : m))
+    setFormations(prev => prev.map(f => ({
+      ...f,
+      positions: f.positions.map(p =>
+        p.memberId === memberId ? { ...p, member: { ...p.member, ...updates } } : p
+      ),
+    })))
+    // 既存メンバー（DB登録済み）の変更を記録
+    if (!addedMemberLocalIds.has(memberId)) {
+      setUpdatedMemberIds(prev => new Set([...prev, memberId]))
+    }
+  }
+
+  const handleDeleteMember = (memberId: string) => {
+    setMembers(prev => prev.filter(m => m.id !== memberId))
+    setFormations(prev => prev.map(f => ({
+      ...f,
+      positions: f.positions.filter(p => p.memberId !== memberId),
+    })))
+    setAddedMemberLocalIds(prev => { const s = new Set(prev); s.delete(memberId); return s })
+    setUpdatedMemberIds(prev => { const s = new Set(prev); s.delete(memberId); return s })
+    if (selectedMemberId === memberId) setSelectedMemberId(null)
+  }
+
   // ============ Save Handler ============
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
@@ -284,6 +344,32 @@ export default function EditVideoPage() {
     setSaveError(null)
 
     try {
+      // 新規追加メンバーをDBに保存し、ローカルID→DB IDのマップを作る
+      const idMap: Record<string, string> = {}
+      if (addedMemberLocalIds.size > 0) {
+        const artistId = members.find(m => !addedMemberLocalIds.has(m.id))?.artistId || ''
+        for (const member of members) {
+          if (addedMemberLocalIds.has(member.id)) {
+            const dbMember = await createMember(artistId, member.name, member.color, member.order)
+            idMap[member.id] = (dbMember as { id: string }).id
+          }
+        }
+        // StateをDB IDで更新
+        setMembers(prev => prev.map(m => idMap[m.id] ? { ...m, id: idMap[m.id] } : m))
+        setAddedMemberLocalIds(new Set())
+      }
+
+      // 既存メンバーの名前/カラー変更をDBに反映
+      if (isSupabaseConfigured() && updatedMemberIds.size > 0) {
+        for (const memberId of updatedMemberIds) {
+          const member = members.find(m => m.id === memberId)
+          if (member) {
+            await updateMember(memberId, { name: member.name, color: member.color })
+          }
+        }
+        setUpdatedMemberIds(new Set())
+      }
+
       // Delete old formation data first
       await deleteFormationDataByVideoId(videoId)
 
@@ -303,9 +389,10 @@ export default function EditVideoPage() {
           i
         )
 
-        // Create positions
+        // Create positions (ローカルIDをDB IDに変換)
         for (const pos of f.positions) {
-          await createPosition(dbFormation.id, pos.memberId, pos.x, pos.y)
+          const resolvedId = idMap[pos.memberId] || pos.memberId
+          await createPosition(dbFormation.id, resolvedId, pos.x, pos.y)
         }
       }
 
@@ -421,56 +508,30 @@ export default function EditVideoPage() {
         {/* Bottom Controls - 3 columns */}
         <div className="grid grid-cols-3 gap-4">
           {/* Left: Members */}
-          <div className="rounded-2xl p-4" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--foreground)] mb-3">Members</h3>
-            <div className="space-y-2 max-h-64 overflow-y-auto px-1 py-1">
-              {members.map((member) => {
-                const isSelected = selectedMemberId === member.id
-                return (
-                  <div
-                    key={member.id}
-                    onClick={() => setSelectedMemberId(isSelected ? null : member.id)}
-                    className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all duration-200 ${
-                      isSelected
-                        ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50 shadow-lg shadow-pink-500/10'
-                        : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)]'
-                    }`}
-                  >
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-transform duration-200 ${isSelected ? 'scale-110' : ''}`}
-                      style={{
-                        backgroundColor: member.color,
-                        boxShadow: isSelected ? `0 0 12px ${member.color}` : 'none',
-                      }}
-                    >
-                      {member.name.charAt(0)}
-                    </div>
-                    <span className={`text-sm font-medium transition-colors ${isSelected ? 'text-pink-300' : 'text-[var(--foreground)]'}`}>
-                      {member.name}
-                    </span>
-                    {isSelected && (
-                      <span className="ml-auto text-xs text-pink-400/80 flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-                        選択中
-                      </span>
-                    )}
-                  </div>
-                )
-              })}
+          <div className="rounded-2xl overflow-hidden" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
+            <div className="max-h-80 overflow-y-auto">
+              <MemberSettings
+                members={members}
+                selectedMemberId={selectedMemberId}
+                onMemberSelect={setSelectedMemberId}
+                onMemberAdd={handleAddMember}
+                onMemberUpdate={handleUpdateMember}
+                onMemberDelete={handleDeleteMember}
+                readOnly={videoId === sampleVideo.id}
+              />
             </div>
 
             {/* Coordinate Input (when member selected) */}
             {selectedMemberId && currentFormation && (() => {
-              const selectedMember = members.find((m) => m.id === selectedMemberId)
               const position = currentFormation.positions.find((p) => p.memberId === selectedMemberId)
-              if (!selectedMember || !position) return null
+              if (!position) return null
               return (
-                <div className="mt-4 pt-4 border-t border-[var(--card-border)]">
-                  <p className="text-[var(--foreground-muted)] text-xs mb-2">位置</p>
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="text-[var(--foreground-muted)]">X:</span>
+                <div className="px-4 pb-3 pt-2" style={{ borderTop: '1px solid rgba(255,45,120,0.12)' }}>
+                  <p className="text-[var(--foreground-muted)] text-xs mb-1.5">位置</p>
+                  <div className="flex items-center gap-2 text-sm font-mono">
+                    <span className="text-[var(--foreground-muted)] text-xs">X</span>
                     <span className="text-white">{Math.round(position.x - 50)}</span>
-                    <span className="text-[var(--foreground-muted)] ml-2">Y:</span>
+                    <span className="text-[var(--foreground-muted)] text-xs ml-2">Y</span>
                     <span className="text-white">{Math.round(position.y - 50)}</span>
                   </div>
                 </div>
