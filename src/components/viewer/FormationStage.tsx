@@ -10,7 +10,8 @@ const BACK_OFFSET = ((1 - PERSPECTIVE_RATIO) / 2) * 100 // 22.5
 
 /** 論理 X (0-100) → 表示 X (0-100) */
 function pX(logicalX: number, displayY: number, flipped: boolean): number {
-  const frontFactor = flipped ? displayY / 100 : (100 - displayY) / 100
+  // flipped=true: FRONTが上(displayY=0)→wide, flipped=false: FRONTが下(displayY=100)→wide
+  const frontFactor = flipped ? (100 - displayY) / 100 : displayY / 100
   const scale = PERSPECTIVE_RATIO + (1 - PERSPECTIVE_RATIO) * frontFactor
   const offset = ((1 - scale) / 2) * 100
   return offset + logicalX * scale
@@ -36,21 +37,23 @@ export function FormationStage({
   const transformY = (y: number) => flipped ? 100 - y : y
 
   // SVG座標 (viewBox 0 0 100 100 で統一)
-  const backY  = flipped ? 0   : 100
-  const frontY = flipped ? 100 : 0
+  // flipped=true → FRONT上(y=0), BACK下(y=100)
+  // flipped=false → FRONT下(y=100), BACK上(y=0)
+  const backY  = flipped ? 100 : 0
+  const frontY = flipped ? 0   : 100
 
-  // 台形頂点
+  // 台形頂点: FRONT側が幅広(100%), BACK側が幅狭(55%)
   const trapPoints = flipped
-    ? `${BACK_OFFSET},0 ${100 - BACK_OFFSET},0 100,100 0,100`
-    : `0,0 100,0 ${100 - BACK_OFFSET},100 ${BACK_OFFSET},100`
+    ? `0,0 100,0 ${100 - BACK_OFFSET},100 ${BACK_OFFSET},100`
+    : `${BACK_OFFSET},0 ${100 - BACK_OFFSET},0 100,100 0,100`
 
-  // 台形外シェードの三角形
+  // 台形外シェードの三角形 (BACK側コーナー)
   const shadeLPoints = flipped
-    ? `0,0 ${BACK_OFFSET},0 0,100`
-    : `0,0 0,100 ${BACK_OFFSET},100`
+    ? `0,0 0,100 ${BACK_OFFSET},100`
+    : `0,0 ${BACK_OFFSET},0 0,100`
   const shadeRPoints = flipped
-    ? `${100 - BACK_OFFSET},0 100,0 100,100`
-    : `100,0 100,100 ${100 - BACK_OFFSET},100`
+    ? `100,0 100,100 ${100 - BACK_OFFSET},100`
+    : `${100 - BACK_OFFSET},0 100,0 100,100`
 
   return (
     <div
@@ -69,7 +72,7 @@ export function FormationStage({
 
         {/* 横パースライン (Y=20,40,60,80) */}
         {[20, 40, 60, 80].map(dY => {
-          const ff  = flipped ? dY / 100 : (100 - dY) / 100
+          const ff  = flipped ? (100 - dY) / 100 : dY / 100
           const sc  = PERSPECTIVE_RATIO + (1 - PERSPECTIVE_RATIO) * ff
           const off = ((1 - sc) / 2) * 100
           return (
@@ -103,25 +106,25 @@ export function FormationStage({
           strokeDasharray="3 2"
         />
 
-        {/* FRONT ライン (ピンク強め) */}
+        {/* FRONT ライン (ピンク強め) - FRONT端は常に全幅 */}
         <line
-          x1={flipped ? 0 : BACK_OFFSET} y1={frontY}
-          x2={flipped ? 100 : 100 - BACK_OFFSET} y2={frontY}
+          x1={0} y1={frontY}
+          x2={100} y2={frontY}
           stroke="rgba(255,45,120,0.45)" strokeWidth="1"
         />
       </svg>
 
-      {/* BACK ラベル */}
+      {/* BACK ラベル: flipped=true→下, flipped=false→上 */}
       <div
         className="absolute left-1/2 -translate-x-1/2 text-[9px] tracking-[0.2em] uppercase font-bold text-[var(--foreground-muted)] opacity-40"
-        style={{ top: flipped ? '5px' : 'auto', bottom: flipped ? 'auto' : '5px' }}
+        style={{ top: flipped ? 'auto' : '5px', bottom: flipped ? '5px' : 'auto' }}
       >
         BACK
       </div>
-      {/* FRONT ラベル */}
+      {/* FRONT ラベル: flipped=true→上, flipped=false→下 */}
       <div
         className="absolute left-1/2 -translate-x-1/2 text-[9px] tracking-[0.2em] uppercase font-bold text-[#FF6BA8] opacity-60"
-        style={{ bottom: flipped ? '5px' : 'auto', top: flipped ? 'auto' : '5px' }}
+        style={{ top: flipped ? '5px' : 'auto', bottom: flipped ? 'auto' : '5px' }}
       >
         FRONT
       </div>
