@@ -231,7 +231,7 @@ export default function ViewerPage() {
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
-      <Header title={viewerData.videoTitle} />
+      <Header title={viewerData.videoTitle} editHref={`/editor/${videoId}`} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* メインコンテンツ - 2カラムレイアウト（タブレット以上） */}
@@ -366,9 +366,9 @@ export default function ViewerPage() {
           </div>
         </div>
 
-        {/* アーティスト情報 + Edit */}
+        {/* アーティスト情報 */}
         <div
-          className="mt-6 px-5 py-3.5 rounded-2xl flex items-center justify-between"
+          className="mt-6 px-5 py-3.5 rounded-2xl"
           style={{
             background: 'rgba(255,255,255,0.025)',
             border: '1px solid rgba(255,45,120,0.1)',
@@ -387,13 +387,6 @@ export default function ViewerPage() {
               </>
             )}
           </div>
-          <a
-            href={`/editor/${videoId}`}
-            className="px-4 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5"
-            style={{ background: 'rgba(255,45,120,0.1)', color: '#FF6BA8', border: '1px solid rgba(255,45,120,0.2)' }}
-          >
-            Edit
-          </a>
         </div>
       </main>
     </div>

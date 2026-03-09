@@ -4,9 +4,10 @@ import Link from 'next/link'
 
 interface HeaderProps {
   title?: string
+  editHref?: string
 }
 
-export function Header({ title }: HeaderProps) {
+export function Header({ title, editHref }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 relative" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(8,5,26,0.75)', borderBottom: '1px solid rgba(255,45,120,0.12)' }}>
       <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
@@ -42,7 +43,7 @@ export function Header({ title }: HeaderProps) {
           </div>
         </Link>
 
-        {/* Page title */}
+        {/* Center: Page title */}
         {title && (
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-[var(--card-border)] text-lg font-thin select-none">|</span>
@@ -53,6 +54,17 @@ export function Header({ title }: HeaderProps) {
               {title}
             </h1>
           </div>
+        )}
+
+        {/* Right: Edit button */}
+        {editHref && (
+          <a
+            href={editHref}
+            className="px-4 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+            style={{ background: 'rgba(255,45,120,0.15)', color: '#FF6BA8', border: '1px solid rgba(255,45,120,0.3)' }}
+          >
+            ✏ Edit
+          </a>
         )}
       </div>
 
