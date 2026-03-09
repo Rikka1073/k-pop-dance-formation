@@ -234,6 +234,21 @@ export default function ViewerPage() {
       <Header title={viewerData.videoTitle} editHref={`/editor/${videoId}`} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
+        {/* アーティスト情報 */}
+        <div className="mb-4 flex items-center gap-3 text-xs text-[var(--foreground-muted)]">
+          <span className="font-black text-base text-white tracking-wide">{viewerData.artistName}</span>
+          <span className="opacity-30">|</span>
+          <span>{viewerData.members.length} members</span>
+          <span className="opacity-30">|</span>
+          <span>{viewerData.formations.length} formations</span>
+          {viewerData.contributorName && (
+            <>
+              <span className="opacity-30">|</span>
+              <span>by {viewerData.contributorName}</span>
+            </>
+          )}
+        </div>
+
         {/* メインコンテンツ - 2カラムレイアウト（タブレット以上） */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* YouTube Player */}
@@ -366,28 +381,6 @@ export default function ViewerPage() {
           </div>
         </div>
 
-        {/* アーティスト情報 */}
-        <div
-          className="mt-6 px-5 py-3.5 rounded-2xl"
-          style={{
-            background: 'rgba(255,255,255,0.025)',
-            border: '1px solid rgba(255,45,120,0.1)',
-          }}
-        >
-          <div className="flex items-center gap-4 text-xs text-[var(--foreground-muted)]">
-            <span className="font-black text-sm text-white tracking-wide">{viewerData.artistName}</span>
-            <span className="opacity-30">|</span>
-            <span>{viewerData.members.length} members</span>
-            <span className="opacity-30">|</span>
-            <span>{viewerData.formations.length} formations</span>
-            {viewerData.contributorName && (
-              <>
-                <span className="opacity-30">|</span>
-                <span>by {viewerData.contributorName}</span>
-              </>
-            )}
-          </div>
-        </div>
       </main>
     </div>
   )
