@@ -494,7 +494,7 @@ export default function EditVideoPage() {
               selectedMemberId={selectedMemberId}
               onPositionChange={handlePositionChange}
               onMemberSelect={setSelectedMemberId}
-              flipped={stageFlipped}
+              flipped={!stageFlipped}
             />
           </div>
         </div>
