@@ -206,18 +206,33 @@ export default function EditVideoPage() {
 
   // ============ Formation Handlers ============
 
-  const handleAddFormation = (template: TemplateType = 'circle') => {
-    const pts = getTemplatePositions(template, members.length)
+  const handleAddFormation = (template: TemplateType | 'inherit' = 'inherit') => {
+    // 直前のフォーメーションを探す（現在時刻より前で最も近いもの、なければ最後のもの）
+    const prevFormation = formations.length > 0
+      ? (formations.filter(f => f.time <= currentTime).sort((a, b) => b.time - a.time)[0]
+         ?? formations[formations.length - 1])
+      : null
+
+    const positions = (template === 'inherit' && prevFormation)
+      ? members.map((m) => {
+          const prev = prevFormation.positions.find(p => p.memberId === m.id)
+          return { memberId: m.id, x: prev?.x ?? 50, y: prev?.y ?? 50, member: m }
+        })
+      : (() => {
+          const pts = getTemplatePositions(template as TemplateType, members.length)
+          return members.map((m, index) => ({
+            memberId: m.id,
+            x: pts[index]?.x ?? 50,
+            y: pts[index]?.y ?? 50,
+            member: m,
+          }))
+        })()
+
     const newFormation: EditorFormation = {
       id: generateId(),
       time: currentTime,
       name: `Formation ${formations.length + 1}`,
-      positions: members.map((m, index) => ({
-        memberId: m.id,
-        x: pts[index]?.x ?? 50,
-        y: pts[index]?.y ?? 50,
-        member: m,
-      })),
+      positions,
     }
     setFormations((prev) => [...prev, newFormation].sort((a, b) => a.time - b.time))
     setCurrentFormationId(newFormation.id)
