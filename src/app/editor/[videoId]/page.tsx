@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Header } from '@/components/layout'
 import { Button, LoadingSpinner } from '@/components/ui'
@@ -10,7 +10,7 @@ import {
   MemberSettings,
   CoordinateInput,
 } from '@/components/editor'
-import { YouTubePlayer } from '@/components/viewer'
+import { YouTubePlayer, YouTubePlayerHandle, Timeline } from '@/components/viewer'
 import { Member, Position } from '@/types'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { TemplateType, getTemplatePositions } from '@/lib/formation-templates'
@@ -58,6 +58,8 @@ export default function EditVideoPage() {
   // Loading state
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
+
+  const playerRef = useRef<YouTubePlayerHandle>(null)
 
   // Video settings (read-only for existing videos)
   const [youtubeVideoId, setYoutubeVideoId] = useState('')
@@ -202,6 +204,10 @@ export default function EditVideoPage() {
 
   const handleTimeUpdate = useCallback((time: number) => {
     setCurrentTime(time)
+  }, [])
+
+  const handleSeek = useCallback((time: number) => {
+    playerRef.current?.seekTo(time)
   }, [])
 
   // ============ Formation Handlers ============
@@ -474,6 +480,7 @@ export default function EditVideoPage() {
           <div>
             <h2 className="text-[var(--foreground-muted)] text-sm font-medium mb-2">動画</h2>
             <YouTubePlayer
+              ref={playerRef}
               videoId={youtubeVideoId}
               onDurationChange={handleDurationChange}
               onTimeUpdate={handleTimeUpdate}
@@ -512,6 +519,17 @@ export default function EditVideoPage() {
               flipped={!stageFlipped}
             />
           </div>
+        </div>
+
+        {/* タイムライン */}
+        <div className="mb-6">
+          <Timeline
+            formations={formations}
+            currentTime={currentTime}
+            duration={videoDuration}
+            currentFormationName={currentFormation?.name}
+            onSeek={handleSeek}
+          />
         </div>
 
         {/* Bottom Controls - 3 columns */}
