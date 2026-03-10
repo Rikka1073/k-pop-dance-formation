@@ -272,7 +272,7 @@ export default function ViewerPage() {
               selectedMemberId={selectedMemberId}
               showMovementArrows={showMovementArrows}
               onMemberClick={handleMemberSelect}
-              flipped={stageFlipped}
+              flipped={!stageFlipped}
             />
           </div>
         </div>
