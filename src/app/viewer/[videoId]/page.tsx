@@ -233,7 +233,7 @@ export default function ViewerPage() {
     <div className="min-h-screen bg-[var(--background)]">
       <Header title={viewerData.videoTitle} editHref={`/editor/${videoId}`} />
 
-      <main className="max-w-7xl mx-auto px-4 py-6">
+      <main className="max-w-screen-2xl mx-auto px-4 py-6">
         {/* アーティスト情報 */}
         <div className="mb-4 flex items-center gap-3 text-xs text-[var(--foreground-muted)]">
           <span className="font-black text-base text-white tracking-wide">{viewerData.artistName}</span>
@@ -249,8 +249,8 @@ export default function ViewerPage() {
           )}
         </div>
 
-        {/* メインコンテンツ - 2カラムレイアウト（タブレット以上） */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        {/* メインコンテンツ - 動画:フォーメーション = 2:3 */}
+        <div className="grid grid-cols-[2fr_3fr] gap-6 mb-6">
           {/* YouTube Player */}
           <div>
             <h2 className="text-[var(--foreground-muted)] text-sm font-medium mb-2">動画</h2>

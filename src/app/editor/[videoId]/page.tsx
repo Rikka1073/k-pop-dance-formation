@@ -455,7 +455,7 @@ export default function EditVideoPage() {
     <div className="min-h-screen bg-[var(--background)]">
       <Header title={`編集: ${videoTitle}`} />
 
-      <main className="max-w-7xl mx-auto px-4 py-6">
+      <main className="max-w-screen-2xl mx-auto px-4 py-6">
         {/* Video Info Banner */}
         <div
           className="rounded-2xl px-5 py-3.5 mb-6 flex items-center justify-between"
@@ -474,8 +474,8 @@ export default function EditVideoPage() {
           </a>
         </div>
 
-        {/* Main Content - Video & Formation side by side (same as Viewer) */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        {/* Main Content - 動画:フォーメーション = 2:3 */}
+        <div className="grid grid-cols-[2fr_3fr] gap-6 mb-6">
           {/* Video */}
           <div>
             <h2 className="text-[var(--foreground-muted)] text-sm font-medium mb-2">動画</h2>
