@@ -421,3 +421,42 @@ export async function saveFullFormation(params: {
 
   return formationData
 }
+
+// ============ Admin ============
+
+export type AdminFormationEntry = {
+  id: string
+  created_at: string
+  updated_at: string
+  contributor_name: string | null
+  video: {
+    id: string
+    title: string
+    youtube_video_id: string
+    artist: { name: string }
+  }
+  formations: { id: string }[]
+}
+
+export async function getAllFormationDataForAdmin(): Promise<AdminFormationEntry[]> {
+  const client = getSupabaseClient()
+  const { data, error } = await client
+    .from('formation_data')
+    .select(`
+      id,
+      created_at,
+      updated_at,
+      contributor_name,
+      video:videos (
+        id,
+        title,
+        youtube_video_id,
+        artist:artists ( name )
+      ),
+      formations ( id )
+    `)
+    .order('updated_at', { ascending: false })
+
+  if (error) throw error
+  return data as AdminFormationEntry[]
+}
