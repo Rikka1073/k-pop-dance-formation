@@ -336,6 +336,7 @@ export default function EditVideoPage() {
 
   // ============ Save Handler ============
   const [isSaving, setIsSaving] = useState(false)
+  const [saveProgress, setSaveProgress] = useState(0)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
@@ -356,6 +357,7 @@ export default function EditVideoPage() {
     }
 
     setIsSaving(true)
+    setSaveProgress(0)
     setSaveError(null)
 
     try {
@@ -369,10 +371,10 @@ export default function EditVideoPage() {
             idMap[member.id] = (dbMember as { id: string }).id
           }
         }
-        // StateをDB IDで更新
         setMembers(prev => prev.map(m => idMap[m.id] ? { ...m, id: idMap[m.id] } : m))
         setAddedMemberLocalIds(new Set())
       }
+      setSaveProgress(10)
 
       // 既存メンバーの名前/カラー変更をDBに反映
       if (isSupabaseConfigured() && updatedMemberIds.size > 0) {
@@ -384,17 +386,20 @@ export default function EditVideoPage() {
         }
         setUpdatedMemberIds(new Set())
       }
+      setSaveProgress(20)
 
       // Delete old formation data first
       await deleteFormationDataByVideoId(videoId)
+      setSaveProgress(35)
 
       // Create new formation data
       const newFormationData = await createFormationData(
         videoId,
         contributorName || undefined
       )
+      setSaveProgress(50)
 
-      // Create formations and positions
+      // Create formations and positions (50% → 95% を formations数で分割)
       for (let i = 0; i < formations.length; i++) {
         const f = formations[i]
         const dbFormation = await createFormation(
@@ -409,8 +414,11 @@ export default function EditVideoPage() {
           const resolvedId = idMap[pos.memberId] || pos.memberId
           await createPosition(dbFormation.id, resolvedId, pos.x, pos.y)
         }
+
+        setSaveProgress(50 + Math.round(((i + 1) / formations.length) * 45))
       }
 
+      setSaveProgress(100)
       setLastSaved(new Date())
 
       if (redirectToViewer) {
@@ -420,7 +428,7 @@ export default function EditVideoPage() {
       console.error('Save error:', error)
       setSaveError(error instanceof Error ? error.message : '保存に失敗しました')
     } finally {
-      setIsSaving(false)
+      setTimeout(() => setIsSaving(false), 400)
     }
   }
 
@@ -457,21 +465,9 @@ export default function EditVideoPage() {
 
       {/* 保存中オーバーレイ */}
       {isSaving && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center" style={{ background: 'rgba(8,5,26,0.75)', backdropFilter: 'blur(8px)' }}>
-          {/* 上部シマーバー */}
-          <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: 'rgba(255,45,120,0.15)' }}>
-            <div
-              className="h-full w-full"
-              style={{
-                background: 'linear-gradient(90deg, transparent 0%, #FF2D78 30%, #c084fc 50%, #7C3AED 70%, transparent 100%)',
-                backgroundSize: '200% 100%',
-                animation: 'savingProgress 1.2s ease-in-out infinite',
-              }}
-            />
-          </div>
-
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center" style={{ background: 'rgba(8,5,26,0.8)', backdropFilter: 'blur(8px)' }}>
           {/* ドットアニメーション */}
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-6">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
@@ -483,7 +479,25 @@ export default function EditVideoPage() {
               />
             ))}
           </div>
-          <p className="text-sm text-[var(--foreground-muted)]">保存中...</p>
+
+          {/* プログレスバー */}
+          <div className="w-64 mb-3">
+            <div className="w-full h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+              <div
+                className="h-full rounded-full transition-all duration-300 ease-out"
+                style={{
+                  width: `${saveProgress}%`,
+                  background: 'linear-gradient(90deg, #FF2D78, #c084fc, #7C3AED)',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* %テキスト */}
+          <p className="text-2xl font-black tracking-tight" style={{ background: 'linear-gradient(90deg, #FF2D78, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            {saveProgress}%
+          </p>
+          <p className="text-xs text-[var(--foreground-muted)] mt-1">保存中...</p>
         </div>
       )}
 
