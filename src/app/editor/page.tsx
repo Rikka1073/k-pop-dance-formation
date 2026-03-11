@@ -62,7 +62,6 @@ export default function EditorPage() {
   const [youtubeVideoId, setYoutubeVideoId] = useState('')
   const [videoTitle, setVideoTitle] = useState('')
   const [artistName, setArtistName] = useState('')
-  const [contributorName, setContributorName] = useState('')
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const [videoDuration, setVideoDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
@@ -481,10 +480,7 @@ export default function EditorPage() {
       const video = await createVideo(artistId, youtubeVideoId, videoTitle)
 
       // Create formation data
-      const formationData = await createFormationData(
-        video.id,
-        contributorName || undefined
-      )
+      const formationData = await createFormationData(video.id)
 
       // Create formations and positions
       for (let i = 0; i < formations.length; i++) {
@@ -649,19 +645,6 @@ export default function EditorPage() {
                       className="w-full px-3 py-2 bg-[var(--background-tertiary)] text-[var(--foreground)] rounded-xl border border-[var(--card-border)] focus:border-pink-400 outline-none"
                     />
                   )}
-                </div>
-
-                <div>
-                  <label className="block text-sm text-[var(--foreground-muted)] mb-1">
-                    投稿者名（任意）
-                  </label>
-                  <input
-                    type="text"
-                    value={contributorName}
-                    onChange={(e) => setContributorName(e.target.value)}
-                    placeholder="例: ダンスファン123"
-                    className="w-full px-3 py-2 bg-[var(--background-tertiary)] text-[var(--foreground)] rounded-xl border border-[var(--card-border)] focus:border-pink-400 outline-none"
-                  />
                 </div>
 
                 {/* 重複エラー表示 */}
