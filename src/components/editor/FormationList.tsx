@@ -182,14 +182,14 @@ export function FormationList({
                   <input
                     type="text"
                     inputMode="decimal"
-                    value={formation.time}
+                    value={Math.round(formation.time)}
                     onChange={(e) => {
                       const value = e.target.value
-                      if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                        const num = parseFloat(value)
+                      if (value === '' || /^\d*$/.test(value)) {
+                        const num = parseInt(value, 10)
                         if (!isNaN(num) && num >= 0) {
                           onFormationTimeChange(formation.id, num)
-                        } else if (value === '' || value === '.') {
+                        } else if (value === '') {
                           onFormationTimeChange(formation.id, 0)
                         }
                       }
