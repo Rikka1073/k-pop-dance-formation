@@ -455,17 +455,35 @@ export default function EditVideoPage() {
     <div className="min-h-screen bg-[var(--background)]">
       <Header title={`編集: ${videoTitle}`} />
 
-      {/* 保存中プログレスバー */}
+      {/* 保存中オーバーレイ */}
       {isSaving && (
-        <div className="fixed top-0 left-0 right-0 z-[100] h-[3px]" style={{ background: 'rgba(255,45,120,0.15)' }}>
-          <div
-            className="h-full w-full"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, #FF2D78 30%, #c084fc 50%, #7C3AED 70%, transparent 100%)',
-              backgroundSize: '200% 100%',
-              animation: 'savingProgress 1.2s ease-in-out infinite',
-            }}
-          />
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center" style={{ background: 'rgba(8,5,26,0.75)', backdropFilter: 'blur(8px)' }}>
+          {/* 上部シマーバー */}
+          <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: 'rgba(255,45,120,0.15)' }}>
+            <div
+              className="h-full w-full"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, #FF2D78 30%, #c084fc 50%, #7C3AED 70%, transparent 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'savingProgress 1.2s ease-in-out infinite',
+              }}
+            />
+          </div>
+
+          {/* ドットアニメーション */}
+          <div className="flex items-center gap-2 mb-4">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="w-3 h-3 rounded-full"
+                style={{
+                  background: 'linear-gradient(135deg, #FF2D78, #7C3AED)',
+                  animation: `bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
+                }}
+              />
+            ))}
+          </div>
+          <p className="text-sm text-[var(--foreground-muted)]">保存中...</p>
         </div>
       )}
 
