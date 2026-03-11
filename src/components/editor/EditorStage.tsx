@@ -22,6 +22,9 @@ export function EditorStage({
   onMemberSelect,
   flipped = true,
 }: EditorStageProps) {
+  // メンバー数に応じてアイコンサイズを決定
+  const iconSize = positions.length <= 6 ? 48 : positions.length <= 9 ? 40 : positions.length <= 12 ? 32 : 26
+
   // flipped=true → 観客視点: Y軸反転 (FRONT=下, BACK=上)
   const transformY        = (y: number) => flipped ? 100 - y : y
   const inverseTransformY = (y: number) => flipped ? 100 - y : y
@@ -101,6 +104,7 @@ export function EditorStage({
             x={pos.x}
             y={dY}
             isSelected={selectedMemberId === pos.memberId}
+            size={iconSize}
             onPositionChange={(displayX, displayY) => {
               const logicalX = Math.max(0, Math.min(100, displayX))
               const logicalY = inverseTransformY(displayY)

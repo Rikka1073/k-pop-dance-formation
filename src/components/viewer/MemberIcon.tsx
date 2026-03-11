@@ -9,10 +9,12 @@ interface MemberIconProps {
   x: number
   y: number
   isSelected?: boolean
+  size?: number
   onClick?: () => void
 }
 
-export function MemberIcon({ member, x, y, isSelected, onClick }: MemberIconProps) {
+export function MemberIcon({ member, x, y, isSelected, size = 40, onClick }: MemberIconProps) {
+  const fontSize = size >= 40 ? 14 : size >= 32 ? 12 : 10
   return (
     <div
       className={cn(
@@ -29,10 +31,13 @@ export function MemberIcon({ member, x, y, isSelected, onClick }: MemberIconProp
       {/* アイコン円 */}
       <motion.div
         className={cn(
-          'w-10 h-10 rounded-full flex items-center justify-center',
-          'text-white font-bold text-sm shadow-lg'
+          'rounded-full flex items-center justify-center',
+          'text-white font-bold shadow-lg'
         )}
         style={{
+          width: size,
+          height: size,
+          fontSize,
           backgroundColor: member.color,
           boxShadow: isSelected
             ? `0 0 0 3px white, 0 0 0 5px ${member.color}, 0 4px 16px rgba(0,0,0,0.4)`
@@ -55,10 +60,11 @@ export function MemberIcon({ member, x, y, isSelected, onClick }: MemberIconProp
       {/* 名前ラベル */}
       <div
         className={cn(
-          'mt-1 px-2 py-0.5 rounded-lg text-xs font-medium',
+          'mt-0.5 px-1.5 py-0.5 rounded-lg font-medium',
           'bg-black/70 text-white whitespace-nowrap',
           isSelected && 'bg-gradient-to-r from-pink-500/80 to-violet-500/80'
         )}
+        style={{ fontSize: fontSize - 2 }}
       >
         {member.name}
       </div>

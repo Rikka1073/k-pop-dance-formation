@@ -21,6 +21,9 @@ export function FormationStage({
   onMemberClick,
   flipped = true,
 }: FormationStageProps) {
+  // メンバー数に応じてアイコンサイズを決定
+  const iconSize = positions.length <= 6 ? 44 : positions.length <= 9 ? 36 : positions.length <= 12 ? 30 : 24
+
   // flipped=true → 観客視点: Y軸反転 (FRONT=下, BACK=上)
   const transformY = (y: number) => flipped ? 100 - y : y
 
@@ -118,6 +121,7 @@ export function FormationStage({
           x={pos.x}
           y={transformY(pos.y)}
           isSelected={selectedMemberId === pos.memberId}
+          size={iconSize}
           onClick={() => onMemberClick?.(pos.memberId)}
         />
       ))}

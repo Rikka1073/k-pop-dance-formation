@@ -10,6 +10,7 @@ interface DraggableMemberIconProps {
   x: number
   y: number
   isSelected?: boolean
+  size?: number
   onPositionChange: (x: number, y: number) => void
   onClick?: () => void
 }
@@ -19,9 +20,11 @@ export function DraggableMemberIcon({
   x,
   y,
   isSelected,
+  size = 48,
   onPositionChange,
   onClick,
 }: DraggableMemberIconProps) {
+  const fontSize = size >= 48 ? 14 : size >= 36 ? 12 : 10
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -85,10 +88,13 @@ export function DraggableMemberIcon({
       {/* アイコン円 */}
       <motion.div
         className={cn(
-          'w-12 h-12 rounded-full flex items-center justify-center',
-          'text-white font-bold text-sm shadow-lg',
+          'rounded-full flex items-center justify-center',
+          'text-white font-bold shadow-lg',
         )}
         style={{
+          width: size,
+          height: size,
+          fontSize,
           backgroundColor: member.color,
           boxShadow: isSelected
             ? `0 0 0 3px white, 0 0 0 5px ${member.color}, 0 4px 16px rgba(0,0,0,0.4)`
@@ -110,10 +116,11 @@ export function DraggableMemberIcon({
       {/* 名前ラベル */}
       <div
         className={cn(
-          'mt-1 px-2 py-0.5 rounded-lg text-xs font-medium',
+          'mt-0.5 px-1.5 py-0.5 rounded-lg font-medium',
           'bg-black/70 text-white whitespace-nowrap',
           isSelected && 'bg-gradient-to-r from-pink-500/80 to-violet-500/80'
         )}
+        style={{ fontSize: fontSize - 2 }}
       >
         {member.name}
       </div>
