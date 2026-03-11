@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@keyframes savingProgress {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 :root {
   --background: #08051A;
   --background-secondary: #0E0B26;

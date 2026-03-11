@@ -455,6 +455,20 @@ export default function EditVideoPage() {
     <div className="min-h-screen bg-[var(--background)]">
       <Header title={`編集: ${videoTitle}`} />
 
+      {/* 保存中プログレスバー */}
+      {isSaving && (
+        <div className="fixed top-0 left-0 right-0 z-[100] h-[3px]" style={{ background: 'rgba(255,45,120,0.15)' }}>
+          <div
+            className="h-full w-full"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, #FF2D78 30%, #c084fc 50%, #7C3AED 70%, transparent 100%)',
+              backgroundSize: '200% 100%',
+              animation: 'savingProgress 1.2s ease-in-out infinite',
+            }}
+          />
+        </div>
+      )}
+
       <main className="max-w-screen-2xl mx-auto px-4 py-6">
         {/* Video Info Banner */}
         <div
