@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Header, Footer } from '@/components/layout'
 import { VideoCard } from '@/components/home'
 import { VideoCardSkeleton } from '@/components/ui'
 import { sampleArtist, sampleVideo, sampleFormationData } from '@/data/mock/sample-formation'
-import { generateDemoVideos, DEMO_VIDEO_TOTAL, DEMO_PAGE_SIZE, DemoVideo } from '@/data/mock/demo-videos'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { getVideos } from '@/lib/supabase/queries'
 
@@ -17,23 +16,12 @@ interface VideoCardData {
   youtubeVideoId: string
   members: { id: string; name: string; color: string }[]
   formationCount?: number
-  isDemo?: boolean
 }
 
 export default function HomePage() {
   const [videos, setVideos] = useState<VideoCardData[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [demoMode, setDemoMode] = useState(false)
-  const [demoVideos, setDemoVideos] = useState<DemoVideo[]>([])
-  const [demoPage, setDemoPage] = useState(0)
-  const [hasMoreDemo, setHasMoreDemo] = useState(true)
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
-  const [demoSessionId, setDemoSessionId] = useState(0)
 
-  // Intersection Observer ref for infinite scroll
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-
-  // Load real videos
   useEffect(() => {
     async function loadVideos() {
       setIsLoading(true)
@@ -81,82 +69,6 @@ export default function HomePage() {
     loadVideos()
   }, [])
 
-
-  // Load more demo videos
-  const loadMoreDemoVideos = useCallback(() => {
-    if (isLoadingMore || !hasMoreDemo) return
-
-    setIsLoadingMore(true)
-
-    // Simulate network delay
-    setTimeout(() => {
-      const startIndex = demoPage * DEMO_PAGE_SIZE
-      const newVideos = generateDemoVideos(DEMO_PAGE_SIZE, startIndex)
-
-      setDemoVideos(prev => [...prev, ...newVideos])
-      setDemoPage(prev => prev + 1)
-      setHasMoreDemo(startIndex + DEMO_PAGE_SIZE < DEMO_VIDEO_TOTAL)
-      setIsLoadingMore(false)
-    }, 500)
-  }, [demoPage, hasMoreDemo, isLoadingMore])
-
-  // Intersection Observer for infinite scroll
-  useEffect(() => {
-    if (!demoMode || !hasMoreDemo) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMoreDemoVideos()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    const currentRef = loadMoreRef.current
-    if (currentRef) {
-      observer.observe(currentRef)
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef)
-      }
-    }
-  }, [demoMode, hasMoreDemo, loadMoreDemoVideos])
-
-  // Toggle demo mode
-  const toggleDemoMode = () => {
-    if (demoMode) {
-      // デモモードをOFFにする時はデータをリセット
-      setDemoVideos([])
-      setDemoPage(0)
-      setHasMoreDemo(true)
-      setDemoMode(false)
-    } else {
-      // デモモードをONにする時は新しいセッションIDを生成して初期データをロード
-      const newSessionId = Date.now()
-      setDemoSessionId(newSessionId)
-      const initial = generateDemoVideos(DEMO_PAGE_SIZE, 0)
-      setDemoVideos(initial)
-      setDemoPage(1)
-      setHasMoreDemo(DEMO_PAGE_SIZE < DEMO_VIDEO_TOTAL)
-      setDemoMode(true)
-    }
-  }
-
-  // Combined videos list
-  const displayVideos: VideoCardData[] = demoMode
-    ? [
-        ...videos,
-        ...demoVideos.map(v => ({
-          ...v,
-          id: `${demoSessionId}-${v.id}`, // セッションIDを追加してユニークにする
-          isDemo: true
-        })),
-      ]
-    : videos
-
   return (
     <div className="min-h-screen bg-[var(--background)]">
       <Header />
@@ -164,7 +76,6 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 py-12">
         {/* ヒーローセクション */}
         <section className="text-center mb-20 relative pt-8">
-          {/* 背景: 複数のグローオーブ */}
           <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
             <div
               className="absolute top-[-60px] left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full blur-[80px] opacity-30"
@@ -180,7 +91,6 @@ export default function HomePage() {
             />
           </div>
 
-          {/* Eyebrow label */}
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full glass border border-[#FF2D78]/25">
             <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D78]" style={{ animation: 'glow-ping 2s ease infinite', boxShadow: '0 0 6px #FF2D78' }} />
             <span className="text-xs font-semibold tracking-[0.18em] uppercase text-[var(--foreground-muted)]">
@@ -188,7 +98,6 @@ export default function HomePage() {
             </span>
           </div>
 
-          {/* Headline */}
           <h1 className="font-black tracking-tight mb-2 leading-none" style={{ fontSize: 'clamp(2.8rem, 7vw, 5.5rem)' }}>
             <span className="shimmer-text">Formation</span>
             <br />
@@ -204,7 +113,6 @@ export default function HomePage() {
             振り付け学習・メンバー位置確認に最適なツール。
           </p>
 
-          {/* CTA */}
           <Link
             href="/editor"
             className="group inline-flex items-center gap-2.5 px-8 py-4 text-white font-bold rounded-2xl text-base relative overflow-hidden"
@@ -213,7 +121,6 @@ export default function HomePage() {
               boxShadow: '0 0 30px rgba(255,45,120,0.35), 0 4px 20px rgba(124,58,237,0.25)',
             }}
           >
-            {/* Shimmer overlay */}
             <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)', backgroundSize: '200% auto' }} />
             <svg className="w-4.5 h-4.5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,28 +133,9 @@ export default function HomePage() {
         {/* コンテンツ */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-baseline gap-3">
-              <h2 className="text-xl font-black uppercase tracking-widest text-[var(--foreground)]">
-                フォーメーション一覧
-              </h2>
-              {demoMode && (
-                <span className="text-xs font-medium text-[#FF6BA8] tracking-wide">
-                  {displayVideos.length} / {videos.length + DEMO_VIDEO_TOTAL}
-                </span>
-              )}
-            </div>
-
-            {/* デモモードトグル */}
-            <button
-              onClick={toggleDemoMode}
-              className="px-4 py-2 rounded-xl text-xs font-semibold tracking-widest uppercase transition-all duration-200"
-              style={demoMode
-                ? { background: 'linear-gradient(135deg,#FF2D78,#7C3AED)', color: '#fff', boxShadow: '0 0 16px rgba(255,45,120,0.35)' }
-                : { background: 'rgba(255,255,255,0.04)', color: 'var(--foreground-muted)', border: '1px solid rgba(255,45,120,0.15)' }
-              }
-            >
-              {demoMode ? '● Demo ON' : 'Demo'}
-            </button>
+            <h2 className="text-xl font-black uppercase tracking-widest text-[var(--foreground)]">
+              フォーメーション一覧
+            </h2>
           </div>
 
           {isLoading ? (
@@ -257,86 +145,31 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            <>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-                {displayVideos.map((video) => (
-                  <VideoCard
-                    key={video.id}
-                    id={video.id}
-                    title={video.title}
-                    artistName={video.artistName}
-                    youtubeVideoId={video.youtubeVideoId}
-                    members={video.members}
-                    formationCount={video.formationCount}
-                    isDemo={video.isDemo}
-                  />
-                ))}
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+              {videos.map((video) => (
+                <VideoCard
+                  key={video.id}
+                  id={video.id}
+                  title={video.title}
+                  artistName={video.artistName}
+                  youtubeVideoId={video.youtubeVideoId}
+                  members={video.members}
+                  formationCount={video.formationCount}
+                />
+              ))}
 
-                {/* プレースホルダーカード（デモモードでない時のみ） */}
-                {!demoMode && (
-                  <Link
-                    href="/editor"
-                    className="bg-[var(--card-bg)]/50 rounded-2xl border-2 border-dashed border-[var(--card-border)] p-8 flex flex-col items-center justify-center text-center hover:border-pink-400 hover:bg-[var(--card-bg)]/70 hover:-translate-y-1 transition-all duration-200"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-[var(--background-tertiary)] flex items-center justify-center mb-4">
-                      <svg
-                        className="w-6 h-6 text-[var(--foreground-muted)]"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                    </div>
-                    <p className="text-[var(--foreground-muted)] text-sm">新しいフォーメーションを追加</p>
-                  </Link>
-                )}
-              </div>
-
-              {/* 無限スクロール用のローディング表示 */}
-              {demoMode && hasMoreDemo && (
-                <div
-                  ref={loadMoreRef}
-                  className="flex justify-center items-center py-12"
-                >
-                  {isLoadingMore ? (
-                    <div className="flex items-center gap-3 text-[var(--foreground-muted)]">
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      <span>読み込み中...</span>
-                    </div>
-                  ) : (
-                    <div className="h-10" />
-                  )}
+              <Link
+                href="/editor"
+                className="bg-[var(--card-bg)]/50 rounded-2xl border-2 border-dashed border-[var(--card-border)] p-8 flex flex-col items-center justify-center text-center hover:border-pink-400 hover:bg-[var(--card-bg)]/70 hover:-translate-y-1 transition-all duration-200"
+              >
+                <div className="w-12 h-12 rounded-full bg-[var(--background-tertiary)] flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 text-[var(--foreground-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
                 </div>
-              )}
-
-              {/* デモモードで全て読み込み完了 */}
-              {demoMode && !hasMoreDemo && (
-                <div className="text-center py-8 text-[var(--foreground-muted)]">
-                  全 {displayVideos.length} 件を表示中
-                </div>
-              )}
-            </>
+                <p className="text-[var(--foreground-muted)] text-sm">新しいフォーメーションを追加</p>
+              </Link>
+            </div>
           )}
         </section>
 
@@ -375,9 +208,7 @@ export default function HomePage() {
             },
           ].map(({ icon, label, desc, accent }) => (
             <div key={label} className="group glass rounded-2xl p-6 hover:border-[rgba(255,45,120,0.3)] transition-all duration-300 hover:-translate-y-1">
-              {/* Top accent line */}
               <div className="h-px w-12 mb-5 rounded-full" style={{ background: accent, boxShadow: `0 0 8px ${accent}` }} />
-              {/* Icon */}
               <div className="mb-4" style={{ color: accent }}>
                 {icon}
               </div>
