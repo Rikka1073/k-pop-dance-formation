@@ -250,7 +250,7 @@ export default function ViewerPage() {
         </div>
 
         {/* メインコンテンツ - 動画:フォーメーション = 2:3 */}
-        <div className="grid grid-cols-[2fr_3fr] gap-6 mb-6">
+        <div className="grid grid-cols-2 gap-6 mb-6">
           {/* YouTube Player */}
           <div>
             <h2 className="text-[var(--foreground-muted)] text-sm font-medium mb-2">動画</h2>
