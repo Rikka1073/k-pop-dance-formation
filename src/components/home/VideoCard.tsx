@@ -8,7 +8,6 @@ interface VideoCardProps {
   artistName: string
   youtubeVideoId: string
   members: { id: string; name: string; color: string }[]
-  formationCount?: number
 }
 
 export function VideoCard({
@@ -17,7 +16,6 @@ export function VideoCard({
   artistName,
   youtubeVideoId,
   members,
-  formationCount,
 }: VideoCardProps) {
   const thumbnailUrl = `https://img.youtube.com/vi/${youtubeVideoId}/mqdefault.jpg`
 
@@ -64,20 +62,6 @@ export function VideoCard({
           </div>
         </div>
 
-        {formationCount !== undefined && (
-          <div
-            className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider"
-            style={{
-              background: 'rgba(8,5,26,0.75)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255,45,120,0.3)',
-              color: '#FF6BA8',
-            }}
-          >
-            {formationCount}
-            <span className="text-[var(--foreground-muted)] font-normal ml-0.5">formations</span>
-          </div>
-        )}
       </div>
 
       {/* コンテンツ */}

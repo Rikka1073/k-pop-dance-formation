@@ -15,7 +15,6 @@ interface VideoCardData {
   artistName: string
   youtubeVideoId: string
   members: { id: string; name: string; color: string }[]
-  formationCount?: number
 }
 
 export default function HomePage() {
@@ -37,7 +36,6 @@ export default function HomePage() {
             name: m.name,
             color: m.color,
           })),
-          formationCount: sampleFormationData.formations.length,
         },
       ]
 
@@ -154,7 +152,6 @@ export default function HomePage() {
                   artistName={video.artistName}
                   youtubeVideoId={video.youtubeVideoId}
                   members={video.members}
-                  formationCount={video.formationCount}
                 />
               ))}
 
