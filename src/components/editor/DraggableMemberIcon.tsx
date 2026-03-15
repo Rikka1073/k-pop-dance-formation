@@ -89,7 +89,7 @@ export function DraggableMemberIcon({
       <motion.div
         className={cn(
           'rounded-full flex items-center justify-center',
-          'text-white font-bold shadow-lg',
+          'text-black font-bold shadow-lg',
         )}
         style={{
           width: size,
