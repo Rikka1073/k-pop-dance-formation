@@ -581,8 +581,8 @@ export default function EditVideoPage() {
         {/* Bottom Controls - 3 columns */}
         <div className="grid grid-cols-3 gap-4">
           {/* Left: Members */}
-          <div className="rounded-2xl overflow-hidden flex flex-col" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
-            <div className="flex-1 overflow-y-auto pr-1 min-h-0">
+          <div className="rounded-2xl overflow-hidden self-start" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
+            <div className="max-h-80 overflow-y-auto pr-1">
               <MemberSettings
                 members={members}
                 selectedMemberId={selectedMemberId}
