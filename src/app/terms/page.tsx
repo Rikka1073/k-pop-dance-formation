@@ -10,74 +10,68 @@ const content = {
     sections: [
       {
         heading: '第1条（適用）',
-        body: '本規約は、運営者が提供するウェブサービス「K-POP Formation Viewer」（以下「本サービス」）の利用条件を定めるものです。本サービスを利用した時点で、ユーザーは本規約に同意したものとみなします。未成年のユーザーは、保護者の同意を得た上でご利用ください。',
+        body: '本規約は、「K-POP Formation Viewer」（以下「本サービス」）の利用条件を定めるものです。本サービスはK-POPファンによるファンのためのツールとして個人が運営しています。ご利用の前に本規約をお読みいただき、同意の上でご利用ください。',
       },
       {
         heading: '第2条（サービスの性質）',
-        body: '本サービスは、ダンスフォーメーションの位置情報（座標データ）を作成・閲覧するためのツールです。本サービスは動画コンテンツを保有・配信するものではなく、YouTube IFrame APIを通じて公式に埋め込んだ動画を表示します。本サービスが提供するのはあくまで「フォーメーション可視化ツール」であり、K-POPアーティストの映像・楽曲・振付の権利は各権利者に帰属します。',
+        body: '本サービスは、ダンスフォーメーションの位置情報（座標データ）を作成・閲覧するためのファン向けツールです。動画コンテンツの保有・配信は行わず、YouTube IFrame APIを通じて公式に埋め込んだ動画を表示します。K-POPアーティストの映像・楽曲・振付に関するすべての権利は各権利者に帰属します。本サービスはそれらを侵害する意図を持たず、あくまで学習・楽しむためのツール提供を目的としています。',
       },
       {
         heading: '第3条（YouTubeコンテンツについて）',
-        body: '本サービスはGoogle LLCが提供するYouTube IFrame APIを利用しており、YouTube利用規約（https://www.youtube.com/t/terms）およびGoogleプライバシーポリシーが適用されます。本サービスは動画の複製・ダウンロード・再配布を一切行いません。YouTube上で権利者によって削除・制限された動画は本サービス上でも表示されません。',
+        body: '本サービスはGoogle LLCが提供するYouTube IFrame APIを利用しています。YouTube利用規約およびGoogleプライバシーポリシーが適用されます。本サービスは動画の複製・ダウンロード・再配布を行いません。YouTube上で削除・制限された動画は本サービス上でも表示されません。',
       },
       {
-        heading: '第4条（ユーザー投稿コンテンツ）',
-        body: 'ユーザーが本サービス上で作成・投稿するフォーメーションデータ（座標・タイミング情報等）の著作権は、当該ユーザーに帰属します。ただし、ユーザーは運営者に対し、本サービスの運営・改善・宣伝のために当該データを無償で利用する権利を許諾するものとします。運営者は、法令に基づく場合または権利者からの正当な削除要請がある場合、事前通知なくコンテンツを削除できるものとします。',
+        heading: '第4条（ユーザーが作成したデータについて）',
+        body: 'ユーザーが作成・投稿するフォーメーションデータ（座標・タイミング情報等）の著作権はそのユーザーに帰属します。ユーザーは運営者に対し、本サービスの運営・改善のためにデータを利用する権利を許諾するものとします。権利者からの正当な要請がある場合、運営者はコンテンツを削除することがあります。',
       },
       {
-        heading: '第5条（知的財産権と著作権への配慮）',
-        body: 'K-POPアーティストの楽曲・映像・振付に関する著作権は、各レーベル・アーティスト・権利者に帰属します。本サービスはファン活動支援を目的としたツールですが、運営者はこれらの権利を侵害する意図を持たず、権利者からの申し立てがあった場合は誠実に対応します。著作権侵害の申告は、本ページ下部の連絡先までお知らせください。',
+        heading: '第5条（著作権への配慮）',
+        body: 'K-POPアーティストの楽曲・映像・振付に関する著作権は、各レーベル・アーティスト・権利者に帰属します。本サービスはファン活動を支援する趣旨で運営しており、権利者からの申し立てがあった場合は誠実に対応します。',
       },
       {
         heading: '第6条（禁止事項）',
         body: 'ユーザーは以下の行為を行ってはなりません。',
         list: [
           '法令または公序良俗に違反する行為',
-          '本サービスの運営・システムを妨害する行為',
-          '他のユーザーまたは第三者の権利・名誉・プライバシーを侵害する行為',
-          '不正アクセスやリバースエンジニアリング等の行為',
-          '虚偽の情報を投稿する行為',
-          '権利者に無断でK-POPコンテンツを商業利用する行為',
+          '本サービスの運営を妨害する行為',
+          '他のユーザーまたは第三者の権利・プライバシーを侵害する行為',
+          '不正アクセスやシステムへの攻撃行為',
           'その他、運営者が不適切と判断する行為',
         ],
       },
       {
-        heading: '第7条（有料サービスについて）',
-        body: '本サービスは現在無料で提供していますが、将来的に一部機能を有料化する場合があります。有料サービスの内容・料金・決済方法については、導入時に別途告知します。有料サービスの利用にあたっては、追加の利用規約が適用される場合があります。',
+        heading: '第7条（免責事項）',
+        body: '本サービスは個人が趣味で運営するツールであり、現状有姿で提供されます。継続的な稼働や正確性を保証するものではなく、予告なく変更・中断・終了する場合があります。本サービスの利用によって生じた損害について、運営者は責任を負いません。',
       },
       {
-        heading: '第8条（免責事項）',
-        body: '本サービスは現状有姿で提供されます。運営者は、本サービスの正確性・継続性・安全性について保証しません。本サービスの利用によって生じた損害（権利者からの申し立てを含む）について、運営者は故意または重大な過失がある場合を除き、責任を負いません。本サービスは予告なく変更・中断・終了する場合があります。',
+        heading: '第8条（個人情報の取り扱い）',
+        body: 'アクセスログ等の情報はサービス改善のためにのみ利用します。第三者への提供は行いません。',
       },
       {
-        heading: '第9条（個人情報の取り扱い）',
-        body: '運営者は、本サービスの利用に際して取得した情報（アクセスログ等）を、サービス改善および統計分析の目的で利用します。第三者への販売・提供は行いません。詳細はプライバシーポリシーをご確認ください。',
+        heading: '第9条（規約の変更）',
+        body: '本規約は必要に応じて変更することがあります。重要な変更は本サービス上でお知らせします。変更後も継続利用した場合、変更に同意したものとみなします。',
       },
       {
-        heading: '第10条（規約の変更）',
-        body: '運営者は、必要に応じて本規約を変更できます。重要な変更については、本サービス上での告知または登録メールアドレスへの通知を行います。変更後も本サービスを継続利用した場合、変更後の規約に同意したものとみなします。',
-      },
-      {
-        heading: '第11条（準拠法・管轄）',
-        body: '本規約は日本法に準拠して解釈されます。本サービスに関する紛争については、運営者の所在地を管轄する裁判所を専属的合意管轄裁判所とします。',
+        heading: '第10条（準拠法）',
+        body: '本規約は日本法に準拠して解釈されます。',
       },
     ],
-    effectiveDate: '制定日：2026年2月10日　最終改訂：2026年3月19日',
+    effectiveDate: '制定日：2026年2月10日　最終改訂：2026年3月20日',
   },
   en: {
     title: 'Terms of Service',
     sections: [
       {
         heading: 'Article 1 (Application)',
-        body: 'These Terms of Service govern the use of "K-POP Formation Viewer" (the "Service") operated by the operator. By using the Service, users are deemed to have agreed to these Terms. Minors must obtain consent from a parent or guardian before use.',
+        body: 'These Terms govern the use of "K-POP Formation Viewer" (the "Service"), a fan-made tool operated by an individual K-POP fan. Please read these Terms before use.',
       },
       {
         heading: 'Article 2 (Nature of the Service)',
-        body: 'The Service is a tool for creating and viewing dance formation position data (coordinate data). The Service does not host or distribute video content. Videos are displayed solely through the official YouTube IFrame API. The Service provides a "formation visualization tool" only; all rights to K-POP artists\' videos, music, and choreography remain with their respective rights holders.',
+        body: 'The Service is a fan tool for creating and viewing dance formation position data. It does not host or distribute video content — videos are displayed through the official YouTube IFrame API only. All rights to K-POP artists\' videos, music, and choreography remain with their respective rights holders. This Service is intended purely as a learning and enjoyment tool.',
       },
       {
         heading: 'Article 3 (YouTube Content)',
-        body: 'The Service uses the YouTube IFrame API provided by Google LLC. YouTube\'s Terms of Service (https://www.youtube.com/t/terms) and Google\'s Privacy Policy apply. The Service does not copy, download, or redistribute any videos. Videos removed or restricted by rights holders on YouTube will not be accessible through the Service.',
+        body: 'The Service uses the YouTube IFrame API by Google LLC. YouTube\'s Terms of Service and Google\'s Privacy Policy apply. The Service does not copy, download, or redistribute videos. Videos removed or restricted on YouTube will not be available through the Service.',
       },
       {
         heading: 'Article 4 (User-Generated Content)',
@@ -85,43 +79,37 @@ const content = {
       },
       {
         heading: 'Article 5 (Intellectual Property and Copyright Consideration)',
-        body: 'Copyrights in K-POP artists\' music, videos, and choreography belong to the respective labels, artists, and rights holders. The Service is a fan-support tool and the operator has no intention of infringing any such rights. The operator will respond in good faith to any claims from rights holders. Copyright infringement notices may be sent to the contact information at the bottom of this page.',
+        body: 'All rights to K-POP artists\' music, videos, and choreography belong to their respective labels, artists, and rights holders. This Service is operated as a fan tool with no intention of infringing those rights. The operator will respond in good faith to any claims from rights holders.',
       },
       {
         heading: 'Article 6 (Prohibited Activities)',
         body: 'Users shall not engage in the following activities:',
         list: [
           'Violating laws or public order and morals',
-          'Interfering with the operation or systems of the Service',
-          'Infringing the rights, reputation, or privacy of other users or third parties',
-          'Unauthorized access, reverse engineering, or similar acts',
-          'Submitting false or misleading information',
-          'Commercially exploiting K-POP content without authorization from rights holders',
+          'Interfering with the operation of the Service',
+          'Infringing the rights or privacy of other users or third parties',
+          'Unauthorized access or attacks on the Service',
           'Any other activities deemed inappropriate by the operator',
         ],
       },
       {
-        heading: 'Article 7 (Paid Services)',
-        body: 'The Service is currently free of charge. However, the operator may introduce paid features in the future. Details regarding pricing, payment methods, and the scope of paid features will be announced separately at the time of introduction. Additional terms may apply to paid services.',
+        heading: 'Article 7 (Disclaimer)',
+        body: 'This Service is a personal hobby project provided "as is." The operator makes no guarantees regarding uptime or accuracy, and the Service may be changed or discontinued without notice. The operator is not liable for any damages arising from use of the Service.',
       },
       {
-        heading: 'Article 8 (Disclaimer)',
-        body: 'The Service is provided "as is." The operator makes no warranties regarding its accuracy, continuity, or security. The operator shall not be liable for any damages arising from use of the Service (including claims from rights holders) except in cases of willful misconduct or gross negligence. The Service may be modified, suspended, or terminated without prior notice.',
+        heading: 'Article 8 (Personal Information)',
+        body: 'Access logs and similar data are used solely to improve the Service and will not be shared with third parties.',
       },
       {
-        heading: 'Article 9 (Personal Information)',
-        body: 'The operator uses information obtained through the Service (such as access logs) solely for improving the Service and statistical analysis. Such information will not be sold or provided to third parties. Please refer to the Privacy Policy for details.',
+        heading: 'Article 9 (Changes to Terms)',
+        body: 'These Terms may be updated as needed. Significant changes will be announced on the Service. Continued use after changes constitutes acceptance of the revised Terms.',
       },
       {
-        heading: 'Article 10 (Changes to Terms)',
-        body: 'The operator may revise these Terms as necessary. For significant changes, notice will be provided through the Service or by email to registered users. Continued use of the Service after changes constitutes acceptance of the revised Terms.',
-      },
-      {
-        heading: 'Article 11 (Governing Law and Jurisdiction)',
-        body: 'These Terms shall be governed by and construed in accordance with the laws of Japan. Any disputes relating to the Service shall be subject to the exclusive jurisdiction of the court having jurisdiction over the location of the operator.',
+        heading: 'Article 10 (Governing Law)',
+        body: 'These Terms are governed by the laws of Japan.',
       },
     ],
-    effectiveDate: 'Established: February 10, 2026 / Last Revised: March 19, 2026',
+    effectiveDate: 'Established: February 10, 2026 / Last Revised: March 20, 2026',
   },
 }
 
