@@ -22,7 +22,7 @@ export function VideoCard({
   return (
     <Link
       href={`/viewer/${id}`}
-      className="group rounded-2xl overflow-hidden transition-all duration-300"
+      className="group rounded-3xl overflow-hidden transition-all duration-300"
       style={{
         background: 'rgba(22,18,53,0.8)',
         backdropFilter: 'blur(16px)',

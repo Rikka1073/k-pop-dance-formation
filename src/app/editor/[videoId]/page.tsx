@@ -504,7 +504,7 @@ export default function EditVideoPage() {
       <main className="max-w-screen-2xl mx-auto px-4 py-6">
         {/* Video Info Banner */}
         <div
-          className="rounded-2xl px-5 py-3.5 mb-6 flex items-center justify-between"
+          className="rounded-3xl px-5 py-3.5 mb-6 flex items-center justify-between"
           style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,45,120,0.12)' }}
         >
           <div>
@@ -513,7 +513,7 @@ export default function EditVideoPage() {
           </div>
           <a
             href={`/viewer/${videoId}`}
-            className="px-4 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5"
+            className="px-4 py-1.5 rounded-2xl text-xs font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5"
             style={{ background: 'rgba(124,58,237,0.12)', color: '#9D5CF0', border: '1px solid rgba(124,58,237,0.25)' }}
           >
             View →
@@ -581,7 +581,7 @@ export default function EditVideoPage() {
         {/* Bottom Controls - 3 columns */}
         <div className="grid grid-cols-3 gap-4">
           {/* Left: Members */}
-          <div className="rounded-2xl overflow-hidden self-start" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
+          <div className="rounded-3xl overflow-hidden self-start" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
             <div className="max-h-80 overflow-y-auto pr-1">
               <MemberSettings
                 members={members}
@@ -641,7 +641,7 @@ export default function EditVideoPage() {
             })()}
 
             {/* Save Buttons */}
-            <div className="rounded-2xl p-4 space-y-3" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
+            <div className="rounded-3xl p-4 space-y-3" style={{ backdropFilter: 'blur(24px) saturate(160%)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,45,120,0.16)' }}>
               {/* Quick Save */}
               <Button
                 className="w-full"
@@ -677,7 +677,7 @@ export default function EditVideoPage() {
 
               {/* Error Message */}
               {saveError && (
-                <div className="mt-3 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
+                <div className="mt-3 p-3 bg-red-500/20 border border-red-500/50 rounded-2xl text-red-400 text-sm">
                   {saveError}
                 </div>
               )}

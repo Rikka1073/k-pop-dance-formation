@@ -34,7 +34,7 @@ export function EditorStage({
 
   return (
     <div
-      className="relative w-full aspect-video rounded-2xl overflow-hidden border border-dashed border-[var(--card-border)]"
+      className="relative w-full aspect-video rounded-3xl overflow-hidden border border-dashed border-[var(--card-border)]"
       style={{ background: 'linear-gradient(to bottom, var(--stage-bg), var(--stage-bg-secondary))' }}
       onClick={() => onMemberSelect(null)}
     >

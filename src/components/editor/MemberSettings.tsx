@@ -76,7 +76,7 @@ export function MemberSettings({
             <div
               key={member.id}
               className={cn(
-                'p-3 rounded-xl transition-all duration-200',
+                'p-3 rounded-2xl transition-all duration-200',
                 selectedMemberId === member.id
                   ? ''
                   : 'hover:bg-[var(--background-tertiary)]/50'

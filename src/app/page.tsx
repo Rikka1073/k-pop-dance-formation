@@ -113,7 +113,7 @@ export default function HomePage() {
 
           <Link
             href="/editor"
-            className="group inline-flex items-center gap-2.5 px-8 py-4 text-white font-bold rounded-2xl text-base relative overflow-hidden"
+            className="group inline-flex items-center gap-2.5 px-8 py-4 text-white font-bold rounded-full text-base relative overflow-hidden"
             style={{
               background: 'linear-gradient(135deg, #FF2D78, #c026d3, #7C3AED)',
               boxShadow: '0 0 30px rgba(255,45,120,0.35), 0 4px 20px rgba(124,58,237,0.25)',
@@ -157,7 +157,7 @@ export default function HomePage() {
 
               <Link
                 href="/editor"
-                className="bg-[var(--card-bg)]/50 rounded-2xl border-2 border-dashed border-[var(--card-border)] p-8 flex flex-col items-center justify-center text-center hover:border-pink-400 hover:bg-[var(--card-bg)]/70 hover:-translate-y-1 transition-all duration-200"
+                className="bg-[var(--card-bg)]/50 rounded-3xl border-2 border-dashed border-[var(--card-border)] p-8 flex flex-col items-center justify-center text-center hover:border-pink-400 hover:bg-[var(--card-bg)]/70 hover:-translate-y-1 transition-all duration-200"
               >
                 <div className="w-12 h-12 rounded-full bg-[var(--background-tertiary)] flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-[var(--foreground-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,7 +204,7 @@ export default function HomePage() {
               accent: '#7C3AED',
             },
           ].map(({ icon, label, desc, accent }) => (
-            <div key={label} className="group glass rounded-2xl p-6 hover:border-[rgba(255,45,120,0.3)] transition-all duration-300 hover:-translate-y-1">
+            <div key={label} className="group glass rounded-3xl p-6 hover:border-[rgba(255,45,120,0.3)] transition-all duration-300 hover:-translate-y-1">
               <div className="h-px w-12 mb-5 rounded-full" style={{ background: accent, boxShadow: `0 0 8px ${accent}` }} />
               <div className="mb-4" style={{ color: accent }}>
                 {icon}

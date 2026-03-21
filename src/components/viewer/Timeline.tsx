@@ -43,7 +43,7 @@ export function Timeline({
 
       {/* タイムライン */}
       <div
-        className="relative h-8 bg-gray-700 rounded-xl cursor-pointer overflow-hidden hover:ring-2 hover:ring-pink-400/50 transition-all duration-200"
+        className="relative h-8 bg-gray-700 rounded-2xl cursor-pointer overflow-hidden hover:ring-2 hover:ring-pink-400/50 transition-all duration-200"
         onClick={handleClick}
       >
         {/* プログレスバー */}

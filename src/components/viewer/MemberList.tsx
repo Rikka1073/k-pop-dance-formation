@@ -12,7 +12,7 @@ interface MemberListProps {
 export function MemberList({ members, selectedMemberId, onMemberSelect }: MemberListProps) {
   return (
     <div
-      className="rounded-2xl p-4"
+      className="rounded-3xl p-4"
       style={{
         backdropFilter: 'blur(24px) saturate(160%)',
         background: 'rgba(255,255,255,0.03)',
@@ -40,7 +40,7 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
             <button
               key={member.id}
               className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left',
+                'w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all duration-200 text-left',
                 isSelected ? '' : 'hover:-translate-x-0.5'
               )}
               style={isSelected ? {
@@ -88,7 +88,7 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
       {/* 選択解除ボタン */}
       {selectedMemberId && (
         <button
-          className="w-full mt-3 py-2 text-xs font-semibold tracking-widest uppercase transition-all duration-200 rounded-xl hover:bg-white/[0.04]"
+          className="w-full mt-3 py-2 text-xs font-semibold tracking-widest uppercase transition-all duration-200 rounded-2xl hover:bg-white/[0.04]"
           style={{ color: 'var(--foreground-muted)', borderTop: '1px solid rgba(255,45,120,0.1)', marginTop: '12px', paddingTop: '12px' }}
           onClick={() => onMemberSelect(null)}
         >

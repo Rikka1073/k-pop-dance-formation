@@ -60,7 +60,7 @@ export function CoordinateInput({
   }
 
   return (
-    <div className="bg-[var(--card-bg)] rounded-2xl p-4">
+    <div className="bg-[var(--card-bg)] rounded-3xl p-4">
       <h3 className="text-pink-400 font-semibold mb-3">座標</h3>
 
       {/* Member info */}
@@ -81,13 +81,13 @@ export function CoordinateInput({
           <label className="text-[var(--foreground-muted)] text-sm w-6">X:</label>
           <button
             onClick={() => adjustX(-5)}
-            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors text-sm"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-xl transition-colors text-sm"
           >
             -5
           </button>
           <button
             onClick={() => adjustX(-1)}
-            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-xl transition-colors"
           >
             -
           </button>
@@ -98,17 +98,17 @@ export function CoordinateInput({
             onBlur={() => setLocalX(toDisplay(x).toString())}
             min={-50}
             max={50}
-            className="w-16 bg-[var(--background-tertiary)] text-[var(--foreground)] text-center px-2 py-1.5 rounded-lg border-none outline-none focus:ring-2 focus:ring-pink-400"
+            className="w-16 bg-[var(--background-tertiary)] text-[var(--foreground)] text-center px-2 py-1.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-pink-400"
           />
           <button
             onClick={() => adjustX(1)}
-            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-xl transition-colors"
           >
             +
           </button>
           <button
             onClick={() => adjustX(5)}
-            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors text-sm"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-xl transition-colors text-sm"
           >
             +5
           </button>
@@ -119,13 +119,13 @@ export function CoordinateInput({
           <label className="text-[var(--foreground-muted)] text-sm w-6">Y:</label>
           <button
             onClick={() => adjustY(-5)}
-            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors text-sm"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-xl transition-colors text-sm"
           >
             -5
           </button>
           <button
             onClick={() => adjustY(-1)}
-            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-xl transition-colors"
           >
             -
           </button>
@@ -136,17 +136,17 @@ export function CoordinateInput({
             onBlur={() => setLocalY(toDisplay(y).toString())}
             min={-50}
             max={50}
-            className="w-16 bg-[var(--background-tertiary)] text-[var(--foreground)] text-center px-2 py-1.5 rounded-lg border-none outline-none focus:ring-2 focus:ring-pink-400"
+            className="w-16 bg-[var(--background-tertiary)] text-[var(--foreground)] text-center px-2 py-1.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-pink-400"
           />
           <button
             onClick={() => adjustY(1)}
-            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-xl transition-colors"
           >
             +
           </button>
           <button
             onClick={() => adjustY(5)}
-            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg transition-colors text-sm"
+            className="w-8 h-8 bg-[var(--background-tertiary)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-xl transition-colors text-sm"
           >
             +5
           </button>

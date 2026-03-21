@@ -59,7 +59,7 @@ export function FormationList({
         <div className="relative">
           <button
             onClick={() => setShowTemplates(v => !v)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all duration-200"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-bold tracking-wide transition-all duration-200"
             style={{
               background: showTemplates
                 ? 'linear-gradient(135deg,#FF2D78,#7C3AED)'
@@ -81,7 +81,7 @@ export function FormationList({
               <div className="fixed inset-0 z-40" onClick={() => setShowTemplates(false)} />
 
               <div
-                className="absolute right-0 top-full mt-2 z-50 rounded-2xl p-3 w-64"
+                className="absolute right-0 top-full mt-2 z-50 rounded-3xl p-3 w-64"
                 style={{
                   backdropFilter: 'blur(24px) saturate(160%)',
                   background: 'rgba(14,11,38,0.95)',
@@ -96,7 +96,7 @@ export function FormationList({
                 {/* 引き継ぐボタン（優先表示） */}
                 <button
                   onClick={() => handleSelectTemplate('inherit')}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl mb-2 text-xs font-bold tracking-wide transition-all duration-150 hover:-translate-y-0.5"
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-2xl mb-2 text-xs font-bold tracking-wide transition-all duration-150 hover:-translate-y-0.5"
                   style={{
                     background: 'linear-gradient(135deg, rgba(255,45,120,0.2), rgba(124,58,237,0.2))',
                     border: '1px solid rgba(255,45,120,0.35)',
@@ -115,7 +115,7 @@ export function FormationList({
                     <button
                       key={tmpl.id}
                       onClick={() => handleSelectTemplate(tmpl.id)}
-                      className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-150 hover:-translate-y-0.5 group"
+                      className="flex flex-col items-center gap-1 p-2 rounded-2xl transition-all duration-150 hover:-translate-y-0.5 group"
                       style={{
                         background: 'rgba(255,255,255,0.04)',
                         border: '1px solid rgba(255,45,120,0.1)',
@@ -154,7 +154,7 @@ export function FormationList({
             <div
               key={formation.id}
               className={cn(
-                'p-3 rounded-xl cursor-pointer transition-all duration-200',
+                'p-3 rounded-2xl cursor-pointer transition-all duration-200',
                 currentFormationId === formation.id
                   ? 'bg-gradient-to-r from-pink-500/20 to-violet-500/20 ring-2 ring-pink-400/50 shadow-lg shadow-pink-500/10'
                   : 'bg-[var(--background-tertiary)]/50 hover:bg-[var(--background-tertiary)]'
@@ -195,7 +195,7 @@ export function FormationList({
                       }
                     }}
                     onFocus={(e) => e.target.select()}
-                    className="w-16 px-2 py-1 bg-[var(--background-secondary)] text-[var(--foreground)] text-xs rounded-lg border border-[var(--card-border)] outline-none text-center focus:border-pink-400"
+                    className="w-16 px-2 py-1 bg-[var(--background-secondary)] text-[var(--foreground)] text-xs rounded-2xl border border-[var(--card-border)] outline-none text-center focus:border-pink-400"
                     onClick={(e) => e.stopPropagation()}
                   />
                   <span className="text-[var(--foreground-muted)] text-xs">秒</span>

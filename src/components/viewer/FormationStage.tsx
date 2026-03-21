@@ -32,7 +32,7 @@ export function FormationStage({
 
   return (
     <div
-      className="relative w-full aspect-video rounded-2xl overflow-hidden"
+      className="relative w-full aspect-video rounded-3xl overflow-hidden"
       style={{ background: 'linear-gradient(to bottom, var(--stage-bg), var(--stage-bg-secondary))' }}
     >
       {/* グリッド */}

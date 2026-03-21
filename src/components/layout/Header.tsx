@@ -16,8 +16,8 @@ export function Header({ title, editHref }: HeaderProps) {
         <Link href="/" className="flex items-center gap-2.5 group">
           {/* Icon mark */}
           <div className="relative w-7 h-7 flex-shrink-0">
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#FF2D78] to-[#7C3AED] opacity-90 group-hover:opacity-100 transition-opacity" />
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#FF2D78] to-[#7C3AED] blur-md opacity-50 group-hover:opacity-80 transition-opacity" />
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#FF2D78] to-[#7C3AED] opacity-90 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#FF2D78] to-[#7C3AED] blur-md opacity-50 group-hover:opacity-80 transition-opacity" />
             <svg className="relative w-7 h-7 p-1.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <circle cx="5"  cy="12" r="2.2" fill="currentColor" strokeWidth="0" />
               <circle cx="12" cy="7"  r="2.2" fill="currentColor" strokeWidth="0" />
@@ -60,7 +60,7 @@ export function Header({ title, editHref }: HeaderProps) {
         {editHref && (
           <a
             href={editHref}
-            className="px-4 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+            className="px-4 py-1.5 rounded-2xl text-xs font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
             style={{ background: 'rgba(255,45,120,0.15)', color: '#FF6BA8', border: '1px solid rgba(255,45,120,0.3)' }}
           >
             ✏ Edit

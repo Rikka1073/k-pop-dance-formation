@@ -299,7 +299,7 @@ export default function ViewerPage() {
 
           {/* オプション */}
           <div
-            className="rounded-2xl p-4"
+            className="rounded-3xl p-4"
             style={{
               backdropFilter: 'blur(24px) saturate(160%)',
               background: 'rgba(255,255,255,0.03)',

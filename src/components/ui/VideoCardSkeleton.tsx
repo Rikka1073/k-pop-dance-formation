@@ -2,7 +2,7 @@
 
 export function VideoCardSkeleton() {
   return (
-    <div className="bg-[var(--card-bg)] rounded-2xl overflow-hidden border border-[var(--card-border)] animate-pulse">
+    <div className="bg-[var(--card-bg)] rounded-3xl overflow-hidden border border-[var(--card-border)] animate-pulse">
       {/* サムネイル部分 */}
       <div className="aspect-video bg-[var(--background-tertiary)]" />
 
