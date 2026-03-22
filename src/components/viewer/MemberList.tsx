@@ -55,7 +55,7 @@ export function MemberList({ members, selectedMemberId, onMemberSelect }: Member
             >
               {/* カラーアイコン */}
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-black text-xs flex-shrink-0 transition-all duration-200"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-black font-black text-xs flex-shrink-0 transition-all duration-200"
                 style={{
                   backgroundColor: member.color,
                   boxShadow: isSelected ? `0 0 14px ${member.color}80, 0 0 4px ${member.color}` : `0 0 0 ${member.color}00`,
