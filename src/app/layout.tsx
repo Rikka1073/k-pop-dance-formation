@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Noto_Sans_JP, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/contexts";
+import { SplashScreen } from "@/components/layout";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -63,6 +64,7 @@ export default function RootLayout({
         className={`${montserrat.variable} ${notoSansJP.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider>
+          <SplashScreen />
           {children}
         </ThemeProvider>
       </body>
