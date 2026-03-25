@@ -27,8 +27,9 @@ export function FormationStage({
   // flipped=true → 観客視点: Y軸反転 (FRONT=下, BACK=上)
   const transformY = (y: number) => flipped ? 100 - y : y
 
-  const frontY = flipped ? 100 : 0
-  const backY  = flipped ? 0   : 100
+  // ラベル位置: flipped=false（Y変換なし）→ FRONT=下, BACK=上
+  const frontY = flipped ? 0   : 100
+  const backY  = flipped ? 100 : 0
 
   return (
     <div

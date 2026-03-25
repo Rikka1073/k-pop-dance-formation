@@ -74,7 +74,7 @@ export default function EditVideoPage() {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null)
 
   // Stage view option
-  const [stageFlipped, setStageFlipped] = useState(false) // デフォルト: FRONT=下, BACK=上
+  const [stageFlipped, setStageFlipped] = useState(true) // デフォルト: 観客視点OFF（Y変換なし）
 
   // Formations
   const [formations, setFormations] = useState<EditorFormation[]>([])
