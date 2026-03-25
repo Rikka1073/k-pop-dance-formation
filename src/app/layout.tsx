@@ -23,34 +23,40 @@ export const viewport: Viewport = {
   themeColor: '#FF2D78',
 }
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://example.com'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'K-POP Formation Viewer',
     template: '%s | K-POP Formation Viewer',
   },
   description: 'K-POPダンスのフォーメーションを動画と同期して確認。カバーダンス練習に最適。',
-  keywords: ['K-POP', 'フォーメーション', 'ダンス', 'カバーダンス', '振り付け', 'formation', 'dance'],
-  authors: [{ name: 'Formation Viewer Team' }],
+  keywords: ['K-POP', 'フォーメーション', 'ダンス', 'カバーダンス', '振り付け', 'formation', 'dance', 'K-POP formation viewer', 'kpop dance'],
+  authors: [{ name: 'K-POP Formation Viewer' }],
   openGraph: {
     type: 'website',
     locale: 'ja_JP',
     siteName: 'K-POP Formation Viewer',
     title: 'K-POP Formation Viewer',
     description: 'K-POPダンスのフォーメーションを動画と同期して確認。カバーダンス練習に最適。',
-    images: ['/og-image.png'],
+    images: [{ url: '/og-image.svg', width: 1200, height: 630, alt: 'K-POP Formation Viewer' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'K-POP Formation Viewer',
     description: 'K-POPダンスのフォーメーションを動画と同期して確認。カバーダンス練習に最適。',
-    images: ['/og-image.png'],
+    images: ['/og-image.svg'],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: { index: true, follow: true },
   },
   manifest: '/manifest.json',
+  alternates: {
+    canonical: siteUrl,
+  },
 };
 
 export default function RootLayout({

@@ -2,8 +2,9 @@ import { Metadata } from 'next'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { getVideoById } from '@/lib/supabase/queries'
 import { sampleVideo, sampleArtist } from '@/data/mock/sample-formation'
+import Script from 'next/script'
 
-const BASE_URL = 'https://example.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
 type Props = {
   params: Promise<{ videoId: string }>
@@ -13,48 +14,34 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { videoId } = await params
 
-  // Check if this is the sample video
+  // サンプル動画
   if (videoId === sampleVideo.id) {
+    const title = `${sampleVideo.title} - ${sampleArtist.name}`
+    const description = `${sampleArtist.name}の「${sampleVideo.title}」のフォーメーションを動画と同期して確認できます。`
+    const ogImage = `https://img.youtube.com/vi/${sampleVideo.youtubeVideoId}/maxresdefault.jpg`
     return {
-      title: `${sampleVideo.title} - ${sampleArtist.name}`,
-      description: `${sampleArtist.name}の「${sampleVideo.title}」のフォーメーションを動画と同期して確認できます。`,
-      openGraph: {
-        title: `${sampleVideo.title} - ${sampleArtist.name}`,
-        description: `${sampleArtist.name}の「${sampleVideo.title}」のフォーメーションを動画と同期して確認できます。`,
-        url: `${BASE_URL}/viewer/${videoId}`,
-        type: 'video.other',
-        images: [`https://img.youtube.com/vi/${sampleVideo.youtubeVideoId}/maxresdefault.jpg`],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: `${sampleVideo.title} - ${sampleArtist.name}`,
-        description: `${sampleArtist.name}の「${sampleVideo.title}」のフォーメーションを確認`,
-        images: [`https://img.youtube.com/vi/${sampleVideo.youtubeVideoId}/maxresdefault.jpg`],
-      },
+      title,
+      description,
+      alternates: { canonical: `${siteUrl}/viewer/${videoId}` },
+      openGraph: { title, description, url: `${siteUrl}/viewer/${videoId}`, type: 'video.other', images: [ogImage] },
+      twitter: { card: 'summary_large_image', title, description, images: [ogImage] },
     }
   }
 
-  // Try to fetch from database
+  // Supabaseから取得
   if (isSupabaseConfigured()) {
     try {
       const video = await getVideoById(videoId)
       if (video) {
+        const title = `${video.title} - ${video.artist.name}`
+        const description = `${video.artist.name}の「${video.title}」のフォーメーションを動画と同期して確認できます。`
+        const ogImage = `https://img.youtube.com/vi/${video.youtube_video_id}/maxresdefault.jpg`
         return {
-          title: `${video.title} - ${video.artist.name}`,
-          description: `${video.artist.name}の「${video.title}」のフォーメーションを動画と同期して確認できます。`,
-          openGraph: {
-            title: `${video.title} - ${video.artist.name}`,
-            description: `${video.artist.name}の「${video.title}」のフォーメーションを動画と同期して確認できます。`,
-            url: `${BASE_URL}/viewer/${videoId}`,
-            type: 'video.other',
-            images: [`https://img.youtube.com/vi/${video.youtube_video_id}/maxresdefault.jpg`],
-          },
-          twitter: {
-            card: 'summary_large_image',
-            title: `${video.title} - ${video.artist.name}`,
-            description: `${video.artist.name}の「${video.title}」のフォーメーションを確認`,
-            images: [`https://img.youtube.com/vi/${video.youtube_video_id}/maxresdefault.jpg`],
-          },
+          title,
+          description,
+          alternates: { canonical: `${siteUrl}/viewer/${videoId}` },
+          openGraph: { title, description, url: `${siteUrl}/viewer/${videoId}`, type: 'video.other', images: [ogImage] },
+          twitter: { card: 'summary_large_image', title, description, images: [ogImage] },
         }
       }
     } catch (error) {
@@ -62,13 +49,50 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  // Fallback metadata
   return {
     title: 'Formation Viewer',
     description: 'K-POPダンスのフォーメーションを動画と同期して確認できます。',
   }
 }
 
-export default function ViewerLayout({ children }: Props) {
-  return <>{children}</>
+export default async function ViewerLayout({ params, children }: Props) {
+  const { videoId } = await params
+
+  // JSON-LD 構造化データ
+  let jsonLd: object | null = null
+  if (videoId === sampleVideo.id) {
+    jsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: `${sampleVideo.title} - ${sampleArtist.name}`,
+      description: `${sampleArtist.name}の「${sampleVideo.title}」のダンスフォーメーション`,
+      url: `${siteUrl}/viewer/${videoId}`,
+    }
+  } else if (isSupabaseConfigured()) {
+    try {
+      const video = await getVideoById(videoId)
+      if (video) {
+        jsonLd = {
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: `${video.title} - ${video.artist.name}`,
+          description: `${video.artist.name}の「${video.title}」のダンスフォーメーション`,
+          url: `${siteUrl}/viewer/${videoId}`,
+        }
+      }
+    } catch { /* ignore */ }
+  }
+
+  return (
+    <>
+      {jsonLd && (
+        <Script
+          id="json-ld-viewer"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      {children}
+    </>
+  )
 }

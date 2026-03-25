@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Script from 'next/script'
 import { Header, Footer } from '@/components/layout'
 import { VideoCard } from '@/components/home'
 import { VideoCardSkeleton } from '@/components/ui'
@@ -67,7 +68,26 @@ export default function HomePage() {
     loadVideos()
   }, [])
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'K-POP Formation Viewer',
+    url: siteUrl,
+    description: 'K-POPダンスのフォーメーションを動画と同期して確認。カバーダンス練習に最適なツール。',
+    applicationCategory: 'EntertainmentApplication',
+    operatingSystem: 'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'JPY' },
+    inLanguage: ['ja', 'en'],
+  }
+
   return (
+    <>
+    <Script
+      id="json-ld-home"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
     <div className="min-h-screen bg-[var(--background)]">
       <Header />
 
@@ -222,5 +242,6 @@ export default function HomePage() {
         <Footer />
       </div>
     </div>
+    </>
   )
 }
