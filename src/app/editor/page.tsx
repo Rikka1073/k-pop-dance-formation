@@ -368,8 +368,9 @@ export default function EditorPage() {
 
   // ============ Formation Handlers ============
 
-  const handleAddFormation = (template: TemplateType = 'circle') => {
-    const pts = getTemplatePositions(template, members.length)
+  const handleAddFormation = (template: TemplateType | 'inherit' = 'circle') => {
+    const effectiveTemplate: TemplateType = template === 'inherit' ? 'circle' : template
+    const pts = getTemplatePositions(effectiveTemplate, members.length)
     const newFormation: EditorFormation = {
       id: generateId(),
       time: currentTime,

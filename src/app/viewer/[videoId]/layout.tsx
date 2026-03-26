@@ -1,4 +1,6 @@
 import { Metadata } from 'next'
+
+export const runtime = 'edge'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { getVideoById } from '@/lib/supabase/queries'
 import { sampleVideo, sampleArtist } from '@/data/mock/sample-formation'
