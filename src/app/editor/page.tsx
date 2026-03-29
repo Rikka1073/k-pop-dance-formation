@@ -514,7 +514,7 @@ export default function EditorPage() {
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
-      <Header title="フォーメーション作成" />
+      <Header />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Step 1: Video Setup */}
