@@ -219,7 +219,7 @@ export default function EditorPage() {
       if (response.ok) {
         const data = await response.json()
         // タイトルを自動設定
-        if (data.title && !videoTitle) {
+        if (data.title) {
           setVideoTitle(data.title)
         }
         // アーティスト名を検出: タイトルから推測、フォールバックはチャンネル名
@@ -227,7 +227,7 @@ export default function EditorPage() {
         const detectedName = extracted || (data.author_name ? cleanChannelName(data.author_name) : null)
 
         if (detectedName) {
-          if (artistMode === 'new' && !artistName) {
+          if (artistMode === 'new') {
             // 新規モード: テキスト入力に設定
             setArtistName(detectedName)
           } else if (artistMode === 'existing' && !selectedArtistId) {
@@ -245,7 +245,7 @@ export default function EditorPage() {
     } finally {
       setIsFetchingVideoInfo(false)
     }
-  }, [videoTitle, artistMode, artistName, selectedArtistId, existingArtists, checkDuplicate])
+  }, [artistMode, selectedArtistId, existingArtists, checkDuplicate])
 
   // ============ Video Handlers ============
 
@@ -262,10 +262,12 @@ export default function EditorPage() {
     )
     const videoId = match ? match[1] : input
     setYoutubeVideoId(videoId)
-    setDuplicateError(null) // 入力が変わったらエラーをクリア
+    setDuplicateError(null)
 
-    // 有効なIDの場合は情報を取得
+    // 有効なIDの場合はフィールドをリセットして情報を取得
     if (videoId && videoId.length >= 11) {
+      setVideoTitle('')
+      setArtistName('')
       fetchVideoInfo(videoId)
     }
   }
