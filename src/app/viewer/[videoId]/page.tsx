@@ -13,11 +13,6 @@ import {
 } from '@/components/viewer'
 import { useFormationSync } from '@/hooks'
 import { Member, Formation, Position } from '@/types'
-import {
-  sampleArtist,
-  sampleVideo,
-  sampleFormationData,
-} from '@/data/mock/sample-formation'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { getFormationDataByVideoId, getVideoById } from '@/lib/supabase/queries'
 
@@ -56,20 +51,6 @@ export default function ViewerPage() {
     async function loadData() {
       setIsLoading(true)
       setError(null)
-
-      // Check if this is the sample video
-      if (videoId === sampleVideo.id) {
-        setViewerData({
-          artistName: sampleArtist.name,
-          videoTitle: sampleVideo.title,
-          youtubeVideoId: sampleVideo.youtubeVideoId,
-          contributorName: sampleFormationData.contributorName,
-          members: sampleArtist.members,
-          formations: sampleFormationData.formations,
-        })
-        setIsLoading(false)
-        return
-      }
 
       // Try to load from Supabase
       if (!isSupabaseConfigured()) {

@@ -6,7 +6,6 @@ import Script from 'next/script'
 import { Header, Footer } from '@/components/layout'
 import { VideoCard } from '@/components/home'
 import { VideoCardSkeleton } from '@/components/ui'
-import { sampleArtist, sampleVideo, sampleFormationData } from '@/data/mock/sample-formation'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { getVideos } from '@/lib/supabase/queries'
 
@@ -26,19 +25,7 @@ export default function HomePage() {
     async function loadVideos() {
       setIsLoading(true)
 
-      const allVideos: VideoCardData[] = [
-        {
-          id: sampleVideo.id,
-          title: sampleVideo.title,
-          artistName: sampleArtist.name,
-          youtubeVideoId: sampleVideo.youtubeVideoId,
-          members: sampleArtist.members.map((m) => ({
-            id: m.id,
-            name: m.name,
-            color: m.color,
-          })),
-        },
-      ]
+      const allVideos: VideoCardData[] = []
 
       if (isSupabaseConfigured()) {
         try {

@@ -25,7 +25,6 @@ import {
   createPosition,
   ArtistWithMembers,
 } from '@/lib/supabase/queries'
-import { sampleVideo } from '@/data/mock/sample-formation'
 
 // Generate unique ID
 function generateId() {
@@ -178,11 +177,6 @@ export default function EditorPage() {
 
   // 重複チェック
   const checkDuplicate = useCallback(async (videoId: string): Promise<string | null> => {
-    // サンプル動画との重複チェック
-    if (videoId === sampleVideo.youtubeVideoId) {
-      return `この動画は既にサンプルとして登録されています（${sampleVideo.title}）`
-    }
-
     // Supabase内の動画との重複チェック
     if (isSupabaseConfigured()) {
       try {

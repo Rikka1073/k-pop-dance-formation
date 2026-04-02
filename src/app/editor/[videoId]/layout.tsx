@@ -3,7 +3,6 @@ import { Metadata } from 'next'
 export const runtime = 'edge'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { getVideoById } from '@/lib/supabase/queries'
-import { sampleVideo, sampleArtist } from '@/data/mock/sample-formation'
 
 type Props = {
   params: Promise<{ videoId: string }>
@@ -16,10 +15,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // 編集ページはインデックスさせない
   const base = {
     robots: { index: false, follow: false },
-  }
-
-  if (videoId === sampleVideo.id) {
-    return { ...base, title: `編集: ${sampleVideo.title} - ${sampleArtist.name}` }
   }
 
   if (isSupabaseConfigured()) {

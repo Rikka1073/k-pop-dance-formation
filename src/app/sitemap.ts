@@ -1,7 +1,6 @@
 import { MetadataRoute } from 'next'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { getVideos } from '@/lib/supabase/queries'
-import { sampleVideo } from '@/data/mock/sample-formation'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
@@ -33,15 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Add sample video
-  const videoPages: MetadataRoute.Sitemap = [
-    {
-      url: `${BASE_URL}/viewer/${sampleVideo.id}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-  ]
+  const videoPages: MetadataRoute.Sitemap = []
 
   // Fetch videos from database if Supabase is configured
   if (isSupabaseConfigured()) {

@@ -25,11 +25,6 @@ import {
   deleteFormation as deleteFormationFromDB,
   deleteFormationDataByVideoId,
 } from '@/lib/supabase/queries'
-import {
-  sampleArtist,
-  sampleVideo,
-  sampleFormationData,
-} from '@/data/mock/sample-formation'
 
 // Generate unique ID
 function generateId() {
@@ -96,31 +91,6 @@ export default function EditVideoPage() {
     async function loadData() {
       setIsLoading(true)
       setLoadError(null)
-
-      // Check if this is the sample video
-      if (videoId === sampleVideo.id) {
-        setYoutubeVideoId(sampleVideo.youtubeVideoId)
-        setVideoTitle(sampleVideo.title)
-        setArtistName(sampleArtist.name)
-        setContributorName(sampleFormationData.contributorName || '')
-        setMembers(sampleArtist.members)
-        setFormations(
-          sampleFormationData.formations.map((f) => ({
-            id: f.id,
-            time: f.time,
-            name: f.name || '',
-            positions: f.positions.map((p) => ({
-              ...p,
-              member: sampleArtist.members.find((m) => m.id === p.memberId)!,
-            })),
-          }))
-        )
-        if (sampleFormationData.formations.length > 0) {
-          setCurrentFormationId(sampleFormationData.formations[0].id)
-        }
-        setIsLoading(false)
-        return
-      }
 
       // Load from Supabase
       if (!isSupabaseConfigured()) {
