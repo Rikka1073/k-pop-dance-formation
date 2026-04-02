@@ -311,11 +311,6 @@ export default function EditVideoPage() {
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
   const handleSave = async (redirectToViewer: boolean = false) => {
-    if (videoId === sampleVideo.id) {
-      alert('サンプルデータは編集できません')
-      return
-    }
-
     if (!isSupabaseConfigured()) {
       alert('Supabaseが設定されていません')
       return
@@ -560,7 +555,7 @@ export default function EditVideoPage() {
                 onMemberAdd={handleAddMember}
                 onMemberUpdate={handleUpdateMember}
                 onMemberDelete={handleDeleteMember}
-                readOnly={videoId === sampleVideo.id}
+                readOnly={false}
               />
             </div>
 
@@ -617,7 +612,7 @@ export default function EditVideoPage() {
                 className="w-full"
                 variant="secondary"
                 onClick={() => handleSave(false)}
-                disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
+                disabled={formations.length === 0 || isSaving}
               >
                 {isSaving ? '保存中...' : '上書き保存'}
               </Button>
@@ -627,7 +622,7 @@ export default function EditVideoPage() {
                 className="w-full"
                 size="lg"
                 onClick={() => handleSave(true)}
-                disabled={formations.length === 0 || isSaving || videoId === sampleVideo.id}
+                disabled={formations.length === 0 || isSaving}
               >
                 {isSaving ? '保存中...' : '保存してビューアーへ'}
               </Button>
@@ -639,11 +634,6 @@ export default function EditVideoPage() {
                 </p>
               )}
 
-              {videoId === sampleVideo.id && (
-                <p className="text-yellow-500 text-xs text-center">
-                  サンプルデータは編集できません
-                </p>
-              )}
 
               {/* Error Message */}
               {saveError && (
